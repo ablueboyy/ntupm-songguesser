@@ -146,9 +146,48 @@ input[type=text]{
 input[type=text]::placeholder{color:rgba(162,154,198,.6)}
 
 .sound{
-  display:flex;gap:.6rem;align-items:center;
+  display:flex;flex-direction:column;gap:.65rem;
   padding:.7rem .8rem;border-radius:13px;
   background:var(--card);border:1px solid var(--edge);
+}
+.sound-row{display:flex;gap:.6rem;align-items:center}
+
+/* ---------- 音量 ---------- */
+.volrow{
+  display:flex;align-items:center;gap:.6rem;
+  padding-top:.6rem;border-top:1px solid var(--edge);
+}
+.volslider{
+  flex:1;min-width:0;height:1.5rem;
+  accent-color:var(--lav);cursor:pointer;
+}
+.volval{
+  font-family:var(--display);font-size:.8rem;font-weight:500;
+  color:var(--lav-2);font-variant-numeric:tabular-nums;
+  min-width:2.6rem;text-align:right;
+}
+.volicon{
+  width:1.15rem;height:1.15rem;flex:none;
+  fill:var(--lav-2);stroke:var(--lav-2);
+  stroke-width:1.6;stroke-linecap:round;
+}
+.volicon .w1,.volicon .w2{fill:none}
+.volicon[data-level="0"] .w1,
+.volicon[data-level="0"] .w2,
+.volicon[data-level="1"] .w2{opacity:.18}
+
+.volbtn{
+  display:flex;align-items:center;justify-content:center;
+  width:2.1rem;height:2.1rem;border-radius:10px;flex:none;
+  border:1px solid var(--edge);background:rgba(182,169,236,.1);
+}
+.volbtn[aria-expanded="true"]{border-color:var(--lav);background:rgba(182,169,236,.22)}
+.volpanel{
+  position:absolute;top:100%;left:0;right:0;z-index:5;
+  margin-top:.45rem;padding:.65rem .85rem;border-radius:12px;
+  background:rgba(20,18,42,.97);border:1px solid var(--edge-2);
+  display:flex;align-items:center;gap:.7rem;
+  box-shadow:0 12px 30px rgba(0,0,0,.55);
 }
 .sound .txt{flex:1;min-width:0;font-size:.8rem;line-height:1.6;color:var(--muted)}
 .sound .txt b{display:block;color:var(--ink);font-size:.88rem;font-weight:700;margin-bottom:.1rem}
@@ -337,7 +376,7 @@ input[type=text]::placeholder{color:rgba(162,154,198,.6)}
   <div class="brand">
     <div class="eyebrow">NTUPM 18th</div>
     <h1>金曲<span>猜歌王</span></h1>
-    <div class="slogan">我們不一定最會唱歌<br>但我們一定最愛唱歌</div>
+    <div class="slogan">我們不一定最會唱歌<br>但我們一定最會猜歌</div>
   </div>
 
   <div class="field">
@@ -347,11 +386,22 @@ input[type=text]::placeholder{color:rgba(162,154,198,.6)}
 
 
   <div class="sound" id="sound">
-    <div class="txt">
-      <b>先測一下聲音</b>
-      請戴耳機,並確認手機沒有靜音
+    <div class="sound-row">
+      <div class="txt">
+        <b>先測一下聲音</b>
+        請戴耳機,並確認手機沒有靜音
+      </div>
+      <button type="button" id="btn-test">試聽</button>
     </div>
-    <button type="button" id="btn-test">試聽</button>
+    <div class="volrow">
+      <svg class="volicon" data-level="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 9.5h3L11 6v12L7 14.5H4z"/>
+        <path class="w1" d="M14.5 9.4a3.8 3.8 0 0 1 0 5.2"/>
+        <path class="w2" d="M17.2 7a7.3 7.3 0 0 1 0 10"/>
+      </svg>
+      <input class="volslider" type="range" id="vol-start" min="0" max="100" step="5" value="80" aria-label="音量">
+      <span class="volval">80%</span>
+    </div>
   </div>
 
   <button class="btn" id="btn-start" disabled>開始遊戲</button>
@@ -373,10 +423,26 @@ input[type=text]::placeholder{color:rgba(162,154,198,.6)}
 <div class="screen" id="screen-play" hidden>
   <div class="hud">
     <div class="hud-top">
-      <span class="q" id="qnum">第 1 / 8 題</span>
+      <button type="button" class="volbtn" id="btn-vol" aria-expanded="false" aria-label="調整音量">
+        <svg class="volicon" data-level="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 9.5h3L11 6v12L7 14.5H4z"/>
+          <path class="w1" d="M14.5 9.4a3.8 3.8 0 0 1 0 5.2"/>
+          <path class="w2" d="M17.2 7a7.3 7.3 0 0 1 0 10"/>
+        </svg>
+      </button>
+      <span class="q" id="qnum">第 1 / 10 題</span>
       <span class="clock" id="clock">12.0</span>
     </div>
     <div class="bar"><i id="barfill"></i></div>
+    <div class="volpanel" id="volpanel" hidden>
+      <svg class="volicon" data-level="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 9.5h3L11 6v12L7 14.5H4z"/>
+        <path class="w1" d="M14.5 9.4a3.8 3.8 0 0 1 0 5.2"/>
+        <path class="w2" d="M17.2 7a7.3 7.3 0 0 1 0 10"/>
+      </svg>
+      <input class="volslider" type="range" id="vol-play" min="0" max="100" step="5" value="80" aria-label="音量">
+      <span class="volval">80%</span>
+    </div>
   </div>
   <div class="grid" id="grid"></div>
   <div class="hud-bot">
@@ -467,6 +533,32 @@ function ensureCtx(){
   return audioCtx;
 }
 
+/* ---------- 音量 ---------- */
+// 記在 localStorage,同一支手機再玩不用重調。
+// 攤位共用耳機時每個人適合的音量不同,這是現場最常被按的東西。
+const VOL_KEY = 'pmsg_volume_v1';
+let volume = 0.8;
+try{
+  const v = parseFloat(localStorage.getItem(VOL_KEY));
+  if(v >= 0 && v <= 1) volume = v;
+}catch(e){}
+
+function setVolume(v){
+  volume = Math.min(1, Math.max(0, v));
+  try{ localStorage.setItem(VOL_KEY, String(volume)); }catch(e){}
+
+  // 已經備好的音源、正在播的合成音都要即時跟著變
+  (G.questions || []).forEach(q => { if(q.audio && q.audio.el) q.audio.el.volume = volume; });
+  if(G.clip && G.clip.setVolume) G.clip.setVolume(volume);
+
+  const pct = Math.round(volume * 100);
+  document.querySelectorAll('.volslider').forEach(el => { if(+el.value !== pct) el.value = pct; });
+  document.querySelectorAll('.volval').forEach(el => { el.textContent = pct + '%'; });
+  document.querySelectorAll('.volicon').forEach(el => {
+    el.dataset.level = volume === 0 ? '0' : volume < 0.5 ? '1' : '2';
+  });
+}
+
 // 試著載入一個音訊來源,載不動就回 null。
 //
 // 判定用 canplay / loadeddata,不用 canplaythrough ——
@@ -516,7 +608,7 @@ async function prepareClip(q, remoteTimeout = 12000){
     }
   }
 
-  if(el){ el.preload = 'auto'; try{ el.load(); }catch(e){} }   // 選定後才預先緩衝
+  if(el){ el.volume = volume; el.preload = 'auto'; try{ el.load(); }catch(e){} }   // 選定後才預先緩衝
   q.audio = el ? { el, source, offset } : null;
   return q.audio;
 }
@@ -542,7 +634,7 @@ function synthClip(song, seconds){
   const filter = ctx.createBiquadFilter();
   filter.type = 'lowpass'; filter.frequency.value = 2400;
   master.connect(filter); filter.connect(ctx.destination);
-  master.gain.setValueAtTime(0.9, ctx.currentTime);
+  master.gain.setValueAtTime(volume, ctx.currentTime);
 
   const scale = [0,2,4,7,9,12,14,16,19];
   const root = 45 + Math.floor(rnd()*8);
@@ -555,8 +647,10 @@ function synthClip(song, seconds){
     if(i % 2 === 0) oscs.push(note(ctx, master, midiToFreq(root), t, beat*1.5, 'sine', 0.22));
     t += beat*0.5; i++;
   }
+  let stopped = false;
   return {
     stop(){
+      stopped = true;
       const now = ctx.currentTime;
       try{
         master.gain.cancelScheduledValues(now);
@@ -564,7 +658,9 @@ function synthClip(song, seconds){
         master.gain.linearRampToValueAtTime(0.0001, now + 0.08);
       }catch(e){}
       oscs.forEach(o => { try{ o.stop(now + 0.1); }catch(e){} });
-    }
+    },
+    // 停掉之後就別再理音量,不然滑桿會把已經收掉的聲音拉回來
+    setVolume(v){ if(stopped) return; try{ master.gain.setTargetAtTime(v, ctx.currentTime, 0.02); }catch(e){} }
   };
 }
 
@@ -583,6 +679,7 @@ function onPlayBlocked(q){
 function playClip(q){
   if(q.audio && q.audio.el){
     try{
+      q.audio.el.volume = volume;
       q.audio.el.currentTime = q.audio.offset || 0;
       const p = q.audio.el.play();
       if(p && p.catch) p.catch(() => onPlayBlocked(q));
@@ -743,15 +840,29 @@ $('btn-test').addEventListener('click', () => {
     alert('這支瀏覽器不支援音訊播放,請換一個瀏覽器開啟。');
     return;
   }
+  // 音量被拉到 0 還按試聽,會以為壞掉 —— 先拉回一半
+  if(volume === 0) setVolume(0.5);
+
   // 一段短暫的上行琶音,同時解開手機的音訊播放限制
   const t = ctx.currentTime + 0.05;
   [0,4,7,12].forEach((semi,i) =>
-    note(ctx, ctx.destination, midiToFreq(69+semi), t + i*0.13, 0.3, 'triangle', 0.2));
+    note(ctx, ctx.destination, midiToFreq(69+semi), t + i*0.13, 0.3, 'triangle', 0.2 * volume));
   G.soundOk = true;
   $('sound').classList.add('ok');
   $('sound').querySelector('b').textContent = '聲音沒問題!';
   $('btn-test').textContent = '再聽一次';
   refreshStartBtn();
+});
+
+/* ---------- 音量控制 ---------- */
+document.querySelectorAll('.volslider').forEach(el =>
+  el.addEventListener('input', e => setVolume(e.target.value / 100)));
+
+$('btn-vol').addEventListener('click', () => {
+  const panel = $('volpanel');
+  const opening = panel.hidden;
+  panel.hidden = !opening;
+  $('btn-vol').setAttribute('aria-expanded', String(opening));
 });
 
 $('btn-start').addEventListener('click', startGame);
@@ -811,6 +922,10 @@ async function startGame(){
 async function nextQuestion(){
   const q = G.questions[G.index];
   G.locked = true;                       // 音源還沒備好之前不接受作答
+
+  // 音量面板蓋在九宮格上方,換題時收起來,免得擋住選項
+  $('volpanel').hidden = true;
+  $('btn-vol').setAttribute('aria-expanded', 'false');
 
   $('qnum').textContent = `第 ${G.index+1} / ${CONFIG.questionCount} 題`;
   $('running').textContent = G.total.toLocaleString();
@@ -989,6 +1104,7 @@ document.addEventListener('keydown', e => {
 });
 
 /* ---------- 啟動 ---------- */
+setVolume(volume);   // 把記住的音量套到滑桿與圖示上
 refreshStartBtn();
 </script>
 </body>
