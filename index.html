@@ -704,7 +704,9 @@ function buildQuestions(){
       idx = swap;
     }
     lastIndex = idx;
-    return { song: answer, options: grid, audio: null };
+    // audio 刻意不設值:prepareClip 用 undefined 判斷「還沒準備過」,
+    // 這裡若寫成 null 會被當成「已確定沒有音源」而直接跳過探測
+    return { song: answer, options: grid };
   });
 }
 
