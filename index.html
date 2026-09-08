@@ -174,6 +174,8 @@ input[type=text]::placeholder{color:rgba(162,154,198,.6)}
   animation:spin 1s linear infinite;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
+.load-retry{max-width:13rem;margin-top:.6rem}
+#load-txt{max-width:20rem}
 
 /* ---------- 遊戲畫面 ---------- */
 #screen-play{height:100vh;height:100dvh;min-height:0;gap:.7rem}
@@ -363,8 +365,9 @@ input[type=text]::placeholder{color:rgba(162,154,198,.6)}
 
 <!-- ═══════════ 載入 ═══════════ -->
 <div class="screen" id="screen-load" hidden>
-  <div class="spin"></div>
-  <div class="slogan" id="load-txt">正在準備八首歌⋯</div>
+  <div class="spin" id="load-spin"></div>
+  <div class="slogan" id="load-txt">正在準備第一首⋯</div>
+  <button class="btn ghost load-retry" id="btn-retry" hidden>重試</button>
 </div>
 
 <!-- ═══════════ 遊戲 ═══════════ -->
@@ -494,7 +497,7 @@ function probeAudio(src, timeoutMs){
 // 結果整局默默退回示範音。單獨一個載入只要 70 毫秒,十六個一起就死。
 let hasLocalAudio = null;   // null = 還沒試過,false = audio/ 是空的,之後不再浪費請求
 
-async function prepareClip(q){
+async function prepareClip(q, remoteTimeout = 12000){
   if(q.audio !== undefined) return q.audio;   // 已經備好或已確定沒有
   const song = q.song;
 
@@ -509,7 +512,7 @@ async function prepareClip(q){
   if(!el){
     const p = (window.SONG_PREVIEWS || {})[song.id];
     if(p && p.url){
-      el = await probeAudio(p.url, 8000);
+      el = await probeAudio(p.url, remoteTimeout);
       if(el){ source = 'preview'; offset = p.offset || 0; }
     }
   }
@@ -750,6 +753,38 @@ $('btn-board-2').addEventListener('click', () => renderBoard());
 $('btn-back').addEventListener('click', () => show('screen-start'));
 
 /* ---------- 開局 ---------- */
+
+// 載入第一首。網路慢就等 —— 但要讓人看到在等什麼。
+// 默默改播示範音是最糟的選項:畫面不報錯,玩家整局猜不出來,
+// 關主也只會覺得「這些人怎麼都不會」。
+async function loadFirst(){
+  const q = G.questions[0];
+  q.audio = undefined;                 // 重試時要重新探測
+  $('load-spin').hidden = false;
+  $('btn-retry').hidden = true;
+  $('load-txt').textContent = '正在準備第一首⋯';
+
+  const t0 = Date.now();
+  const ticker = setInterval(() => {
+    const s = Math.round((Date.now() - t0) / 1000);
+    if(s >= 10)     $('load-txt').textContent = `網路好像不太順,還在等⋯(${s} 秒)`;
+    else if(s >= 4) $('load-txt').textContent = '網路好像有點慢,再等一下⋯';
+  }, 1000);
+
+  const clip = await prepareClip(q, 25000);   // 開場給到 25 秒,慢總比默默降級好
+  clearInterval(ticker);
+  if(clip) return true;
+
+  $('load-spin').hidden = true;
+  $('load-txt').innerHTML = '載不到音樂 —— 可能是網路不通。<br>請確認手機有連上網,或跟攤位人員說一聲。';
+  $('btn-retry').hidden = false;
+  return false;
+}
+
+$('btn-retry').addEventListener('click', async () => {
+  if(await loadFirst()){ show('screen-play'); nextQuestion(); }
+});
+
 async function startGame(){
   const err = nickError($('nick').value);
   if(err){ alert(err); return; }
@@ -759,9 +794,7 @@ async function startGame(){
   G.index = 0; G.total = 0; G.log = [];
 
   show('screen-load');
-  $('load-txt').textContent = '正在準備第一首⋯';
-
-  await prepareClip(G.questions[0]);   // 只備第一題,其餘邊玩邊預抓
+  if(!await loadFirst()) return;   // 載不到就停在載入畫面讓玩家重試,不要硬開局
 
   show('screen-play');
   nextQuestion();
@@ -790,6 +823,7 @@ async function nextQuestion(){
     grid.appendChild(b);
   });
 
+  if(q.audio === undefined) $('playmeta').textContent = '載入中⋯';   // 預抓還沒完成才會看到
   await prepareClip(q);
   $('playmeta').textContent = q.audio ? '' : '示範音 · 這首找不到音源';
 
