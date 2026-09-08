@@ -569,14 +569,26 @@ function synthClip(song, seconds){
   };
 }
 
+// 瀏覽器擋掉播放時(iOS 側邊靜音鍵、頁面失去使用者互動狀態)不要默默無聲。
+// 倒數照跑、畫面不報錯、玩家安靜地猜完一題,是最糟的失敗方式。
+function onPlayBlocked(q){
+  $('playmeta').textContent = '沒有聲音?點一下畫面';
+  const retry = () => {
+    ensureCtx();
+    const el = q.audio && q.audio.el;
+    if(el) el.play().then(() => { $('playmeta').textContent = ''; }).catch(() => {});
+  };
+  document.addEventListener('pointerdown', retry, { once: true });
+}
+
 function playClip(q){
   if(q.audio && q.audio.el){
     try{
       q.audio.el.currentTime = q.audio.offset || 0;
       const p = q.audio.el.play();
-      if(p && p.catch) p.catch(()=>{});
+      if(p && p.catch) p.catch(() => onPlayBlocked(q));
       return { stop(){ try{ q.audio.el.pause(); }catch(e){} } };
-    }catch(e){ /* 落回合成音 */ }
+    }catch(e){ onPlayBlocked(q); }
   }
   return synthClip(q.song, CONFIG.clipSeconds);
 }
