@@ -218,7 +218,8 @@ input[type=text]::placeholder{color:rgba(162,154,198,.6)}
 
 /* ---------- 遊戲畫面 ---------- */
 #screen-play{height:100vh;height:100dvh;min-height:0;gap:.7rem}
-.hud{flex:none;display:flex;flex-direction:column;gap:.5rem}
+/* position:relative 是音量面板的定位基準,拿掉的話面板會掉到頁面最底部 */
+.hud{flex:none;display:flex;flex-direction:column;gap:.5rem;position:relative}
 .hud-top{
   display:flex;justify-content:space-between;align-items:baseline;
   font-family:var(--display);letter-spacing:.14em;
