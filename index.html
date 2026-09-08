@@ -489,23 +489,34 @@ function probeAudio(src, timeoutMs){
 
 // 音源優先順序:本地音檔 → Apple 官方試聽(串流,不落地)→ 合成示範音
 //
-// 兩個來源同時探測,不要「先等本地逾時再試串流」——
-// 頁面剛載入時,本地請求會排在主視覺圖後面(開發用的 http.server 是單執行緒),
-// 序列化會把整條鏈拖到逾時,結果整局默默退回示範音。
-async function probeClip(song){
-  const p = (window.SONG_PREVIEWS || {})[song.id];
-  const [local, remote] = await Promise.all([
-    probeAudio(`audio/${song.id}.m4a`, 4000),
-    (p && p.url) ? probeAudio(p.url, 6000) : Promise.resolve(null)
-  ]);
+// 一次只準備一首。不要開場就把八題全部探測 ——
+// 同時建立十幾個 audio 元素會讓 Chrome 的媒體載入全部卡在 stalled,
+// 結果整局默默退回示範音。單獨一個載入只要 70 毫秒,十六個一起就死。
+let hasLocalAudio = null;   // null = 還沒試過,false = audio/ 是空的,之後不再浪費請求
 
-  const pick = local  ? { el: local,  source: 'local',   offset: 0 }
-             : remote ? { el: remote, source: 'preview', offset: (p && p.offset) || 0 }
-             : null;
+async function prepareClip(q){
+  if(q.audio !== undefined) return q.audio;   // 已經備好或已確定沒有
+  const song = q.song;
 
-  // 選定之後才開始預先緩衝,播放時才不會卡頓
-  if(pick){ pick.el.preload = 'auto'; try{ pick.el.load(); }catch(e){} }
-  return pick;
+  let el = null, source = null, offset = 0;
+
+  if(hasLocalAudio !== false){
+    el = await probeAudio(`audio/${song.id}.m4a`, 2500);
+    if(el){ hasLocalAudio = true; source = 'local'; }
+    else if(hasLocalAudio === null) hasLocalAudio = false;   // 第一首就沒有,整個資料夾當作空的
+  }
+
+  if(!el){
+    const p = (window.SONG_PREVIEWS || {})[song.id];
+    if(p && p.url){
+      el = await probeAudio(p.url, 8000);
+      if(el){ source = 'preview'; offset = p.offset || 0; }
+    }
+  }
+
+  if(el){ el.preload = 'auto'; try{ el.load(); }catch(e){} }   // 選定後才預先緩衝
+  q.audio = el ? { el, source, offset } : null;
+  return q.audio;
 }
 
 function note(ctx, dest, freq, at, dur, type, peak){
@@ -748,25 +759,24 @@ async function startGame(){
   G.index = 0; G.total = 0; G.log = [];
 
   show('screen-load');
-  $('load-txt').textContent = `正在準備 ${CONFIG.questionCount} 首歌⋯`;
+  $('load-txt').textContent = '正在準備第一首⋯';
 
-  // 開場一次把八題的音源備好,中途才不會卡住
-  const clips = await Promise.all(G.questions.map(q => probeClip(q.song)));
-  clips.forEach((c, i) => { G.questions[i].audio = c; });
-
-  const missing = clips.filter(c => !c).length;
-  $('playmeta').textContent = missing ? `${missing} 題為示範音` : '';
+  await prepareClip(G.questions[0]);   // 只備第一題,其餘邊玩邊預抓
 
   show('screen-play');
   nextQuestion();
 }
 
-function nextQuestion(){
+async function nextQuestion(){
   const q = G.questions[G.index];
-  G.locked = false;
+  G.locked = true;                       // 音源還沒備好之前不接受作答
 
   $('qnum').textContent = `第 ${G.index+1} / ${CONFIG.questionCount} 題`;
   $('running').textContent = G.total.toLocaleString();
+  $('clock').textContent = CONFIG.timeLimit.toFixed(1);
+  $('clock').classList.remove('hurry');
+  $('barfill').style.transform = 'scaleX(1)';
+  $('barfill').classList.remove('hurry');
 
   const grid = $('grid');
   grid.innerHTML = '';
@@ -780,11 +790,19 @@ function nextQuestion(){
     grid.appendChild(b);
   });
 
+  await prepareClip(q);
+  $('playmeta').textContent = q.audio ? '' : '示範音 · 這首找不到音源';
+
   if(G.clip) G.clip.stop();
   G.clip = playClip(q);
 
+  G.locked = false;
   G.deadline = performance.now() + CONFIG.timeLimit * 1000;
   tick();
+
+  // 這一題在播的時候,把下一題的音源先抓好,換題才不會停頓
+  const nx = G.questions[G.index + 1];
+  if(nx) prepareClip(nx);
 }
 
 function tick(){
