@@ -11,11 +11,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "七里香",
-  "artist": "周杰倫",
-  "genre": "mando"
- },
- {
   "title": "那天下雨了",
   "artist": "周杰倫",
   "genre": "mando"
@@ -56,22 +51,12 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "戀愛ing",
-  "artist": "五月天",
-  "genre": "mando"
- },
- {
   "title": "瘋狂世界",
   "artist": "五月天",
   "genre": "mando"
  },
  {
   "title": "好好 (想把你寫成一首歌)",
-  "artist": "五月天",
-  "genre": "mando"
- },
- {
-  "title": "倔強",
   "artist": "五月天",
   "genre": "mando"
  },
@@ -112,11 +97,6 @@ window.DECOYS = [
  },
  {
   "title": "那些你很冒險的夢 (JJ20版)",
-  "artist": "林俊傑",
-  "genre": "mando"
- },
- {
-  "title": "她說",
   "artist": "林俊傑",
   "genre": "mando"
  },
@@ -176,16 +156,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "想自由",
-  "artist": "林宥嘉",
-  "genre": "mando"
- },
- {
-  "title": "浪費",
-  "artist": "林宥嘉",
-  "genre": "mando"
- },
- {
   "title": "怪情歌",
   "artist": "林宥嘉",
   "genre": "mando"
@@ -203,11 +173,6 @@ window.DECOYS = [
  {
   "title": "一家人相親相愛",
   "artist": "林宥嘉",
-  "genre": "mando"
- },
- {
-  "title": "愛情轉移",
-  "artist": "陳奕迅",
   "genre": "mando"
  },
  {
@@ -231,11 +196,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "K歌之王",
-  "artist": "陳奕迅",
-  "genre": "mando"
- },
- {
   "title": "婚禮的祝福",
   "artist": "陳奕迅",
   "genre": "mando"
@@ -247,11 +207,6 @@ window.DECOYS = [
  },
  {
   "title": "唯一",
-  "artist": "鄧紫棋",
-  "genre": "mando"
- },
- {
-  "title": "泡沫",
   "artist": "鄧紫棋",
   "genre": "mando"
  },
@@ -291,11 +246,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "愛人錯過",
-  "artist": "告五人",
-  "genre": "mando"
- },
- {
   "title": "我想要佔據你",
   "artist": "告五人",
   "genre": "mando"
@@ -307,11 +257,6 @@ window.DECOYS = [
  },
  {
   "title": "披星戴月的想你",
-  "artist": "告五人",
-  "genre": "mando"
- },
- {
-  "title": "帶我去找夜生活",
   "artist": "告五人",
   "genre": "mando"
  },
@@ -376,11 +321,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "我好想你",
-  "artist": "蘇打綠",
-  "genre": "mando"
- },
- {
   "title": "無與倫比的美麗",
   "artist": "蘇打綠",
   "genre": "mando"
@@ -412,11 +352,6 @@ window.DECOYS = [
  },
  {
   "title": "我不難過",
-  "artist": "孫燕姿",
-  "genre": "mando"
- },
- {
-  "title": "我懷念的",
   "artist": "孫燕姿",
   "genre": "mando"
  },
@@ -461,11 +396,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "玫瑰少年",
-  "artist": "JOLIN蔡依林",
-  "genre": "mando"
- },
- {
   "title": "Pleasure",
   "artist": "JOLIN蔡依林",
   "genre": "mando"
@@ -492,11 +422,6 @@ window.DECOYS = [
  },
  {
   "title": "永不失聯的愛",
-  "artist": "周興哲",
-  "genre": "mando"
- },
- {
-  "title": "怎麼了",
   "artist": "周興哲",
   "genre": "mando"
  },
@@ -556,18 +481,8 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "醜八怪",
-  "artist": "薛之謙",
-  "genre": "mando"
- },
- {
   "title": "紳士",
   "artist": "薛之謙",
-  "genre": "mando"
- },
- {
-  "title": "像我這樣的人",
-  "artist": "毛不易",
   "genre": "mando"
  },
  {
@@ -1091,17 +1006,7 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "洋蔥",
-  "artist": "楊宗緯",
-  "genre": "mando"
- },
- {
   "title": "那個男人",
-  "artist": "楊宗緯",
-  "genre": "mando"
- },
- {
-  "title": "背叛",
   "artist": "楊宗緯",
   "genre": "mando"
  },
@@ -1701,11 +1606,6 @@ window.DECOYS = [
   "genre": "classic"
  },
  {
-  "title": "心太軟",
-  "artist": "任賢齊",
-  "genre": "classic"
- },
- {
   "title": "天涯",
   "artist": "任賢齊",
   "genre": "classic"
@@ -1727,11 +1627,6 @@ window.DECOYS = [
  },
  {
   "title": "忽然之間",
-  "artist": "莫文蔚",
-  "genre": "classic"
- },
- {
-  "title": "陰天",
   "artist": "莫文蔚",
   "genre": "classic"
  },
@@ -1781,11 +1676,6 @@ window.DECOYS = [
   "genre": "classic"
  },
  {
-  "title": "用心良苦",
-  "artist": "張宇",
-  "genre": "classic"
- },
- {
   "title": "傘下 (電視劇《歡喜來逗陣》片尾曲)",
   "artist": "張宇",
   "genre": "classic"
@@ -1807,11 +1697,6 @@ window.DECOYS = [
  },
  {
   "title": "被動",
-  "artist": "蘇慧倫",
-  "genre": "classic"
- },
- {
-  "title": "鴨子",
   "artist": "蘇慧倫",
   "genre": "classic"
  },

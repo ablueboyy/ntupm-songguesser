@@ -1,5 +1,5 @@
 /* 自動產生,請勿手動編輯 —— 由 tools/fetch-previews.js 產出
- * 產生時間:2026-09-08T16:21:59.549Z
+ * 產生時間:2026-09-08T18:58:07.461Z
  * 這裡只存 Apple 官方 30 秒試聽的網址,音檔不落地,遊戲執行時直接串流。
  * conf 是配對信心度,low 的請人工確認是不是配錯歌。
  */
@@ -801,6 +801,406 @@ window.SONG_PREVIEWS = {
     "title": "残響散歌",
     "artist": "Aimer",
     "album": "Open α Door",
+    "offset": 0,
+    "conf": "high"
+  },
+  "qilixiang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/99/4e/e2/994ee285-7c0d-73ab-85b7-8d3899a17242/mzaf_12441330510018253101.plus.aac.p.m4a",
+    "title": "七里香",
+    "artist": "周杰倫",
+    "album": "七里香",
+    "offset": 0,
+    "conf": "high"
+  },
+  "qinghuaci": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3a/15/ff/3a15ff0b-ee24-a863-db04-8a489be66397/mzaf_1259240667288251806.plus.aac.p.m4a",
+    "title": "青花瓷",
+    "artist": "周杰倫",
+    "album": "我很忙",
+    "offset": 0,
+    "conf": "high"
+  },
+  "shuohaobuku": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/09/56/a3/0956a3ba-1d87-1297-eaa2-6520a9297375/mzaf_9451698682107745612.plus.aac.p.m4a",
+    "title": "說好不哭",
+    "artist": "周杰倫 & 五月天 阿信",
+    "album": "說好不哭 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "juejiang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/4b/ba/2d/4bba2d71-e326-b2d7-ff8b-ab62a183fad7/mzaf_10668710428294815005.plus.aac.p.m4a",
+    "title": "倔強",
+    "artist": "五月天",
+    "album": "神的孩子都在跳舞",
+    "offset": 0,
+    "conf": "high"
+  },
+  "lianaiing": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6d/42/02/6d4202a4-3a20-e799-2b08-1a596cdff009/mzaf_17302376051483179336.plus.aac.p.m4a",
+    "title": "戀愛ing",
+    "artist": "五月天",
+    "album": "知足 just my pride 最真傑作選",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yangcong": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/96/62/ec/9662ec05-83b4-9103-553c-c006a6ed318f/mzaf_11896279660740097435.plus.aac.p.m4a",
+    "title": "洋蔥",
+    "artist": "五月天",
+    "album": "步步自選作品輯 1999-2013",
+    "offset": 0,
+    "conf": "high"
+  },
+  "tashuo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5a/d9/b5/5ad9b59a-d760-afb6-71d4-6e9614dbd18b/mzaf_2961581987529700790.plus.aac.p.m4a",
+    "title": "她說",
+    "artist": "林俊傑",
+    "album": "她說",
+    "offset": 0,
+    "conf": "high"
+  },
+  "xiaojiuwo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/55/17/8d/55178d90-c168-ef61-c195-4ce3b56ea1af/mzaf_16279702411600496318.plus.aac.p.m4a",
+    "title": "小酒窩",
+    "artist": "林俊傑",
+    "album": "林俊傑2003年-2010年作品精選集",
+    "offset": 0,
+    "conf": "high"
+  },
+  "moguizhongde": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/52/60/03/526003fa-7c45-175d-7d6c-596edec10b88/mzaf_10341838568266663391.plus.aac.p.m4a",
+    "title": "魔鬼中的天使 (Angel devil)",
+    "artist": "田馥甄",
+    "album": "My Love",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "langfei": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b4/2a/71/b42a71aa-0c98-655f-f357-83c3c0141fc4/mzaf_13188202888695856060.plus.aac.p.m4a",
+    "title": "浪費",
+    "artist": "林宥嘉",
+    "album": "大小說家",
+    "offset": 0,
+    "conf": "high"
+  },
+  "xiangziyou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/74/30/aa/7430aa86-63e8-2e4a-86bf-2ce9271703c7/mzaf_4564437527030942451.plus.aac.p.m4a",
+    "title": "想自由",
+    "artist": "林宥嘉",
+    "album": "美妙生活",
+    "offset": 0,
+    "conf": "high"
+  },
+  "kgezhiwang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b0/cd/af/b0cdafc1-438e-6615-6151-8ded7b2a0677/mzaf_3140694325255467275.plus.aac.p.m4a",
+    "title": "K歌之王",
+    "artist": "陳奕迅",
+    "album": "陳奕迅 國語精選",
+    "offset": 0,
+    "conf": "high"
+  },
+  "aiqingzhuanyi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/89/ed/41/89ed4149-9064-949b-f826-24943a728084/mzaf_2597976030459913793.plus.aac.p.m4a",
+    "title": "愛情轉移",
+    "artist": "陳奕迅",
+    "album": "認了吧 (台灣版)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "paomo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2e/a2/6f/2ea26f2e-b3ab-dfda-d594-b288bcc66ea4/mzaf_13800734421504250775.plus.aac.p.m4a",
+    "title": "泡沫",
+    "artist": "鄧紫棋",
+    "album": "Xposed",
+    "offset": 0,
+    "conf": "high"
+  },
+  "xihuanni": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0a/f0/7d/0af07d63-c6aa-03e4-f090-60be65c1d62f/mzaf_14089765536714302614.plus.aac.p.m4a",
+    "title": "喜歡你",
+    "artist": "鄧紫棋",
+    "album": "喜歡你 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yeshenghuo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/29/43/ea/2943ea8a-fff5-9387-756f-dc7c7a66d56f/mzaf_5114626731721012870.plus.aac.p.m4a",
+    "title": "帶我去找夜生活",
+    "artist": "告五人",
+    "album": "帶我去找夜生活 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "kezaixindi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a5/9d/de/a59dde59-d295-b922-e78c-88b969f61c2d/mzaf_15129751321384603625.plus.aac.p.m4a",
+    "title": "刻在我心底的名字 (電影《刻在你心底的名字》主題曲)",
+    "artist": "盧廣仲",
+    "album": "刻在我心底的名字 (電影《刻在你心底的名字》主題曲) - Single",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "jifenzhiji": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/90/ff/4c/90ff4ce2-fec8-f28b-cffc-64a9b483b24f/mzaf_17367706297350017430.plus.aac.p.m4a",
+    "title": "幾分之幾 (電影《花甲大人轉男孩》主題曲)",
+    "artist": "盧廣仲",
+    "album": "幾分之幾 - Single",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "wohaoxiangni": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5c/8a/58/5c8a5859-7881-8c7e-112a-c02b14137a90/mzaf_5916367910955417777.plus.aac.p.m4a",
+    "title": "我好想你",
+    "artist": "蘇打綠",
+    "album": "秋:故事",
+    "offset": 0,
+    "conf": "high"
+  },
+  "nibeixiezai": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1d/9a/bd/1d9abd98-34f3-8579-45c7-cbade3c190ea/mzaf_3671575465054615536.plus.aac.p.m4a",
+    "title": "你被寫在我的歌裡(蘇打綠版) (feat. 陳嘉樺)",
+    "artist": "蘇打綠",
+    "album": "你在煩惱什麼(蘇打綠版)",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "tianheihei": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ea/88/68/ea8868db-ce33-f2ca-40e6-9cbeb625219e/mzaf_18160633054138606566.plus.aac.p.m4a",
+    "title": "天黑黑",
+    "artist": "孫燕姿",
+    "album": "My Story (2006 新歌+精選)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "wohuainiande": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/31/12/cd/3112cdad-110b-9da9-88e4-0242f7efb715/mzaf_8081013030607847076.plus.aac.p.m4a",
+    "title": "我懷念的",
+    "artist": "孫燕姿",
+    "album": "逆光",
+    "offset": 0,
+    "conf": "high"
+  },
+  "meiguishaonian": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/69/b3/1a/69b31ae4-d501-7a4e-fcbe-176b401f527b/mzaf_1773036438364483271.plus.aac.p.m4a",
+    "title": "玫瑰少年",
+    "artist": "JOLIN蔡依林",
+    "album": "Ugly Beauty",
+    "offset": 0,
+    "conf": "high"
+  },
+  "zenmele": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c7/24/76/c724760d-d967-37ee-09d8-ea35f6030233/mzaf_14908267644769078368.plus.aac.p.m4a",
+    "title": "怎麼了",
+    "artist": "周興哲",
+    "album": "終於了解自由 - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "xiangwozheyang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ab/aa/6f/abaa6f37-b059-5a90-6080-e446f8213be9/mzaf_3421896006612901929.plus.aac.p.m4a",
+    "title": "像我這樣的人",
+    "artist": "毛不易",
+    "album": "平凡的一天",
+    "offset": 0,
+    "conf": "high"
+  },
+  "beipan": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b4/ca/03/b4ca0328-9b56-c402-ec91-85708cb52a0a/mzaf_16216393181521739879.plus.aac.p.m4a",
+    "title": "背叛",
+    "artist": "曹格",
+    "album": "Superman",
+    "offset": 0,
+    "conf": "high"
+  },
+  "haoxinfenshou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3c/c6/e8/3cc6e805-e584-3a45-573a-b4c7ab4adfca/mzaf_14685504927248577737.plus.aac.p.m4a",
+    "title": "好心分手",
+    "artist": "盧巧音",
+    "album": "Four Seasons in One Day",
+    "offset": 0,
+    "conf": "high"
+  },
+  "shouzhangxin": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/81/7f/88/817f8887-1345-cec2-75ae-913b33db8d88/mzaf_15611058009807044930.plus.aac.p.m4a",
+    "title": "手掌心",
+    "artist": "丁噹",
+    "album": "敢愛敢當",
+    "offset": 0,
+    "conf": "high"
+  },
+  "pingfanzhilu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c5/19/3f/c5193f32-615a-db89-29ae-28b67035ecf5/mzaf_14264476800131433849.plus.aac.p.m4a",
+    "title": "平凡之路",
+    "artist": "朴樹",
+    "album": "獵戶星座",
+    "offset": 0,
+    "conf": "high"
+  },
+  "dongxiaojie": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/21/8e/12/218e12dd-5f6c-61e9-2e56-2ba769501099/mzaf_8147701578186021952.plus.aac.p.m4a",
+    "title": "董小姐",
+    "artist": "宋冬野",
+    "album": "摩登天空7",
+    "offset": 0,
+    "conf": "high"
+  },
+  "nanshannan": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/07/f1/5a/07f15aaf-9d68-daed-7c70-c9e2904c1d6f/mzaf_7046538232798178206.plus.aac.p.m4a",
+    "title": "南山南",
+    "artist": "馬頔",
+    "album": "孤島",
+    "offset": 0,
+    "conf": "high"
+  },
+  "chengdu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d3/7c/c4/d37cc4d4-2bc0-b205-c453-e3290a682d93/mzaf_3541493926237256260.plus.aac.p.m4a",
+    "title": "成都",
+    "artist": "趙雷",
+    "album": "無法長大",
+    "offset": 0,
+    "conf": "high"
+  },
+  "lanlianhua": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/94/c5/eb/94c5ebb1-1dbf-1c6d-3e6e-6b4304b2cbb1/mzaf_13174042724356647221.plus.aac.p.m4a",
+    "title": "藍蓮花",
+    "artist": "許巍",
+    "album": "今天 2002-2008生活作品集",
+    "offset": 0,
+    "conf": "high"
+  },
+  "youdiantian": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/8f/56/55/8f56551f-c849-de67-b043-436886e1e025/mzaf_5278813436322677700.plus.aac.p.m4a",
+    "title": "有點甜 (《萌三國》網遊主題曲《微微一笑很傾城》電視劇插曲)",
+    "artist": "汪蘇瀧 & By2",
+    "album": "萬有引力",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "xiaopingguo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/08/c4/be/08c4be90-30af-94cd-d0d3-5caf4f0fbc47/mzaf_1020545420151198104.plus.aac.p.m4a",
+    "title": "小蘋果",
+    "artist": "筷子兄弟",
+    "album": "《老男孩之猛龍過江》電影原聲帶",
+    "offset": 0,
+    "conf": "high"
+  },
+  "tiantianxiangni": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/4d/f6/e6/4df6e67d-e2fa-1039-d8d2-08f46b65f703/mzaf_15534515753949783061.plus.aac.p.m4a",
+    "title": "天天想你",
+    "artist": "張雨生",
+    "album": "天天想你",
+    "offset": 0,
+    "conf": "high"
+  },
+  "xintairuan": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6e/60/20/6e60200c-d504-744b-d556-456fdc92dc3f/mzaf_16166076213417518929.plus.aac.p.m4a",
+    "title": "心太軟",
+    "artist": "任賢齊",
+    "album": "為了愛而心太軟",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yintian": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e6/34/db/e634db60-abb8-47f6-fab3-eb038d600929/mzaf_7406713660273189854.plus.aac.p.m4a",
+    "title": "陰天",
+    "artist": "莫文蔚",
+    "album": "含情莫莫.莫文蔚全精選集",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yongxinliangku": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/16/81/85/16818558-409c-88c5-614e-db184f55fa7b/mzaf_9371845855727545564.plus.aac.p.m4a",
+    "title": "用心良苦",
+    "artist": "張宇",
+    "album": "男人的好 新歌精選影音全記錄",
+    "offset": 0,
+    "conf": "high"
+  },
+  "weidao": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d4/9c/26/d49c26b6-c692-a7a7-de41-93c81b1dead8/mzaf_12241264058683214625.plus.aac.p.m4a",
+    "title": "味道",
+    "artist": "辛曉琪",
+    "album": "味道",
+    "offset": 0,
+    "conf": "high"
+  },
+  "dayuezaidongji": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/88/d0/f6/88d0f65d-9a4f-4080-fe10-175e1fade3ce/mzaf_7155499580748254164.plus.aac.p.m4a",
+    "title": "大約在冬季",
+    "artist": "齊秦",
+    "album": "摘金寶典",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yichangyouxi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/84/59/6a/84596aab-986c-d025-2e40-ad2c131d0b9c/mzaf_5979947135983612270.plus.aac.p.m4a",
+    "title": "一場遊戲一場夢",
+    "artist": "王傑",
+    "album": "一場遊戲一場夢",
+    "offset": 0,
+    "conf": "high"
+  },
+  "tongnian": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/5e/16/c8/5e16c835-df85-2183-6d8c-325cb3cc842e/mzaf_2373174907656040679.plus.aac.p.m4a",
+    "title": "童年",
+    "artist": "羅大佑",
+    "album": "之乎者也",
+    "offset": 0,
+    "conf": "high"
+  },
+  "zhengfu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/62/90/4f/62904f92-650e-9966-6e42-f91cc495b4f5/mzaf_5843510267679926123.plus.aac.p.m4a",
+    "title": "征服 (Remastered)",
+    "artist": "那英",
+    "album": "征服 (Remastered)",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "guohuo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c3/b3/13/c3b31330-7dc0-3f2e-6b42-376ca67c7048/mzaf_6828132498864280720.plus.aac.p.m4a",
+    "title": "過火",
+    "artist": "張信哲",
+    "album": "寬容",
+    "offset": 0,
+    "conf": "high"
+  },
+  "rencuo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/6b/07/4f/6b074fe5-a6e7-4bd4-b051-83aa3eecf0d3/mzaf_12080975956906491044.plus.aac.p.m4a",
+    "title": "認錯",
+    "artist": "優客李林",
+    "album": "認錯",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yazi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/91/31/b6/9131b67f-fbd0-434a-82aa-80723757a902/mzaf_8363800565225377303.plus.aac.p.m4a",
+    "title": "鴨子",
+    "artist": "蘇慧倫",
+    "album": "鴨子",
+    "offset": 0,
+    "conf": "high"
+  },
+  "aiwobiezou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c8/19/89/c8198931-4372-32c0-326b-5060df79cd0d/mzaf_14799796831186133511.plus.aac.p.m4a",
+    "title": "愛我別走",
+    "artist": "張震嶽",
+    "album": "祕密基地",
+    "offset": 0,
+    "conf": "high"
+  },
+  "choubagua": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/21/8e/8d/218e8d1b-3931-7d0a-3700-ecf642bd33be/mzaf_17027698660220435203.plus.aac.p.m4a",
+    "title": "醜八怪",
+    "artist": "薛之謙",
+    "album": "意外",
+    "offset": 0,
+    "conf": "low"
+  },
+  "airencuoguo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2f/48/6a/2f486aea-49ce-4bd8-0392-1b46b5b99c40/mzaf_9473331430726024879.plus.aac.p.m4a",
+    "title": "愛人錯過",
+    "artist": "告五人",
+    "album": "我肯定在幾百年前就說過愛你",
     "offset": 0,
     "conf": "high"
   }

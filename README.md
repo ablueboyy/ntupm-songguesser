@@ -1,6 +1,6 @@
 # 金曲猜歌王 — NTUPM 18th 聯展攤位遊戲
 
-台大流行音樂演唱社社團聯展擺攤用的猜歌遊戲。掃 QR → 取暱稱 → 八題九宮格搶答 → 達標兌獎。
+台大流行音樂演唱社社團聯展擺攤用的猜歌遊戲。掃 QR → 取暱稱 → 十題九宮格搶答 → 達標兌獎。
 
 **試玩版:https://ablueboyy.github.io/ntupm-songguesser/**
 
@@ -29,7 +29,7 @@ python -m http.server 8000
 | 部分 | 狀態 |
 |---|---|
 | 九宮格搶答、倒數、計分 | 完成 |
-| 暱稱、歌單選擇、音量測試 | 完成 |
+| 暱稱輸入、音量測試 | 完成 |
 | 結算、稱號、兌獎判定(門檻 5,000 分) | 完成 |
 | 音源 | Apple 官方試聽,執行時串流 |
 | 排行榜 | **還沒做**,畫面上顯示「還在製作中」 |
@@ -62,7 +62,7 @@ audio/xiaoxingyun.m4a   ← 小幸運
 
 ### 批次剪輯工具
 
-`tools/clips.csv` 已經把 54 首歌的 id 都列好了,只要填兩欄:
+`tools/clips.csv` 已經把 150 首歌的 id 都列好了,只要填兩欄:
 
 ```csv
 id,title,artist,source,start
@@ -114,7 +114,7 @@ node tools/fetch-previews.js --delay 3000      # 放慢(API 約 20 次/分鐘)
 
 ### 換歌之後一定要做的事
 
-改了 `songs.js` 就要重跑一次抓取,而且**要看報告**。實際跑下來,100 首裡有 4 首出問題,全部都是「台灣 Apple Music 沒有那個版本」造成的:
+改了 `songs.js` 就要重跑一次抓取,而且**要看報告**。實際跑下來,前 100 首裡有 4 首出問題,全部都是「台灣 Apple Music 沒有那個版本」造成的:
 
 | 狀況 | 例子 | 怎麼處理 |
 |---|---|---|
@@ -146,21 +146,21 @@ node tools/fetch-previews.js --delay 3000      # 放慢(API 約 20 次/分鐘)
 
 | 檔案 | 內容 | 需要音源? |
 |---|---|---|
-| `songs.js` | 100 首,會被抽成題目 | 要 |
-| `decoys.js` | 400+ 首,只當九宮格的干擾選項 | 不用 |
+| `songs.js` | 150 首,會被抽成題目 | 要 |
+| `decoys.js` | 743 首,只當九宮格的干擾選項 | 不用 |
 
 九宮格的九個選項從「`songs.js` + `decoys.js`」合起來的池子抽。干擾項不需要音檔,所以可以放很多 —— 這樣重玩很多次也不會一直看到同一批選項。
 
 ### songs.js
 
 ```js
-{ id: "daoxiang", title: "稻香", artist: "周杰倫", tier: 1, genre: "mando" }
+{ id: "daoxiang", title: "稻香", artist: "周杰倫", genre: "mando" }
 ```
 
 - `id` 是所有東西的鑰匙:音檔檔名 `audio/<id>.m4a`、`previews.js` 的對應都靠它
-- `tier: 1` 人人會唱 → 前 4 題從這層抽(目前 40 首)
-- `tier: 2` / `tier: 3` → 後 4 題從這兩層一起抽
-- `genre` 玩家完全看不到。它只用來挑干擾項 —— **華語歌的九宮格要配華語的干擾項**,不然混進一堆英文歌名,用刪去法就猜到了,九選一的難度會垮
+- `genre` 玩家完全看不到,但有兩個用途:
+  1. **決定每局的曲風配額**(見下面的 `CONFIG.quota`)
+  2. **挑干擾項** —— 華語歌的九宮格要配華語的干擾項,不然混進一堆英文歌名,用刪去法就猜到了,九選一的難度會垮
   - `mando` 華語現代 · `classic` 華語經典 · `tw` 台語 · `kpop` 韓語 · `west` 西洋 · `jp` 日文
 - `title` 直接顯示在九宮格上,程式會依長度自動縮字級(中文 6/9/11 字、英文 9/14/20 字三段)
 
@@ -182,13 +182,20 @@ node tools/build-decoys.js --per 12         # 每位歌手多撈幾首
 `index.html` 最上面的 `CONFIG`:
 
 ```js
-timeLimit: 12,        // 每題秒數 ← D-7 實測後最可能改這個
-baseScore: 300,       // 答對底分
-speedScore: 700,      // 速度分上限
-prize: { small: 2500, mid: 4500, big: 6000 },
+quota: { mando: 5, classic: 1, tw: 1, kpop: 1, west: 1, jp: 1 },  // 合計 10 題
+timeLimit: 12,        // 每題秒數 ← 實測後最可能改這個
+baseScore: 240,       // 答對底分
+speedScore: 560,      // 速度分上限
+prizeScore: 5000,     // 兌獎門檻
 ```
 
-得分公式:`300 + 700 × (剩餘秒數 ÷ 12)`,秒答約 950,拖到最後約 360,答錯 0。
+**題數由 `quota` 加總得出**,不用另外設定。想加重某個曲風就改那個數字,別忘了把另一個減掉。
+
+得分公式:`240 + 560 × (剩餘秒數 ÷ 12)`,每題滿分 800,10 題滿分 **8000**。
+秒答約 760,拖到最後約 290,答錯 0。
+
+門檻 5000 分約需「十題全對且平均 6 秒內作答」或「八題全對且反應很快」,是偏嚴格的設定。
+覺得兌獎率太低就把 `prizeScore` 往下調,改一個數字即可,稱號不會受影響。
 
 ---
 
@@ -205,7 +212,6 @@ create table scores (
   nickname text not null,
   score int not null,
   correct int not null,
-  pack text,
   device_id text,
   created_at timestamptz default now()
 );
@@ -219,7 +225,7 @@ create policy "anyone can read"   on scores for select to anon using (true);
 2. 把 `Store.submit` 改成 `insert`、`Store.ranked` 改成 `select ... order by score desc limit 20`。
 3. 想要即時更新,再訂閱 Realtime channel。
 
-**待辦**:`board.html`(攤位螢幕用的全螢幕榜)、`staff.html`(核銷兌獎碼、刪除不當暱稱)。
+**待辦**:`board.html`(攤位螢幕用的全螢幕榜)、`staff.html`(刪除不當暱稱、清除異常分數)。
 這兩頁要等接上伺服器才有意義 —— 現在做只會顯示那台電腦自己的分數。
 
 ---
@@ -228,7 +234,7 @@ create policy "anyone can read"   on scores for select to anon using (true);
 
 ```
 index.html                遊戲本體(HTML + CSS + JS 全在裡面)
-songs.js                  題庫 100 首(手工維護)
+songs.js                  題庫 150 首(手工維護)
 decoys.js                 干擾選項庫(自動產生)
 previews.js               官方試聽網址(自動產生)
 assets/theme.png          社團主視覺,當背景用

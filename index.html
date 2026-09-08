@@ -345,7 +345,6 @@ input[type=text]::placeholder{color:rgba(162,154,198,.6)}
     <input type="text" id="nick" maxlength="8" placeholder="2–8 個字,請勿用真名" autocomplete="off" enterkeyhint="done">
   </div>
 
-  <div class="notice" id="libinfo">題庫載入中⋯</div>
 
   <div class="sound" id="sound">
     <div class="txt">
@@ -426,11 +425,11 @@ input[type=text]::placeholder{color:rgba(162,154,198,.6)}
 
 const CONFIG = {
   // 每局的曲風配額,總和就是題數。配額之內隨機抽,出題順序也隨機。
-  quota: { mando: 3, classic: 1, tw: 1, kpop: 1, west: 1, jp: 1 },
+  quota: { mando: 5, classic: 1, tw: 1, kpop: 1, west: 1, jp: 1 },   // 合計 10 題
   optionCount: 9,
   timeLimit: 12,          // 每題秒數
-  baseScore: 300,         // 答對底分
-  speedScore: 700,        // 速度分上限
+  baseScore: 240,         // 答對底分
+  speedScore: 560,        // 速度分上限(240+560=800,10 題滿分 8000)
   revealMs: 2200,         // 顯示答案的停頓
   clipSeconds: 15,        // 音檔片段長度
   prizeScore: 5000,       // 兌獎門檻(滿分 8000),沒到就是再接再厲
@@ -718,12 +717,7 @@ const G = {
 };
 
 /* ---------- 開始畫面 ---------- */
-function renderLibInfo(){
-  const songs = (window.SONGS || []).length;
-  const opts  = songs + (window.DECOYS || []).length;
-  $('libinfo').textContent =
-    `題庫 ${songs} 首 · 九宮格選項 ${opts} 個 · 每局 ${CONFIG.questionCount} 題`;
-}
+
 
 const BANNED = ['幹','靠北','白痴','智障','媽的','雞掰','三小','fuck','shit','bitch'];
 function nickError(v){
@@ -995,7 +989,6 @@ document.addEventListener('keydown', e => {
 });
 
 /* ---------- 啟動 ---------- */
-renderLibInfo();
 refreshStartBtn();
 </script>
 </body>
