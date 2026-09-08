@@ -1,0 +1,807 @@
+/* 自動產生,請勿手動編輯 —— 由 tools/fetch-previews.js 產出
+ * 產生時間:2026-09-08T16:21:59.549Z
+ * 這裡只存 Apple 官方 30 秒試聽的網址,音檔不落地,遊戲執行時直接串流。
+ * conf 是配對信心度,low 的請人工確認是不是配錯歌。
+ */
+window.SONG_PREVIEWS = {
+  "daoxiang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/af/d8/da/afd8daa7-b2aa-fb44-b4e0-258ad25187f5/mzaf_18323630198043973445.plus.aac.p.m4a",
+    "title": "稻香",
+    "artist": "周杰倫",
+    "album": "魔杰座",
+    "offset": 0,
+    "conf": "high"
+  },
+  "xiaoxingyun": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b7/37/86/b7378628-8529-9a31-c8e1-235e7ff25bd8/mzaf_6137552542381438513.plus.aac.p.m4a",
+    "title": "小幸運 (電影《我的少女時代》主題曲)",
+    "artist": "田馥甄",
+    "album": "小幸運 (電影《我的少女時代》主題曲) - Single",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "ditto": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/85/72/66/8572665a-d35f-ce5d-43c5-9ae4b69b4b46/mzaf_2317272666428796662.plus.aac.p.m4a",
+    "title": "Ditto",
+    "artist": "NewJeans",
+    "album": "Ditto - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "qingtian": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/20/d0/e7/20d0e7db-9c12-795a-d738-2fc3dde4ac9a/mzaf_10317517925583301645.plus.aac.p.m4a",
+    "title": "晴天",
+    "artist": "周杰倫",
+    "album": "葉惠美",
+    "offset": 0,
+    "conf": "high"
+  },
+  "gaobaiqiqiu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e5/24/59/e5245986-c2d0-a701-5bde-bbc9373da1dc/mzaf_13819014783674734406.plus.aac.p.m4a",
+    "title": "告白氣球",
+    "artist": "周杰倫",
+    "album": "周杰倫的床邊故事",
+    "offset": 0,
+    "conf": "high"
+  },
+  "wenrou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2a/9a/d9/2a9ad927-23fb-22cb-6b4c-3b3b71b1a88c/mzaf_13780998646913755556.plus.aac.p.m4a",
+    "title": "溫柔",
+    "artist": "五月天",
+    "album": "愛情萬歲",
+    "offset": 0,
+    "conf": "high"
+  },
+  "xiulianaiqing": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/2c/27/bd/2c27bdb9-cfed-0c51-33c7-c92b1bfd4f87/mzaf_14472512472316297311.plus.aac.p.m4a",
+    "title": "修煉愛情",
+    "artist": "林俊傑",
+    "album": "因你 而在",
+    "offset": 0,
+    "conf": "high"
+  },
+  "qifengle": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/59/76/ba/5976ba80-6049-6127-50d9-6781bddc2df8/mzaf_6260020937354522916.plus.aac.p.m4a",
+    "title": "起風了",
+    "artist": "買辣椒也用券",
+    "album": "起風了 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "haoburongyi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5e/f1/26/5ef12610-238f-2f41-f120-eb46926494d3/mzaf_195636756135182114.plus.aac.p.m4a",
+    "title": "好不容易 (《華燈初上》片尾曲)",
+    "artist": "告五人",
+    "album": "好不容易 (《華燈初上》片尾曲) - Single",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "guangnianzhiwai": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/dc/59/1c/dc591cca-09b0-9d38-9c9b-cbddf4f02a60/mzaf_11965447431641442372.plus.aac.p.m4a",
+    "title": "光年之外",
+    "artist": "鄧紫棋",
+    "album": "嗨,唱起來 第5期 - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yanyuan": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5c/1d/bc/5c1dbc23-bde6-7276-a97b-78f5c325fa59/mzaf_1879729394428684960.plus.aac.p.m4a",
+    "title": "演員",
+    "artist": "薛之謙",
+    "album": "初學者",
+    "offset": 0,
+    "conf": "high"
+  },
+  "shuosanjiusan": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ac/9b/c9/ac9bc90e-68a6-f81e-0562-e345e88ae68a/mzaf_15178938973992196104.plus.aac.p.m4a",
+    "title": "說散就散",
+    "artist": "JC 陳詠桐",
+    "album": "說散就散 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yihoubiezuo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/37/48/c5/3748c557-538b-ee4d-648d-55efaedb00a8/mzaf_9801725987694101437.plus.aac.p.m4a",
+    "title": "以後別做朋友",
+    "artist": "周興哲",
+    "album": "以後別做朋友 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "haonianqing": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/15/5b/b5/155bb550-1b04-91ee-caa9-c31989a5990c/mzaf_14154289537108168810.plus.aac.p.m4a",
+    "title": "我還年輕 我還年輕",
+    "artist": "老王樂隊",
+    "album": "吾十有五而志於學 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "shuixingji": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/2e/06/64/2e066487-0ecc-e28a-7443-ce7372a2d4ff/mzaf_183616778003776525.plus.aac.p.m4a",
+    "title": "水星記",
+    "artist": "郭頂",
+    "album": "飛行器的執行週期",
+    "offset": 0,
+    "conf": "high"
+  },
+  "xiaochou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/12/ba/9a/12ba9a1d-00e4-d295-baac-a0120563d32d/mzaf_14360511390289545312.plus.aac.p.m4a",
+    "title": "消愁",
+    "artist": "毛不易",
+    "album": "平凡的一天",
+    "offset": 0,
+    "conf": "high"
+  },
+  "xiangjianni": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview123/v4/86/5f/9f/865f9fec-9f87-028a-c584-f04b2bf65023/mzaf_10775201517756653377.plus.aac.p.m4a",
+    "title": "想見你想見你想見你",
+    "artist": "八三夭",
+    "album": "《想見你》電影原聲帶",
+    "offset": 0,
+    "conf": "high"
+  },
+  "howyoulikethat": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a7/b1/5d/a7b15d5c-e4a6-52e4-8700-15b13b1b9c5d/mzaf_2562596897017350825.plus.aac.p.m4a",
+    "title": "How You Like That",
+    "artist": "BLACKPINK",
+    "album": "How You Like That - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "dynamite": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/a3/a0/a6/a3a0a6b5-4715-b872-1aff-21e42634d9cd/mzaf_7224423421767640589.plus.aac.p.m4a",
+    "title": "Dynamite",
+    "artist": "防彈少年團",
+    "album": "BE",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "gangnamstyle": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7e/57/4f/7e574f27-ea0a-7512-e10a-603a2a0331fa/mzaf_8938211254903191199.plus.aac.p.m4a",
+    "title": "Gangnam Style",
+    "artist": "PSY",
+    "album": "Gangnam Style - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "tt": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/47/46/d2/4746d202-db33-8a12-7b0a-294b7ad8179a/mzaf_3164023858517556590.plus.aac.p.m4a",
+    "title": "TT",
+    "artist": "TWICE",
+    "album": "Twicecoaster: Lane 1",
+    "offset": 0,
+    "conf": "high"
+  },
+  "antifragile": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f2/d1/ca/f2d1ca54-daf6-5fcf-f00c-d5f0e6c61db4/mzaf_12674104195853522476.plus.aac.p.m4a",
+    "title": "ANTIFRAGILE",
+    "artist": "LE SSERAFIM",
+    "album": "UNFORGIVEN",
+    "offset": 0,
+    "conf": "high"
+  },
+  "tomboy": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/da/37/14/da3714a4-b9cd-78ea-590e-bae5af9f3856/mzaf_9300426931010299319.plus.aac.p.m4a",
+    "title": "TOMBOY",
+    "artist": "i-dle",
+    "album": "I NEVER DIE",
+    "offset": 0,
+    "conf": "high"
+  },
+  "turanhaoxiangni": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/80/aa/a2/80aaa2ca-171a-b74b-72de-81fcc8cdec0f/mzaf_2062386005950218021.plus.aac.p.m4a",
+    "title": "突然好想你",
+    "artist": "五月天",
+    "album": "後 青春期的詩",
+    "offset": 0,
+    "conf": "high"
+  },
+  "jiangnan": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/69/cd/d1/69cdd15b-a126-c8e6-907e-71818aa3602d/mzaf_7511039411341655106.plus.aac.p.m4a",
+    "title": "江南",
+    "artist": "林俊傑",
+    "album": "林俊傑2003年-2010年作品精選集",
+    "offset": 0,
+    "conf": "high"
+  },
+  "shuohuang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0b/96/62/0b9662e0-438d-974e-d3ea-48b4f91ada3b/mzaf_4684616202414338495.plus.aac.p.m4a",
+    "title": "說謊",
+    "artist": "林宥嘉",
+    "album": "感官/世界",
+    "offset": 0,
+    "conf": "high"
+  },
+  "shinian": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/2d/ac/f3/2dacf39e-5ea3-6bb0-b3d7-9ae7698a3766/mzaf_17074639237948685456.plus.aac.p.m4a",
+    "title": "十年",
+    "artist": "陳奕迅",
+    "album": "陳奕迅 國語精選",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yuzai": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/85/62/8b/85628b54-5205-2546-7c6a-04e057e91e0f/mzaf_1810756128646768767.plus.aac.p.m4a",
+    "title": "魚仔",
+    "artist": "盧廣仲",
+    "album": "魚仔 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "xiaoqingge": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/75/7e/cc/757ecc0d-d419-754e-be9a-5eb47e8f235f/mzaf_8531890385184388935.plus.aac.p.m4a",
+    "title": "小情歌",
+    "artist": "蘇打綠",
+    "album": "小宇宙",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yujian": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/97/69/28/9769288d-0e4a-317a-fe78-479e282ce16f/mzaf_7234144933995764949.plus.aac.p.m4a",
+    "title": "遇見",
+    "artist": "孫燕姿",
+    "album": "Your Song (2006 新歌+精選)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "ribuluo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/28/38/62/283862bd-bf93-1865-2aec-172c1ac0ac4b/mzaf_3144956199985617812.plus.aac.p.m4a",
+    "title": "日不落",
+    "artist": "JOLIN蔡依林",
+    "album": "特務J",
+    "offset": 0,
+    "conf": "high"
+  },
+  "dayu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/27/03/8c/27038c8a-1c58-b6a2-ddec-94c88a43aa44/mzaf_6044919222865325627.plus.aac.p.m4a",
+    "title": "大魚",
+    "artist": "周深",
+    "album": "深的深",
+    "offset": 0,
+    "conf": "high"
+  },
+  "wangfei": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/da/88/72/da8872c2-8e39-9045-aad3-a704a9ab3ad0/mzaf_11274682000537117162.plus.aac.p.m4a",
+    "title": "王妃",
+    "artist": "蕭敬騰",
+    "album": "王妃",
+    "offset": 0,
+    "conf": "high"
+  },
+  "shenqibaima": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/32/30/5e/32305e2c-660c-ab58-4123-e9b70b4c4961/mzaf_16181794234386862948.plus.aac.p.m4a",
+    "title": "身騎白馬",
+    "artist": "徐佳瑩",
+    "album": "徐佳瑩LaLa首張創作專輯",
+    "offset": 0,
+    "conf": "high"
+  },
+  "shishenmerang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c3/8c/33/c38c3328-b097-211f-760b-ff5f1c0d118c/mzaf_847390450748804826.plus.aac.p.m4a",
+    "title": "是什麼讓我遇見這樣的你",
+    "artist": "白安",
+    "album": "麥田捕手",
+    "offset": 0,
+    "conf": "high"
+  },
+  "aimei": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/20/28/5b/20285bff-7591-5dec-2c4e-421a5e83fe08/mzaf_13513407049461102425.plus.aac.p.m4a",
+    "title": "曖昧",
+    "artist": "楊丞琳",
+    "album": "曖昧",
+    "offset": 0,
+    "conf": "high"
+  },
+  "superstar": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/79/74/b2/7974b240-d160-d09c-34cb-8eaaac7ac489/mzaf_18341187977018790057.plus.aac.p.m4a",
+    "title": "Super Star",
+    "artist": "S.H.E",
+    "album": "Super Star",
+    "offset": 0,
+    "conf": "high"
+  },
+  "zuishouxi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8e/ff/d6/8effd6c6-88fa-ef35-8cd6-113b338bcb4d/mzaf_1980239992342563054.plus.aac.p.m4a",
+    "title": "最熟悉的陌生人",
+    "artist": "蕭亞軒",
+    "album": "蕭亞軒",
+    "offset": 0,
+    "conf": "high"
+  },
+  "nibuzhidao": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f7/1e/e0/f71ee069-2e18-8d31-8d44-5223cdd9287e/mzaf_7611968034053736579.plus.aac.p.m4a",
+    "title": "你不知道的事",
+    "artist": "王力宏",
+    "album": "十八般武藝",
+    "offset": 0,
+    "conf": "high"
+  },
+  "jiushiaini": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/41/60/3d/41603d9f-d3fa-20d2-fb83-3df506e6b637/mzaf_9771040343531931968.plus.aac.p.m4a",
+    "title": "就是愛妳",
+    "artist": "陶喆",
+    "album": "太平盛世",
+    "offset": 0,
+    "conf": "low"
+  },
+  "libai": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6a/ab/d7/6aabd742-f9c0-955a-a0de-e574091431fc/mzaf_13898884267723901214.plus.aac.p.m4a",
+    "title": "李白",
+    "artist": "李榮浩",
+    "album": "模特",
+    "offset": 0,
+    "conf": "high"
+  },
+  "dang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/73/65/1a/73651ac2-2971-66b1-3089-86a7a25add51/mzaf_18197701108546735176.plus.aac.p.m4a",
+    "title": "當",
+    "artist": "動力火車",
+    "album": "就是紅光輝全紀錄",
+    "offset": 0,
+    "conf": "high"
+  },
+  "shoufangkai": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/62/1c/ab/621cabbc-cf32-5f78-56af-445be4b6b305/mzaf_3923528862742566941.plus.aac.p.m4a",
+    "title": "手放開",
+    "artist": "李聖傑",
+    "album": "絕對痴心.手放開",
+    "offset": 0,
+    "conf": "high"
+  },
+  "kongbaige": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/25/21/fe/2521fe6d-d017-14c4-b9d3-49d0a598b57b/mzaf_11200164324777069480.plus.aac.p.m4a",
+    "title": "空白格",
+    "artist": "蔡健雅",
+    "album": "Goodbye & Hello",
+    "offset": 0,
+    "conf": "high"
+  },
+  "lvxingdeyiyi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/2a/1e/ec/2a1eec17-2425-7b81-c0fc-566773bc483c/mzaf_12466374753183438391.plus.aac.p.m4a",
+    "title": "旅行的意義",
+    "artist": "陳綺貞",
+    "album": "華麗的冒險",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yinxingdechibang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/69/72/d5/6972d5f5-0e1f-8815-203d-db19418cb646/mzaf_7240048494576774626.plus.aac.p.m4a",
+    "title": "隱形的翅膀",
+    "artist": "張韶涵",
+    "album": "潘朵拉",
+    "offset": 0,
+    "conf": "high"
+  },
+  "womendeai": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d6/d0/73/d6d073c6-d68f-c872-379e-3bb9c2db5373/mzaf_5738660493965290406.plus.aac.p.m4a",
+    "title": "我們的愛",
+    "artist": "飛兒樂團",
+    "album": "飛兒樂團",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "haoxiangni": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/b7/3e/3f/b73e3f9d-2a95-3031-6431-105ece6cb490/mzaf_15574195699412642126.plus.aac.p.m4a",
+    "title": "好想你",
+    "artist": "朱主愛",
+    "album": "四葉草 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "qishidoumeiyou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/40/6e/fb/406efbc8-767c-280c-9be8-326e24e261bf/mzaf_17790009441121230540.plus.aac.p.m4a",
+    "title": "其實都沒有",
+    "artist": "楊宗緯",
+    "album": "初 . 愛",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yigerenxiangzhe": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e0/23/c6/e023c6c7-44fd-445b-c02d-e6a257270c5a/mzaf_1383517023719448108.plus.aac.p.m4a",
+    "title": "一個人想著一個人",
+    "artist": "曾沛慈",
+    "album": "終極一班2 (電視原聲帶)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "naxienian": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f3/dc/78/f3dc783c-3b80-c775-7001-25635814d1c5/mzaf_8415818356248619179.plus.aac.p.m4a",
+    "title": "那些年",
+    "artist": "胡夏",
+    "album": "燃點",
+    "offset": 0,
+    "conf": "high"
+  },
+  "haishihui": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/67/c1/23/67c1234b-4480-e3e1-3957-a52aa15d7365/mzaf_3966395889790755021.plus.aac.p.m4a",
+    "title": "還是會",
+    "artist": "韋禮安",
+    "album": "我可能不會愛你OST (Series Music from the TV )",
+    "offset": 0,
+    "conf": "high"
+  },
+  "aini": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e8/9e/14/e89e14c2-e07f-a10f-ec09-aee9177bfff6/mzaf_11999460664371504808.plus.aac.p.m4a",
+    "title": "愛你",
+    "artist": "陳芳語",
+    "album": "戀愛筆記",
+    "offset": 0,
+    "conf": "high"
+  },
+  "zhuiguangzhe": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/da/b0/aa/dab0aa94-232a-f117-05f3-6caf47fb8bd8/mzaf_2727837089015674077.plus.aac.p.m4a",
+    "title": "追光者 (電視劇《夏至未至》插曲)",
+    "artist": "岑寧兒",
+    "album": "電視劇《夏至未至》原聲帶",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "zenyang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/3f/c9/bf/3fc9bf4f-1de6-6914-e29a-ba4da47fc846/mzaf_9698830775096016395.plus.aac.p.m4a",
+    "title": "怎樣",
+    "artist": "戴佩妮",
+    "album": "好佩妮",
+    "offset": 0,
+    "conf": "high"
+  },
+  "tianmimi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/e5/31/b5/e531b5f4-5bf6-3cb0-02ff-7b3b19077789/mzaf_2897837559077729218.plus.aac.p.m4a",
+    "title": "甜蜜蜜",
+    "artist": "鄧麗君",
+    "album": "歌林金唱片(8)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "zhishaohaiyouni": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d1/7a/3c/d17a3c98-ce56-0723-373d-6b22a38b1b00/mzaf_11862567678911520083.plus.aac.p.m4a",
+    "title": "至少還有你",
+    "artist": "林憶蓮",
+    "album": "林憶蓮's",
+    "offset": 0,
+    "conf": "high"
+  },
+  "wenbie": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/12/db/ce/12dbce07-47bc-dc49-05d7-eab7e057af57/mzaf_3837636671161943771.plus.aac.p.m4a",
+    "title": "吻別",
+    "artist": "張學友",
+    "album": "吻別",
+    "offset": 0,
+    "conf": "high"
+  },
+  "hongdou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/4d/cb/26/4dcb2622-1524-f937-05de-6baad0412d15/mzaf_8182413927380279026.plus.aac.p.m4a",
+    "title": "紅豆",
+    "artist": "王菲",
+    "album": "唱遊",
+    "offset": 0,
+    "conf": "high"
+  },
+  "tinghai": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/15/86/89/158689df-c0eb-24fd-5041-2e933fc8de7c/mzaf_9552080877385567935.plus.aac.p.m4a",
+    "title": "聽海",
+    "artist": "張惠妹",
+    "album": "BAD BOY",
+    "offset": 0,
+    "conf": "high"
+  },
+  "pengyou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ac/fb/45/acfb45f6-86f6-a61d-9585-f6223e2f5293/mzaf_14957491645624046760.plus.aac.p.m4a",
+    "title": "朋友",
+    "artist": "周華健",
+    "album": "朋友",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yongqi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/65/61/a0/6561a04d-0409-dd56-1372-a134dbb60e6f/mzaf_17722108781096334325.plus.aac.p.m4a",
+    "title": "勇氣",
+    "artist": "梁靜茹",
+    "album": "花樣年華 第一彈",
+    "offset": 0,
+    "conf": "high"
+  },
+  "xiaoxiaoniao": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d5/44/dc/d544dc7f-ba38-b921-8fc3-c0083aaf8481/mzaf_12003691356630948433.plus.aac.p.m4a",
+    "title": "我是一隻小小鳥",
+    "artist": "趙傳",
+    "album": "一顆滾石的25年",
+    "offset": 0,
+    "conf": "high"
+  },
+  "tonghua": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3a/a9/b2/3aa9b2c6-c215-da01-9e09-b716157a3fd7/mzaf_2891844185519836119.plus.aac.p.m4a",
+    "title": "童話",
+    "artist": "光良",
+    "album": "十光年精選輯",
+    "offset": 0,
+    "conf": "high"
+  },
+  "sileduyaoai": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/9a/12/f4/9a12f4df-93db-f1ad-76aa-f8429d51a86d/mzaf_7283158951335075515.plus.aac.p.m4a",
+    "title": "死了都要愛",
+    "artist": "信樂團",
+    "album": "信樂團",
+    "offset": 0,
+    "conf": "high"
+  },
+  "qingfeideyi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/0d/3b/94/0d3b94b4-e056-567a-94b7-06c57c94b447/mzaf_4413239663379634355.plus.aac.p.m4a",
+    "title": "情非得已",
+    "artist": "庾澄慶",
+    "album": "海嘯",
+    "offset": 0,
+    "conf": "high"
+  },
+  "wangqingshui": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f7/29/31/f72931cb-aaa8-8805-e962-8e8c994c579c/mzaf_14174887784583782246.plus.aac.p.m4a",
+    "title": "忘情水",
+    "artist": "劉德華",
+    "album": "忘情水",
+    "offset": 0,
+    "conf": "high"
+  },
+  "langzihuitou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/19/31/2e/19312e5e-3fcb-c59c-fe35-6fe431bfad67/mzaf_14325981858551569708.plus.aac.p.m4a",
+    "title": "浪子回頭",
+    "artist": "茄子蛋",
+    "album": "卡通人物",
+    "offset": 0,
+    "conf": "high"
+  },
+  "daoyutianguang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/35/39/ec/3539ec94-dec1-3067-d014-6fbe6e0132ba/mzaf_15259289685927828921.plus.aac.p.m4a",
+    "title": "島嶼天光",
+    "artist": "滅火器",
+    "album": "島嶼天光 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "jiahou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/74/9c/fd/749cfdc0-dd73-c60e-be77-71bafd4b7216/mzaf_17760326263246915358.plus.aac.p.m4a",
+    "title": "家後",
+    "artist": "江蕙",
+    "album": "江蕙",
+    "offset": 0,
+    "conf": "high"
+  },
+  "sorrysorry": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/41/83/14/418314c8-75b8-a609-0206-57e55a77a7e3/mzaf_870384710444515739.plus.aac.p.m4a",
+    "title": "Sorry, Sorry",
+    "artist": "SUPER JUNIOR",
+    "album": "Sorry, Sorry",
+    "offset": 0,
+    "conf": "high"
+  },
+  "bluevalentine": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1f/59/35/1f59352b-302e-2631-6959-5a9b44251e4e/mzaf_17173132131021232743.plus.aac.p.m4a",
+    "title": "Blue Valentine",
+    "artist": "NMIXX",
+    "album": "Blue Valentine",
+    "offset": 0,
+    "conf": "high"
+  },
+  "supernova": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/cb/a5/34/cba5340f-feac-7e85-0d62-c687a5da7524/mzaf_5508662312740645025.plus.aac.p.m4a",
+    "title": "Supernova",
+    "artist": "aespa",
+    "album": "Supernova - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "growl": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5c/4a/33/5c4a33ea-7ac7-e4f7-3416-7f7f64f2f26f/mzaf_13482719509545056838.plus.aac.p.m4a",
+    "title": "Growl",
+    "artist": "EXO",
+    "album": "The 1st Album 'XOXO' (Repackage)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "psycho": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d1/c7/cd/d1c7cd49-83a7-9cda-e5a2-2b2e5f997885/mzaf_18086462166647796817.plus.aac.p.m4a",
+    "title": "Psycho",
+    "artist": "Red Velvet",
+    "album": "‘The ReVe Festival’ Finale - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "verynice": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1a/2c/30/1a2c3020-08a8-6d57-add0-9e5ae7a78380/mzaf_2884994483924990947.plus.aac.p.m4a",
+    "title": "VERY NICE",
+    "artist": "SEVENTEEN",
+    "album": "17 IS RIGHT HERE",
+    "offset": 0,
+    "conf": "high"
+  },
+  "gee": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/04/e6/bb/04e6bbf7-fb5f-dfde-efea-c1ae60e206f6/mzaf_5800170755931136448.plus.aac.p.m4a",
+    "title": "Gee",
+    "artist": "少女時代",
+    "album": "Gee - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "shapeofyou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/44/c7/4f/44c74f0d-72dc-6143-d4d0-ba14d661ca0d/mzaf_9566898362556366703.plus.aac.p.m4a",
+    "title": "Shape of You",
+    "artist": "Ed Sheeran",
+    "album": "÷ (Deluxe)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "blindinglights": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1d/44/0d/1d440dbc-9832-08e6-080d-aa1e1bacf40c/mzaf_3600642016947675074.plus.aac.p.m4a",
+    "title": "Blinding Lights",
+    "artist": "Abel Tesfaye",
+    "album": "After Hours (Deluxe)",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "someonelikeyou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/cc/7c/82/cc7c82b6-0f0c-a362-952f-6389dbc603ba/mzaf_15156534524546439842.plus.aac.p.m4a",
+    "title": "Someone Like You",
+    "artist": "Adele",
+    "album": "21",
+    "offset": 0,
+    "conf": "high"
+  },
+  "badguy": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c3/87/1f/c3871f7e-3260-d615-1c66-5fdca2c3a48f/mzaf_10721331211699880949.plus.aac.p.m4a",
+    "title": "bad guy",
+    "artist": "Billie Eilish",
+    "album": "WHEN WE ALL FALL ASLEEP, WHERE DO WE GO?",
+    "offset": 0,
+    "conf": "high"
+  },
+  "shakeitoff": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/82/9a/55/829a551a-461c-f1d8-818d-ddedb090791d/mzaf_3170634596127872695.plus.aac.p.m4a",
+    "title": "Shake It Off",
+    "artist": "Taylor Swift",
+    "album": "1989",
+    "offset": 0,
+    "conf": "high"
+  },
+  "uptownfunk": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/38/55/fe/3855feef-5884-9f0c-a1a5-5c1a9ff4e269/mzaf_16034847874510944537.plus.aac.p.m4a",
+    "title": "Uptown Funk (feat. Bruno Mars)",
+    "artist": "Mark Ronson",
+    "album": "Uptown Special",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "countingstars": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8a/e6/26/8ae626cc-ede8-47d2-d86b-ce7fd562e4d1/mzaf_15251194521255976653.plus.aac.p.m4a",
+    "title": "Counting Stars",
+    "artist": "OneRepublic",
+    "album": "Native",
+    "offset": 0,
+    "conf": "high"
+  },
+  "letitgo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/43/5f/36/435f3609-ddd5-bc10-3dbb-ddf5872b93ce/mzaf_9461789858996596537.plus.aac.p.m4a",
+    "title": "Let It Go",
+    "artist": "Idina Menzel",
+    "album": "Frozen (Original Motion Picture Soundtrack)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "despacito": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0d/cb/ec/0dcbec41-5e9e-bd09-7cdd-fdff44acdf78/mzaf_17345185466754008149.plus.aac.p.m4a",
+    "title": "Despacito",
+    "artist": "Luis Fonsi & Daddy Yankee",
+    "album": "VIDA",
+    "offset": 0,
+    "conf": "high"
+  },
+  "happy": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ed/a0/19/eda019cf-2794-66d1-208d-2e2e74c26c3d/mzaf_16469762943852039623.plus.aac.p.m4a",
+    "title": "Happy (From \"Despicable Me 2\")",
+    "artist": "Pharrell Williams",
+    "album": "G I R L",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "flowers": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/68/9e/f7/689ef7fe-14fe-a846-c87f-7d3b2d6344b1/mzaf_4167137058064023087.plus.aac.p.m4a",
+    "title": "Flowers",
+    "artist": "Miley Cyrus",
+    "album": "Endless Summer Vacation",
+    "offset": 0,
+    "conf": "high"
+  },
+  "attention": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0b/76/e1/0b76e164-35b8-7fbb-a773-9832f3155532/mzaf_12020704327610118862.plus.aac.p.m4a",
+    "title": "Attention",
+    "artist": "Charlie Puth",
+    "album": "Voicenotes",
+    "offset": 0,
+    "conf": "high"
+  },
+  "believer": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c0/3f/36/c03f367a-b66b-fd0a-a54c-30f8250c4410/mzaf_12768434238801682952.plus.aac.p.m4a",
+    "title": "Believer",
+    "artist": "Imagine Dragons",
+    "album": "Evolve",
+    "offset": 0,
+    "conf": "high"
+  },
+  "vivalavida": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8c/bb/68/8cbb6818-175a-d46c-93de-7145fc66d332/mzaf_5442307369244073775.plus.aac.p.m4a",
+    "title": "Viva la Vida",
+    "artist": "Coldplay",
+    "album": "Viva la Vida (Prospekt's March Edition)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "lemon": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/27/17/9b/27179b15-2153-25e8-d035-35fdb4d059d8/mzaf_757024838235216109.plus.aac.p.m4a",
+    "title": "Lemon",
+    "artist": "米津玄師",
+    "album": "Lemon - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "idol": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/09/89/ff/0989ff36-24f8-20e1-e814-e023f784e623/mzaf_7376653984110547507.plus.aac.p.m4a",
+    "title": "アイドル",
+    "artist": "YOASOBI",
+    "album": "THE BOOK 3",
+    "offset": 0,
+    "conf": "high"
+  },
+  "gurenge": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview124/v4/f1/a9/41/f1a941d9-c259-3218-2dff-b30e62684ffb/mzaf_13364525358954217763.plus.aac.p.m4a",
+    "title": "紅蓮華",
+    "artist": "LiSA",
+    "album": "紅蓮華 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "pretender": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/95/8d/6b/958d6b1a-b4f1-0c72-039b-ddb2fbf6489b/mzaf_170812766685279849.plus.aac.p.m4a",
+    "title": "Pretender",
+    "artist": "Official鬍子男dism",
+    "album": "Pretender - Single",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "zenzenzense": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/9e/80/43/9e80437b-7cd6-f491-18c5-613b83eb4230/mzaf_10227088064717027964.plus.aac.p.m4a",
+    "title": "前前前世 (original ver.)",
+    "artist": "RADWIMPS",
+    "album": "人間開花",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "chiqingnanzihan": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/12/08/f0/1208f0c4-8e45-1ab7-4d86-355bd94c1d10/mzaf_3044817623220884644.plus.aac.p.m4a",
+    "title": "癡情男子漢 (feat. 胡睿兒)",
+    "artist": "玖壹壹",
+    "album": "打鐵",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "nishiwodehuaduo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f9/2e/94/f92e946a-d4cf-ec2e-6c21-d737479690ba/mzaf_2403531258538423184.plus.aac.p.m4a",
+    "title": "妳是我的花朵",
+    "artist": "伍佰 & China Blue",
+    "album": "純真年代",
+    "offset": 0,
+    "conf": "high"
+  },
+  "amadehua": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/c6/84/17/c6841708-2514-406b-2e25-e113575b8a77/mzaf_145502338461997220.plus.aac.p.m4a",
+    "title": "阿嬤的話",
+    "artist": "蕭煌奇",
+    "album": "黑色吉他",
+    "offset": 0,
+    "conf": "high"
+  },
+  "zankyosanka": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/49/4e/57/494e57e7-2338-1952-aee1-2b255677c76e/mzaf_1061314507630007223.plus.aac.p.m4a",
+    "title": "残響散歌",
+    "artist": "Aimer",
+    "album": "Open α Door",
+    "offset": 0,
+    "conf": "high"
+  }
+};

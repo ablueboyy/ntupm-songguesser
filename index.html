@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#14122A">
+<title>金曲猜歌王 · NTUPM 18th</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<style>
+:root{
+  color-scheme: dark;
+
+  --deep:#0C0B1C;
+  --night:#14122A;
+  --night-2:#1C1838;
+  --sea:#1E2E52;
+  --lav:#B6A9EC;
+  --lav-2:#CFC6F5;
+  --lav-dim:#7C72AE;
+  --glow:#E4E86F;
+  --mint:#6FD8C0;
+  --coral:#F0849B;
+  --sand:#DCC9A6;
+  --ink:#F2F0FB;
+  --muted:#A29AC6;
+
+  --card:rgba(20,18,42,.72);
+  --card-2:rgba(28,24,56,.82);
+  --edge:rgba(182,169,236,.26);
+  --edge-2:rgba(182,169,236,.5);
+
+  --display:"Fredoka","Noto Sans TC",system-ui,sans-serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--deep);
+  min-height:100vh;
+  min-height:100dvh;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;z-index:-2;
+  background-image:url("assets/theme.png");
+  background-size:cover;
+  background-position:center 38%;
+  filter:brightness(1.45) saturate(1.15);
+}
+body::after{
+  content:"";
+  position:fixed;inset:0;z-index:-1;
+  background:linear-gradient(180deg,
+    rgba(12,11,28,.74) 0%,
+    rgba(12,11,28,.34) 34%,
+    rgba(12,11,28,.52) 66%,
+    rgba(12,11,28,.88) 100%);
+  transition:background .4s ease;
+}
+body.dim::after{
+  background:linear-gradient(180deg, rgba(12,11,28,.9) 0%, rgba(12,11,28,.93) 100%);
+}
+
+/* ---------- 通用 ---------- */
+.screen{
+  min-height:100vh;min-height:100dvh;
+  display:flex;flex-direction:column;
+  padding:max(1.1rem,env(safe-area-inset-top)) 1.1rem max(1.1rem,env(safe-area-inset-bottom));
+  max-width:34rem;margin:0 auto;width:100%;
+}
+[hidden]{display:none !important}
+
+.eyebrow{
+  font-family:var(--display);font-weight:500;
+  font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--lav);opacity:.9;
+}
+.slogan{
+  font-size:.8rem;color:var(--muted);line-height:1.9;letter-spacing:.06em;
+}
+
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,input:focus-visible,a:focus-visible{
+  outline:2px solid var(--lav-2);outline-offset:3px;border-radius:10px;
+}
+
+.btn{
+  display:block;width:100%;
+  padding:.95rem 1rem;border-radius:14px;
+  background:linear-gradient(180deg,#C7BBF3,#A192DF);
+  color:#1A1633;font-weight:900;letter-spacing:.08em;font-size:1.02rem;
+  box-shadow:0 6px 20px rgba(126,110,196,.35);
+  transition:transform .12s ease, filter .12s ease;
+}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{
+  background:rgba(124,114,174,.28);color:rgba(242,240,251,.4);
+  box-shadow:none;cursor:not-allowed;
+}
+.btn.ghost{
+  background:transparent;border:1px solid var(--edge-2);
+  color:var(--lav-2);font-weight:700;box-shadow:none;
+}
+
+/* 內容區的柔和暗角:壓住背景主視覺的圖案,但邊緣保持透亮 */
+#screen-start,#screen-result,#screen-board{
+  position:relative;
+}
+#screen-start::before,#screen-result::before,#screen-board::before{
+  content:"";position:absolute;inset:0 -30%;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 62% 58% at 50% 50%,
+    rgba(10,9,24,.88) 0%, rgba(10,9,24,.74) 45%, rgba(10,9,24,.32) 76%, rgba(10,9,24,0) 100%);
+}
+#screen-start > *,#screen-result > *,#screen-board > *{position:relative}
+
+/* ---------- 開始畫面 ---------- */
+#screen-start{gap:1.15rem;justify-content:center}
+.brand{text-align:center;display:flex;flex-direction:column;gap:.5rem;margin-bottom:.25rem}
+.brand h1{
+  font-family:var(--sans);font-weight:900;
+  font-size:clamp(2.3rem,12vw,3.1rem);
+  margin:0;letter-spacing:.14em;line-height:1.1;
+  color:var(--lav-2);
+  text-shadow:0 0 24px rgba(182,169,236,.45), 0 3px 0 rgba(12,11,28,.5);
+}
+.brand h1 span{color:var(--glow);text-shadow:0 0 26px rgba(228,232,111,.5)}
+
+.field{display:flex;flex-direction:column;gap:.45rem}
+.label{
+  font-size:.74rem;letter-spacing:.18em;color:var(--lav);
+  font-weight:700;display:flex;justify-content:space-between;align-items:baseline;
+}
+.label em{font-style:normal;color:var(--muted);font-weight:400;letter-spacing:.02em;font-size:.72rem}
+input[type=text]{
+  width:100%;padding:.85rem 1rem;border-radius:13px;
+  background:var(--card);border:1px solid var(--edge);
+  color:var(--ink);font-size:1.05rem;font-family:var(--sans);
+}
+input[type=text]::placeholder{color:rgba(162,154,198,.6)}
+
+.sound{
+  display:flex;gap:.6rem;align-items:center;
+  padding:.7rem .8rem;border-radius:13px;
+  background:var(--card);border:1px solid var(--edge);
+}
+.sound .txt{flex:1;min-width:0;font-size:.8rem;line-height:1.6;color:var(--muted)}
+.sound .txt b{display:block;color:var(--ink);font-size:.88rem;font-weight:700;margin-bottom:.1rem}
+.sound button{
+  flex:none;padding:.5rem .85rem;border-radius:10px;
+  border:1px solid var(--edge-2);color:var(--lav-2);font-size:.82rem;font-weight:700;
+  background:rgba(182,169,236,.1);
+}
+.sound.ok{border-color:rgba(111,216,192,.45);background:rgba(111,216,192,.1)}
+.sound.ok .txt b{color:var(--mint)}
+
+.startfoot{
+  display:flex;justify-content:space-between;align-items:center;gap:1rem;
+  font-size:.76rem;color:var(--muted);padding-top:.35rem;
+}
+.startfoot a{color:var(--lav);text-decoration:none;border-bottom:1px solid rgba(182,169,236,.35);padding-bottom:1px}
+
+/* ---------- 載入 ---------- */
+#screen-load{align-items:center;justify-content:center;text-align:center;gap:1rem}
+.spin{
+  width:46px;height:46px;border-radius:50%;
+  border:3px solid rgba(182,169,236,.2);border-top-color:var(--lav-2);
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ---------- 遊戲畫面 ---------- */
+#screen-play{height:100vh;height:100dvh;min-height:0;gap:.7rem}
+.hud{flex:none;display:flex;flex-direction:column;gap:.5rem}
+.hud-top{
+  display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--display);letter-spacing:.14em;
+}
+.hud-top .q{font-size:.82rem;color:var(--lav);font-weight:500}
+.hud-top .clock{
+  font-size:2rem;font-weight:600;color:var(--lav-2);
+  font-variant-numeric:tabular-nums;letter-spacing:0;line-height:1;
+}
+.hud-top .clock.hurry{color:var(--coral)}
+.bar{height:5px;border-radius:3px;background:rgba(182,169,236,.16);overflow:hidden}
+.bar i{
+  display:block;height:100%;width:100%;
+  background:linear-gradient(90deg,var(--lav-2),var(--glow));
+  transform-origin:left center;
+}
+.bar i.hurry{background:linear-gradient(90deg,var(--coral),#F5B27E)}
+
+.grid{
+  flex:1;min-height:0;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(3,1fr);
+  gap:.5rem;
+}
+.opt{
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:.35rem .3rem;border-radius:14px;
+  background:var(--card-2);border:1px solid var(--edge);
+  font-weight:700;font-size:1rem;line-height:1.3;
+  word-break:break-word;overflow:hidden;
+  transition:background .15s ease, border-color .15s ease, opacity .15s ease, transform .1s ease;
+}
+.opt.sm{font-size:.86rem}
+.opt.xs{font-size:.74rem;line-height:1.25}
+.opt.xxs{font-size:.64rem;line-height:1.22;letter-spacing:-.01em}
+.opt:active{transform:scale(.97)}
+.opt.right{
+  border-color:var(--mint);background:rgba(111,216,192,.22);color:#DFFFF6;
+  box-shadow:0 0 22px rgba(111,216,192,.3);
+}
+.opt.wrong{
+  border-color:var(--coral);background:rgba(240,132,155,.2);color:#FFE4EA;
+}
+.opt.fade{opacity:.3}
+
+.hud-bot{
+  flex:none;display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--display);letter-spacing:.12em;font-size:.78rem;color:var(--muted);
+}
+.hud-bot b{
+  font-size:1.35rem;font-weight:600;color:var(--glow);
+  font-variant-numeric:tabular-nums;letter-spacing:0;
+}
+
+/* 貼齊底部,壓在分數列上而不是蓋住九宮格的選項 */
+.toast{
+  position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + .5rem);
+  max-width:calc(100vw - 2rem);transform:translateX(-50%);
+  padding:.6rem 1.1rem;border-radius:999px;
+  background:rgba(20,18,42,.94);border:1px solid var(--edge-2);
+  font-size:.9rem;font-weight:700;white-space:nowrap;
+  box-shadow:0 10px 30px rgba(0,0,0,.5);
+  animation:pop .25s ease;
+}
+.toast.good{border-color:var(--mint);color:var(--mint)}
+.toast.bad{border-color:var(--coral);color:var(--coral)}
+@keyframes pop{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* ---------- 結算 ---------- */
+#screen-result{gap:.85rem;justify-content:center}
+.scorecard{
+  text-align:center;padding:1.4rem 1.1rem;border-radius:20px;
+  background:var(--card);border:1px solid var(--edge);
+}
+.scorecard .title{font-size:1.15rem;font-weight:900;color:var(--lav-2);letter-spacing:.1em}
+.scorecard .big{
+  font-family:var(--display);font-weight:600;font-size:4rem;line-height:1.05;
+  color:var(--glow);font-variant-numeric:tabular-nums;margin:.2rem 0 .1rem;
+  text-shadow:0 0 30px rgba(228,232,111,.35);
+}
+.scorecard .meta{font-size:.82rem;color:var(--muted);letter-spacing:.06em}
+
+.codebox{
+  padding:.95rem 1rem;border-radius:16px;text-align:center;
+  background:rgba(228,232,111,.1);border:1px solid rgba(228,232,111,.45);
+}
+.codebox .lab{font-size:.72rem;letter-spacing:.2em;color:var(--glow);font-weight:700}
+.codebox .msg{
+  font-family:var(--sans);font-weight:900;font-size:1.2rem;letter-spacing:.06em;
+  color:var(--glow);margin:.25rem 0 .3rem;
+}
+.codebox .ttl{font-size:.74rem;color:var(--muted);font-variant-numeric:tabular-nums}
+
+.misses{
+  padding:.85rem 1rem;border-radius:16px;
+  background:var(--card);border:1px solid var(--edge);
+  font-size:.84rem;
+}
+.misses h4{margin:0 0 .5rem;font-size:.72rem;letter-spacing:.18em;color:var(--lav);font-weight:700}
+.misses ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:.3rem}
+.misses li{display:flex;justify-content:space-between;gap:.8rem;color:var(--muted)}
+.misses li b{color:var(--ink);font-weight:500}
+.misses .none{color:var(--mint);font-weight:700}
+
+.row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+
+/* ---------- 排行榜 ---------- */
+#screen-board{gap:.85rem}
+.board-head{text-align:center;display:flex;flex-direction:column;gap:.3rem;padding:.5rem 0}
+.board-head h2{margin:0;font-size:1.5rem;font-weight:900;letter-spacing:.16em;color:var(--lav-2)}
+.board-list{
+  flex:1;min-height:0;overflow-y:auto;
+  display:flex;flex-direction:column;gap:.35rem;
+}
+.rowitem{
+  display:grid;grid-template-columns:2.4rem 1fr auto;gap:.7rem;align-items:center;
+  padding:.6rem .85rem;border-radius:12px;
+  background:var(--card);border:1px solid transparent;
+}
+.rowitem .rk{
+  font-family:var(--display);font-weight:600;font-size:1rem;
+  color:var(--lav-dim);font-variant-numeric:tabular-nums;text-align:center;
+}
+.rowitem .nm{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rowitem .sc{
+  font-family:var(--display);font-weight:600;font-size:1.05rem;
+  color:var(--glow);font-variant-numeric:tabular-nums;
+}
+.rowitem.top1 .rk,.rowitem.top2 .rk,.rowitem.top3 .rk{color:var(--glow)}
+.rowitem.me{border-color:var(--lav);background:rgba(182,169,236,.16)}
+.empty{text-align:center;color:var(--muted);font-size:.85rem;padding:2.5rem 1rem;line-height:1.9}
+.empty b{display:block;color:var(--lav-2);font-size:1.15rem;font-weight:900;letter-spacing:.1em;margin-bottom:.9rem}
+
+.notice{
+  font-size:.72rem;color:var(--muted);text-align:center;line-height:1.7;
+  padding:.6rem .8rem;border-radius:11px;
+  background:rgba(20,18,42,.55);border:1px dashed var(--edge);
+}
+
+@media (max-height:640px){
+  .brand h1{font-size:2rem}
+  .scorecard .big{font-size:3.2rem}
+  #screen-start{gap:.85rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ 開始 ═══════════ -->
+<div class="screen" id="screen-start">
+  <div class="brand">
+    <div class="eyebrow">NTUPM 18th</div>
+    <h1>金曲<span>猜歌王</span></h1>
+    <div class="slogan">我們不一定最會唱歌<br>但我們一定最愛唱歌</div>
+  </div>
+
+  <div class="field">
+    <label class="label" for="nick">取個暱稱 <em>會顯示在公開排行榜</em></label>
+    <input type="text" id="nick" maxlength="8" placeholder="2–8 個字,請勿用真名" autocomplete="off" enterkeyhint="done">
+  </div>
+
+  <div class="notice" id="libinfo">題庫載入中⋯</div>
+
+  <div class="sound" id="sound">
+    <div class="txt">
+      <b>先測一下聲音</b>
+      請戴耳機,並確認手機沒有靜音
+    </div>
+    <button type="button" id="btn-test">試聽</button>
+  </div>
+
+  <button class="btn" id="btn-start" disabled>開始遊戲</button>
+
+  <div class="startfoot">
+    <a href="https://www.instagram.com/ntupm__18th" target="_blank" rel="noopener">@ntupm__18th</a>
+    <button type="button" id="btn-board-1" style="color:var(--lav);font-size:.76rem">看排行榜 →</button>
+  </div>
+</div>
+
+<!-- ═══════════ 載入 ═══════════ -->
+<div class="screen" id="screen-load" hidden>
+  <div class="spin"></div>
+  <div class="slogan" id="load-txt">正在準備八首歌⋯</div>
+</div>
+
+<!-- ═══════════ 遊戲 ═══════════ -->
+<div class="screen" id="screen-play" hidden>
+  <div class="hud">
+    <div class="hud-top">
+      <span class="q" id="qnum">第 1 / 8 題</span>
+      <span class="clock" id="clock">12.0</span>
+    </div>
+    <div class="bar"><i id="barfill"></i></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="hud-bot">
+    <span id="playmeta">華語金曲</span>
+    <span>目前總分 <b id="running">0</b></span>
+  </div>
+</div>
+
+<!-- ═══════════ 結算 ═══════════ -->
+<div class="screen" id="screen-result" hidden>
+  <div class="scorecard">
+    <div class="title" id="res-title">金曲猜歌王</div>
+    <div class="big" id="res-score">0</div>
+    <div class="meta" id="res-meta">答對 0 / 8 題 · 目前第 0 名</div>
+  </div>
+  <div id="res-code"></div>
+  <div class="misses" id="res-misses"></div>
+  <div class="row">
+    <button class="btn ghost" id="btn-board-2">排行榜</button>
+    <button class="btn" id="btn-again">再玩一次</button>
+  </div>
+  <div class="startfoot">
+    <a href="https://www.instagram.com/ntupm__18th" target="_blank" rel="noopener">追蹤 @ntupm__18th</a>
+    <span id="res-hint"></span>
+  </div>
+</div>
+
+<!-- ═══════════ 排行榜 ═══════════ -->
+<div class="screen" id="screen-board" hidden>
+  <div class="board-head">
+    <div class="eyebrow">Leaderboard</div>
+    <h2>排行榜</h2>
+  </div>
+  <div class="board-list" id="board-list"></div>
+  <button class="btn ghost" id="btn-back">返回</button>
+</div>
+
+<script src="songs.js"></script>
+<script src="decoys.js"></script>
+<script src="previews.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════
+   金曲猜歌王 — 原型版
+   排行榜目前寫在 localStorage,正式版請把 Store 換成 Supabase。
+   ═══════════════════════════════════════════════════════ */
+
+const CONFIG = {
+  // 每局的曲風配額,總和就是題數。配額之內隨機抽,出題順序也隨機。
+  quota: { mando: 3, classic: 1, tw: 1, kpop: 1, west: 1, jp: 1 },
+  optionCount: 9,
+  timeLimit: 12,          // 每題秒數
+  baseScore: 300,         // 答對底分
+  speedScore: 700,        // 速度分上限
+  revealMs: 2200,         // 顯示答案的停頓
+  clipSeconds: 15,        // 音檔片段長度
+  prizeScore: 5000,       // 兌獎門檻(滿分 8000),沒到就是再接再厲
+  maxSameArtist: 2        // 同一歌手在九格中最多出現幾次
+};
+CONFIG.questionCount = Object.values(CONFIG.quota).reduce((a, b) => a + b, 0);
+
+const $ = id => document.getElementById(id);
+const SCREENS = ['screen-start','screen-load','screen-play','screen-result','screen-board'];
+function show(id){
+  SCREENS.forEach(s => $(s).hidden = (s !== id));
+  document.body.classList.toggle('dim', id === 'screen-play');
+  window.scrollTo(0,0);
+}
+
+/* ---------- 小工具 ---------- */
+const shuffle = arr => {
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+};
+const hashCode = str => { let h=0; for(const ch of str) h=(h*31+ch.charCodeAt(0))|0; return h; };
+const seeded = seed => { let s=seed>>>0; return () => { s=(s*1664525+1013904223)>>>0; return s/4294967296; }; };
+const midiToFreq = m => 440 * Math.pow(2,(m-69)/12);
+
+/* ---------- 音訊 ---------- */
+let audioCtx = null;
+function ensureCtx(){
+  if(!audioCtx){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(!AC) return null;
+    audioCtx = new AC();
+  }
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+// 試著載入一個音訊來源,載不動就回 null。
+//
+// 判定用 canplay / loadeddata,不用 canplaythrough ——
+// canplaythrough 要整段緩衝到「保證不會斷」才觸發,八首歌同時下載
+// (每首約 1MB)在校園網路下常常超過逾時,結果整局退回示範音。
+// 只要 metadata 到手就代表這個來源有效,剩下的邊播邊緩衝。
+function probeAudio(src, timeoutMs){
+  return new Promise(resolve => {
+    const a = new Audio(src);
+    a.preload = 'metadata';   // 只探測,不整首抓下來;選定之後才改成 auto 預先緩衝
+    let settled = false;
+    const ok = () => { if(!settled){ settled = true; resolve(a); } };
+    const no = () => { if(!settled){ settled = true; resolve(null); } };
+    a.addEventListener('canplay', ok, {once:true});
+    a.addEventListener('loadeddata', ok, {once:true});
+    a.addEventListener('loadedmetadata', ok, {once:true});
+    a.addEventListener('error', no, {once:true});
+    setTimeout(no, timeoutMs);
+    a.load();
+  });
+}
+
+// 音源優先順序:本地音檔 → Apple 官方試聽(串流,不落地)→ 合成示範音
+//
+// 兩個來源同時探測,不要「先等本地逾時再試串流」——
+// 頁面剛載入時,本地請求會排在主視覺圖後面(開發用的 http.server 是單執行緒),
+// 序列化會把整條鏈拖到逾時,結果整局默默退回示範音。
+async function probeClip(song){
+  const p = (window.SONG_PREVIEWS || {})[song.id];
+  const [local, remote] = await Promise.all([
+    probeAudio(`audio/${song.id}.m4a`, 4000),
+    (p && p.url) ? probeAudio(p.url, 6000) : Promise.resolve(null)
+  ]);
+
+  const pick = local  ? { el: local,  source: 'local',   offset: 0 }
+             : remote ? { el: remote, source: 'preview', offset: (p && p.offset) || 0 }
+             : null;
+
+  // 選定之後才開始預先緩衝,播放時才不會卡頓
+  if(pick){ pick.el.preload = 'auto'; try{ pick.el.load(); }catch(e){} }
+  return pick;
+}
+
+function note(ctx, dest, freq, at, dur, type, peak){
+  const osc = ctx.createOscillator();
+  const g = ctx.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, at);
+  g.gain.exponentialRampToValueAtTime(peak, at + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+  osc.connect(g); g.connect(dest);
+  osc.start(at); osc.stop(at + dur + 0.05);
+  return osc;
+}
+
+// 依歌曲 id 產生固定的示範旋律(同一首歌每次都一樣)
+function synthClip(song, seconds){
+  const ctx = ensureCtx();
+  if(!ctx) return { stop(){} };
+  const rnd = seeded(hashCode(song.id));
+  const master = ctx.createGain();
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass'; filter.frequency.value = 2400;
+  master.connect(filter); filter.connect(ctx.destination);
+  master.gain.setValueAtTime(0.9, ctx.currentTime);
+
+  const scale = [0,2,4,7,9,12,14,16,19];
+  const root = 45 + Math.floor(rnd()*8);
+  const beat = 60 / (80 + Math.floor(rnd()*45));
+  const t0 = ctx.currentTime + 0.06;
+  const oscs = [];
+  let t = t0, i = 0;
+  while(t < t0 + seconds){
+    oscs.push(note(ctx, master, midiToFreq(root+12+scale[Math.floor(rnd()*scale.length)]), t, beat*0.85, 'triangle', 0.16));
+    if(i % 2 === 0) oscs.push(note(ctx, master, midiToFreq(root), t, beat*1.5, 'sine', 0.22));
+    t += beat*0.5; i++;
+  }
+  return {
+    stop(){
+      const now = ctx.currentTime;
+      try{
+        master.gain.cancelScheduledValues(now);
+        master.gain.setValueAtTime(master.gain.value, now);
+        master.gain.linearRampToValueAtTime(0.0001, now + 0.08);
+      }catch(e){}
+      oscs.forEach(o => { try{ o.stop(now + 0.1); }catch(e){} });
+    }
+  };
+}
+
+function playClip(q){
+  if(q.audio && q.audio.el){
+    try{
+      q.audio.el.currentTime = q.audio.offset || 0;
+      const p = q.audio.el.play();
+      if(p && p.catch) p.catch(()=>{});
+      return { stop(){ try{ q.audio.el.pause(); }catch(e){} } };
+    }catch(e){ /* 落回合成音 */ }
+  }
+  return synthClip(q.song, CONFIG.clipSeconds);
+}
+
+/* ---------- 排行榜儲存(正式版換成 Supabase)---------- */
+const Store = {
+  KEY: 'pmsg_scores_v1',
+  DEV: 'pmsg_device_v1',
+  deviceId(){
+    let d = null;
+    try{ d = localStorage.getItem(this.DEV); }catch(e){}
+    if(!d){
+      d = 'd_' + Math.random().toString(36).slice(2,10);
+      try{ localStorage.setItem(this.DEV, d); }catch(e){}
+    }
+    return d;
+  },
+  all(){
+    try{ return JSON.parse(localStorage.getItem(this.KEY)) || []; }
+    catch(e){ return []; }
+  },
+  // 同一暱稱只留最高分
+  submit(entry){
+    const list = this.all();
+    const i = list.findIndex(r => r.nickname === entry.nickname);
+    if(i >= 0){ if(entry.score > list[i].score) list[i] = entry; }
+    else list.push(entry);
+    try{ localStorage.setItem(this.KEY, JSON.stringify(list)); }catch(e){}
+    return this.ranked();
+  },
+  ranked(){
+    return this.all().sort((a,b) => b.score - a.score || a.at - b.at);
+  }
+};
+
+/* ---------- 出題 ---------- */
+
+// 顯示用的歌名:去掉「(電影《⋯》主題曲)」這類副標。
+// 答案的歌名是手寫的、本來就乾淨,干擾項來自 Apple 商店常帶副標 ——
+// 兩邊不統一的話,玩家會發現「沒有括號的那格就是答案」。
+function cleanTitle(t){
+  const s = String(t || '')
+    .replace(/\s*[（(【\[].*$/, '')   // 「(電影《⋯》主題曲)」「(movie ver.)」
+    .replace(/\s+[-–—]\s+.*$/, '')    // 「 - A Rock Can Be A Star」「 - Single Version」
+    .trim();                          // 破折號前後都要有空白,才不會誤砍 DDU-DU DDU-DU
+  return s || String(t || '');
+}
+
+// 依歌名長度決定字級,九格必須一屏看完、不能捲動
+function sizeClass(label){
+  const cjk = /[㐀-鿿぀-ヿ]/.test(label);
+  const n = label.length;
+  if(cjk ? n >= 11 : n >= 20) return ' xxs';
+  if(cjk ? n >= 9  : n >= 14) return ' xs';
+  if(cjk ? n >= 6  : n >= 9)  return ' sm';
+  return '';
+}
+
+// 選項池 = 100 首題目 + 純干擾歌名
+function optionPool(){
+  return (window.SONGS || []).concat(window.DECOYS || []);
+}
+
+function buildQuestions(){
+  const songs = window.SONGS || [];
+
+  // 依配額抽題:每個曲風抽固定首數,配額之內隨機
+  const picked = [];
+  for(const [genre, n] of Object.entries(CONFIG.quota)){
+    picked.push(...shuffle(songs.filter(s => s.genre === genre)).slice(0, n));
+  }
+  // 某個曲風的歌不夠時,從剩下的歌補滿題數
+  if(picked.length < CONFIG.questionCount){
+    const rest = shuffle(songs.filter(s => !picked.includes(s)));
+    picked.push(...rest.slice(0, CONFIG.questionCount - picked.length));
+  }
+  const answers = shuffle(picked);   // 出題順序也打亂,不然每局都是同樣的曲風順序
+
+  const pool = optionPool();
+  let lastIndex = -1;
+
+  return answers.map(answer => {
+    const options = [answer];
+    const usedTitle = new Set([cleanTitle(answer.title)]);
+    const byArtist = { [answer.artist]: 1 };
+
+    // 干擾項先挑同 genre 的 —— 華語歌就配華語選項。
+    // 混進一堆英文歌名的話,玩家用刪去法就猜到了,九選一的難度會垮。
+    const passes = [
+      { list: pool.filter(o => o.genre === answer.genre), max: CONFIG.maxSameArtist },
+      { list: pool, max: CONFIG.maxSameArtist },
+      { list: pool, max: Infinity }
+    ];
+    for(const pass of passes){
+      if(options.length >= CONFIG.optionCount) break;
+      for(const o of shuffle(pass.list)){
+        if(options.length >= CONFIG.optionCount) break;
+        const key = cleanTitle(o.title);
+        if(usedTitle.has(key)) continue;
+        if((byArtist[o.artist] || 0) >= pass.max) continue;
+        usedTitle.add(key);
+        byArtist[o.artist] = (byArtist[o.artist] || 0) + 1;
+        options.push(o);
+      }
+    }
+
+    const grid = shuffle(options);
+    // 正確答案不連續兩題落在同一格
+    let idx = grid.indexOf(answer);
+    if(idx === lastIndex && grid.length > 1){
+      const swap = (idx + 1 + Math.floor(Math.random()*(grid.length-1))) % grid.length;
+      [grid[idx], grid[swap]] = [grid[swap], grid[idx]];
+      idx = swap;
+    }
+    lastIndex = idx;
+    return { song: answer, options: grid, audio: null };
+  });
+}
+
+/* ---------- 遊戲狀態 ---------- */
+const G = {
+  nickname: '',
+  questions: [], index: 0, total: 0, log: [],
+  soundOk: false, timer: null, clip: null, deadline: 0, locked: false
+};
+
+/* ---------- 開始畫面 ---------- */
+function renderLibInfo(){
+  const songs = (window.SONGS || []).length;
+  const opts  = songs + (window.DECOYS || []).length;
+  $('libinfo').textContent =
+    `題庫 ${songs} 首 · 九宮格選項 ${opts} 個 · 每局 ${CONFIG.questionCount} 題`;
+}
+
+const BANNED = ['幹','靠北','白痴','智障','媽的','雞掰','三小','fuck','shit','bitch'];
+function nickError(v){
+  const n = v.trim();
+  if(n.length < 2) return '暱稱至少 2 個字';
+  if(n.length > 8) return '暱稱最多 8 個字';
+  const low = n.toLowerCase();
+  if(BANNED.some(w => low.includes(w))) return '這個暱稱會出現在公開螢幕上,換一個吧';
+  return null;
+}
+
+function refreshStartBtn(){
+  const ok = !nickError($('nick').value) && G.soundOk;
+  $('btn-start').disabled = !ok;
+  $('btn-start').textContent = G.soundOk ? '開始遊戲' : '請先測試聲音';
+}
+
+$('nick').addEventListener('input', refreshStartBtn);
+
+$('btn-test').addEventListener('click', () => {
+  const ctx = ensureCtx();
+  if(!ctx){
+    alert('這支瀏覽器不支援音訊播放,請換一個瀏覽器開啟。');
+    return;
+  }
+  // 一段短暫的上行琶音,同時解開手機的音訊播放限制
+  const t = ctx.currentTime + 0.05;
+  [0,4,7,12].forEach((semi,i) =>
+    note(ctx, ctx.destination, midiToFreq(69+semi), t + i*0.13, 0.3, 'triangle', 0.2));
+  G.soundOk = true;
+  $('sound').classList.add('ok');
+  $('sound').querySelector('b').textContent = '聲音沒問題!';
+  $('btn-test').textContent = '再聽一次';
+  refreshStartBtn();
+});
+
+$('btn-start').addEventListener('click', startGame);
+$('btn-again').addEventListener('click', () => show('screen-start'));
+$('btn-board-1').addEventListener('click', () => renderBoard());
+$('btn-board-2').addEventListener('click', () => renderBoard());
+$('btn-back').addEventListener('click', () => show('screen-start'));
+
+/* ---------- 開局 ---------- */
+async function startGame(){
+  const err = nickError($('nick').value);
+  if(err){ alert(err); return; }
+
+  G.nickname = $('nick').value.trim();
+  G.questions = buildQuestions();
+  G.index = 0; G.total = 0; G.log = [];
+
+  show('screen-load');
+  $('load-txt').textContent = `正在準備 ${CONFIG.questionCount} 首歌⋯`;
+
+  // 開場一次把八題的音源備好,中途才不會卡住
+  const clips = await Promise.all(G.questions.map(q => probeClip(q.song)));
+  clips.forEach((c, i) => { G.questions[i].audio = c; });
+
+  const missing = clips.filter(c => !c).length;
+  $('playmeta').textContent = missing ? `${missing} 題為示範音` : '';
+
+  show('screen-play');
+  nextQuestion();
+}
+
+function nextQuestion(){
+  const q = G.questions[G.index];
+  G.locked = false;
+
+  $('qnum').textContent = `第 ${G.index+1} / ${CONFIG.questionCount} 題`;
+  $('running').textContent = G.total.toLocaleString();
+
+  const grid = $('grid');
+  grid.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const label = cleanTitle(opt.title);
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'opt' + sizeClass(label);
+    b.textContent = label;
+    b.addEventListener('click', () => answer(opt, i));
+    grid.appendChild(b);
+  });
+
+  if(G.clip) G.clip.stop();
+  G.clip = playClip(q);
+
+  G.deadline = performance.now() + CONFIG.timeLimit * 1000;
+  tick();
+}
+
+function tick(){
+  const left = Math.max(0, (G.deadline - performance.now()) / 1000);
+  const ratio = left / CONFIG.timeLimit;
+  $('clock').textContent = left.toFixed(1);
+  $('clock').classList.toggle('hurry', left <= 4);
+  $('barfill').style.transform = `scaleX(${ratio})`;
+  $('barfill').classList.toggle('hurry', left <= 4);
+
+  if(left <= 0){ answer(null, -1); return; }
+  G.timer = requestAnimationFrame(tick);
+}
+
+function answer(opt, index){
+  if(G.locked) return;
+  G.locked = true;
+  cancelAnimationFrame(G.timer);
+  if(G.clip) G.clip.stop();
+
+  const q = G.questions[G.index];
+  const left = Math.max(0, (G.deadline - performance.now()) / 1000);
+  const correct = opt === q.song;
+  const gained = correct
+    ? Math.round(CONFIG.baseScore + CONFIG.speedScore * (left / CONFIG.timeLimit))
+    : 0;
+
+  G.total += gained;
+  G.log.push({ song: q.song, correct, gained, seconds: +(CONFIG.timeLimit - left).toFixed(1) });
+
+  // 標出正解,淡掉其他選項
+  const rightIndex = q.options.indexOf(q.song);
+  [...$('grid').children].forEach((el, i) => {
+    if(i === rightIndex) el.classList.add('right');
+    else if(i === index) el.classList.add('wrong');
+    else el.classList.add('fade');
+  });
+  $('running').textContent = G.total.toLocaleString();
+
+  const t = document.createElement('div');
+  t.className = 'toast ' + (correct ? 'good' : 'bad');
+  t.textContent = correct
+    ? `+${gained}　${q.song.title}`
+    : (opt ? `答錯了　${q.song.title} — ${q.song.artist}` : `時間到　${q.song.title} — ${q.song.artist}`);
+  document.body.appendChild(t);
+
+  setTimeout(() => {
+    t.remove();
+    G.index++;
+    if(G.index >= CONFIG.questionCount) finish();
+    else nextQuestion();
+  }, CONFIG.revealMs);
+}
+
+/* ---------- 結算 ---------- */
+// 稱號只是給玩家截圖用的,跟兌獎門檻分開,改門檻不會影響這裡
+function titleFor(score){
+  if(score >= 6500) return '流唱社之光';
+  if(score >= 5000) return '金曲猜歌王';
+  if(score >= 3000) return 'KTV 常客';
+  if(score >= 1200) return '副歌才想起來';
+  return '音癡新星';
+}
+
+let freshTimer = null;
+function finish(){
+  const entry = {
+    nickname: G.nickname,
+    score: G.total,
+    correct: G.log.filter(r => r.correct).length,
+    device: Store.deviceId(),
+    at: Date.now()
+  };
+  const board = Store.submit(entry);
+  // 排行榜還沒接伺服器,所以只講這支手機自己的最佳成績,不講名次
+  const best = board.find(r => r.nickname === entry.nickname);
+
+  $('res-title').textContent = titleFor(G.total);
+  $('res-score').textContent = G.total.toLocaleString();
+  $('res-meta').textContent = `答對 ${entry.correct} / ${CONFIG.questionCount} 題`
+    + (best && best.score > entry.score
+        ? ` · 這支手機的最佳成績 ${best.score.toLocaleString()} 分` : '');
+
+  // 兌獎:不發代碼,達標就直接把螢幕拿給關主看
+  const box = $('res-code');
+  clearInterval(freshTimer);
+  if(G.total >= CONFIG.prizeScore){
+    box.innerHTML = `<div class="codebox">
+        <div class="lab">達標了,可以兌獎</div>
+        <div class="msg">把這個畫面拿給關主看</div>
+        <div class="ttl" id="fresh">剛剛完成</div>
+      </div>`;
+    // 秒數一直跳,關主一眼就能分辨現場成績和翻出來的舊截圖
+    const at = Date.now();
+    freshTimer = setInterval(() => {
+      const el = $('fresh');
+      if(!el){ clearInterval(freshTimer); return; }
+      const s = Math.round((Date.now() - at) / 1000);
+      el.textContent = s < 60 ? `${s} 秒前完成` : `${Math.floor(s / 60)} 分鐘前完成`;
+    }, 1000);
+    $('res-hint').textContent = '';
+  }else{
+    box.innerHTML = `<div class="notice">再接再厲!再 ${(CONFIG.prizeScore - G.total).toLocaleString()} 分就能兌獎 —— 要不要再玩一次?</div>`;
+    $('res-hint').textContent = `兌獎門檻 ${CONFIG.prizeScore.toLocaleString()} 分`;
+  }
+
+  // 答錯的歌
+  const missed = G.log.filter(r => !r.correct);
+  $('res-misses').innerHTML = missed.length
+    ? `<h4>這幾首沒答出來</h4><ul>${missed.map(r =>
+        `<li><b>${r.song.title}</b><span>${r.song.artist}</span></li>`).join('')}</ul>`
+    : `<h4>全對</h4><div class="none">八題全中,去攤位跟社員說一聲吧</div>`;
+
+  show('screen-result');
+}
+
+/* ---------- 排行榜 ---------- */
+function renderBoard(){
+  // 排行榜要等接上伺服器才有意義 —— 現在做只會顯示這支手機自己的分數
+  $('board-list').innerHTML = `<div class="empty">
+      <b>還在製作中</b>
+      正式版會接上伺服器,全場共用同一張即時榜,<br>
+      攤位上也會有一面螢幕跑排名。<br><br>
+      現在先專心玩,分數暫時只留在這支手機裡。
+    </div>`;
+  show('screen-board');
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ---------- 電腦測試用:按 1–9 作答 ---------- */
+document.addEventListener('keydown', e => {
+  if($('screen-play').hidden || G.locked) return;
+  const n = parseInt(e.key, 10);
+  if(n >= 1 && n <= 9){
+    const el = $('grid').children[n-1];
+    if(el) el.click();
+  }
+});
+
+/* ---------- 啟動 ---------- */
+renderLibInfo();
+refreshStartBtn();
+</script>
+</body>
+</html>
