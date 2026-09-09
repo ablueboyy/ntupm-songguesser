@@ -1666,11 +1666,6 @@ window.DECOYS = [
   "genre": "tw"
  },
  {
-  "title": "浪流連",
-  "artist": "茄子蛋",
-  "genre": "tw"
- },
- {
   "title": "恰似你的溫柔",
   "artist": "茄子蛋",
   "genre": "tw"

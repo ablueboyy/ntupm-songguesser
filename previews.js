@@ -1,5 +1,5 @@
 /* 自動產生,請勿手動編輯 —— 由 tools/fetch-previews.js 產出
- * 產生時間:2026-09-09T15:24:41.153Z
+ * 產生時間:2026-09-09T15:37:39.902Z
  * 這裡只存 Apple 官方 30 秒試聽的網址,音檔不落地,遊戲執行時直接串流。
  * conf 是配對信心度,low 的請人工確認是不是配錯歌。
  */
@@ -804,14 +804,6 @@ window.SONG_PREVIEWS = {
     "offset": 0,
     "conf": "high"
   },
-  "qilixiang": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/99/4e/e2/994ee285-7c0d-73ab-85b7-8d3899a17242/mzaf_12441330510018253101.plus.aac.p.m4a",
-    "title": "七里香",
-    "artist": "周杰倫",
-    "album": "七里香",
-    "offset": 0,
-    "conf": "high"
-  },
   "qinghuaci": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3a/15/ff/3a15ff0b-ee24-a863-db04-8a489be66397/mzaf_1259240667288251806.plus.aac.p.m4a",
     "title": "青花瓷",
@@ -892,14 +884,6 @@ window.SONG_PREVIEWS = {
     "offset": 0,
     "conf": "high"
   },
-  "kgezhiwang": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b0/cd/af/b0cdafc1-438e-6615-6151-8ded7b2a0677/mzaf_3140694325255467275.plus.aac.p.m4a",
-    "title": "K歌之王",
-    "artist": "陳奕迅",
-    "album": "陳奕迅 國語精選",
-    "offset": 0,
-    "conf": "high"
-  },
   "aiqingzhuanyi": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/89/ed/41/89ed4149-9064-949b-f826-24943a728084/mzaf_2597976030459913793.plus.aac.p.m4a",
     "title": "愛情轉移",
@@ -940,14 +924,6 @@ window.SONG_PREVIEWS = {
     "offset": 0,
     "conf": "medium"
   },
-  "jifenzhiji": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/90/ff/4c/90ff4ce2-fec8-f28b-cffc-64a9b483b24f/mzaf_17367706297350017430.plus.aac.p.m4a",
-    "title": "幾分之幾 (電影《花甲大人轉男孩》主題曲)",
-    "artist": "盧廣仲",
-    "album": "幾分之幾 - Single",
-    "offset": 0,
-    "conf": "medium"
-  },
   "wohaoxiangni": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5c/8a/58/5c8a5859-7881-8c7e-112a-c02b14137a90/mzaf_5916367910955417777.plus.aac.p.m4a",
     "title": "我好想你",
@@ -955,14 +931,6 @@ window.SONG_PREVIEWS = {
     "album": "秋:故事",
     "offset": 0,
     "conf": "high"
-  },
-  "nibeixiezai": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1d/9a/bd/1d9abd98-34f3-8579-45c7-cbade3c190ea/mzaf_3671575465054615536.plus.aac.p.m4a",
-    "title": "你被寫在我的歌裡(蘇打綠版) (feat. 陳嘉樺)",
-    "artist": "蘇打綠",
-    "album": "你在煩惱什麼(蘇打綠版)",
-    "offset": 0,
-    "conf": "medium"
   },
   "tianheihei": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/ea/88/68/ea8868db-ce33-f2ca-40e6-9cbeb625219e/mzaf_18160633054138606566.plus.aac.p.m4a",
@@ -1196,22 +1164,6 @@ window.SONG_PREVIEWS = {
     "offset": 0,
     "conf": "high"
   },
-  "yequ": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/49/d9/63/49d96370-e197-5629-b8bb-bdd954c1b576/mzaf_217123187122990137.plus.aac.p.m4a",
-    "title": "夜曲",
-    "artist": "周杰倫",
-    "album": "11月的蕭邦",
-    "offset": 0,
-    "conf": "high"
-  },
-  "jiandanai": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/99/c2/35/99c23519-691d-28bd-3263-54ee44ea4b1a/mzaf_16660115524814344678.plus.aac.p.m4a",
-    "title": "簡單愛",
-    "artist": "周杰倫",
-    "album": "范特西",
-    "offset": 0,
-    "conf": "high"
-  },
   "yiluxiangbei": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f6/23/91/f6239173-79c5-663b-0894-b143753d1722/mzaf_10517715920157224642.plus.aac.p.m4a",
     "title": "一路向北 (Bonus Track)",
@@ -1244,22 +1196,6 @@ window.SONG_PREVIEWS = {
     "offset": 0,
     "conf": "high"
   },
-  "keximeiruguo": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e1/3c/cb/e13ccb07-e70d-3ca3-bdf1-04845064c053/mzaf_7303736522312605913.plus.aac.p.m4a",
-    "title": "可惜沒如果",
-    "artist": "林俊傑",
-    "album": "新地球",
-    "offset": 0,
-    "conf": "high"
-  },
-  "caocao": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2c/57/eb/2c57eb2f-06a5-bd8d-fe2b-0d381e791554/mzaf_2577685219624582476.plus.aac.p.m4a",
-    "title": "曹操",
-    "artist": "林俊傑",
-    "album": "曹操",
-    "offset": 0,
-    "conf": "high"
-  },
   "jimojiuhao": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/3f/5c/bf/3f5cbf80-cf7d-47bd-ca4f-f733dbe7eb6e/mzaf_11186607586721731408.plus.aac.p.m4a",
     "title": "寂寞寂寞就好",
@@ -1268,51 +1204,11 @@ window.SONG_PREVIEWS = {
     "offset": 0,
     "conf": "high"
   },
-  "xinsuan": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/13/3a/20/133a2085-2953-43b1-5b66-6d2dea1ada12/mzaf_9111429707601971723.plus.aac.p.m4a",
-    "title": "心酸",
-    "artist": "林宥嘉",
-    "album": "感官/世界",
-    "offset": 0,
-    "conf": "high"
-  },
-  "haojiubujian": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/37/c8/bd/37c8bd2a-2199-b337-60e4-3536d0923bc4/mzaf_1012009428533951700.plus.aac.p.m4a",
-    "title": "好久不見",
-    "artist": "陳奕迅",
-    "album": "認了吧 (台灣版)",
-    "offset": 0,
-    "conf": "high"
-  },
-  "daoshu": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/d2/70/22/d2702208-bfde-fb3e-d7cd-6b962ef40d36/mzaf_366523854842282670.plus.aac.p.m4a",
-    "title": "倒數",
-    "artist": "鄧紫棋",
-    "album": "另一個童話 - Single",
-    "offset": 0,
-    "conf": "high"
-  },
-  "zaizhechengshi": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/01/69/70/0169709b-b7c4-2b3b-c497-26ed0527e520/mzaf_12422750865636199283.plus.aac.p.m4a",
-    "title": "在這座城市遺失了你 (戲劇《他們創業的那些鳥事》插曲)",
-    "artist": "告五人",
-    "album": "運氣來得若有似無",
-    "offset": 0,
-    "conf": "medium"
-  },
   "wuyulunbi": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1a/01/7c/1a017cda-7e4f-a6fe-3467-4c1ac4b34b43/mzaf_1028489884164559954.plus.aac.p.m4a",
     "title": "無與倫比的美麗",
     "artist": "蘇打綠",
     "album": "無與倫比的美麗",
-    "offset": 0,
-    "conf": "high"
-  },
-  "lvguang": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/99/93/1c/99931cb7-6314-dd1c-1a9d-a698758ac369/mzaf_4719229539469603560.plus.aac.p.m4a",
-    "title": "綠光",
-    "artist": "孫燕姿",
-    "album": "風箏",
     "offset": 0,
     "conf": "high"
   },
@@ -1401,14 +1297,6 @@ window.SONG_PREVIEWS = {
     "title": "痴心絕對",
     "artist": "李聖傑",
     "album": "痴心絕對",
-    "offset": 0,
-    "conf": "high"
-  },
-  "darenzhong": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/bb/45/9d/bb459d75-eed7-bc9b-dc1e-182b6b216ef6/mzaf_13567932421358203717.plus.aac.p.m4a",
-    "title": "大人中",
-    "artist": "盧廣仲",
-    "album": "大人中 - Single",
     "offset": 0,
     "conf": "high"
   },
@@ -1628,14 +1516,6 @@ window.SONG_PREVIEWS = {
     "offset": 0,
     "conf": "high"
   },
-  "cheerup": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3d/50/30/3d5030a5-41ef-aaeb-0bf4-0c7bad2a75ba/mzaf_2690744486775202166.plus.aac.p.m4a",
-    "title": "Cheer Up",
-    "artist": "TWICE",
-    "album": "Page Two - EP",
-    "offset": 0,
-    "conf": "high"
-  },
   "queencard": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/45/40/a5/4540a5a8-906d-718e-6681-86c8b4c0c019/mzaf_1989940222119268016.plus.aac.p.m4a",
     "title": "Queencard",
@@ -1785,6 +1665,134 @@ window.SONG_PREVIEWS = {
     "title": "Strategy",
     "artist": "TWICE",
     "album": "KPop Demon Hunters (Soundtrack from the Netflix Film)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "dafengchui": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f6/53/85/f653858a-bdde-530e-45a0-65b3a06c624c/mzaf_3129731264778222002.plus.aac.p.m4a",
+    "title": "大風吹",
+    "artist": "草東沒有派對",
+    "album": "醜奴兒",
+    "offset": 0,
+    "conf": "high"
+  },
+  "anjiu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1c/2c/91/1c2c9125-a58d-90e8-70f4-6a15060dc2b2/mzaf_2452416082826863263.plus.aac.p.m4a",
+    "title": "安九",
+    "artist": "老王樂隊",
+    "album": "吾日三省吾身",
+    "offset": 0,
+    "conf": "high"
+  },
+  "wendingshenghuo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/81/62/a1/8162a10d-3863-09f7-1587-25f135b9965a/mzaf_15067270764730325866.plus.aac.p.m4a",
+    "title": "穩定生活多美好 三年五年高普考",
+    "artist": "老王樂隊",
+    "album": "吾十有五而志於學 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "myjinji": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/af/61/31/af61312d-e5d8-9885-11e5-f9fabab6a894/mzaf_5761505061943548664.plus.aac.p.m4a",
+    "title": "My Jinji",
+    "artist": "落日飛車",
+    "album": "JINJI KIKKO - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "meihaodeshi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0e/c1/30/0ec13022-5e32-d22d-dc56-fe35964d7005/mzaf_15617025347488990150.plus.aac.p.m4a",
+    "title": "美好的事可不可以發生在我身上",
+    "artist": "康士坦的變化球",
+    "album": "美好的事可不可以發生在我身上 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yushi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/41/6d/bd/416dbd2f-ee3f-5cff-e767-98d8c23cfee1/mzaf_2617081487658724876.plus.aac.p.m4a",
+    "title": "浴室",
+    "artist": "deca joins",
+    "album": "浴室",
+    "offset": 0,
+    "conf": "high"
+  },
+  "meiyongnianqing": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/3a/d3/c8/3ad3c805-70fa-0e5f-8517-80f8aee235bd/mzaf_95551155058283823.plus.aac.p.m4a",
+    "title": "他們說我是沒有用的年輕人",
+    "artist": "好樂團",
+    "album": "在遊蕩的路上學會寬容",
+    "offset": 0,
+    "conf": "high"
+  },
+  "likaiyilushang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/6d/79/1f/6d791f93-49b0-2304-1820-55368ae88bac/mzaf_3124004340481654859.plus.aac.p.m4a",
+    "title": "離開的一路上",
+    "artist": "理想混蛋",
+    "album": "半熟理想",
+    "offset": 0,
+    "conf": "high"
+  },
+  "tianqiqinglang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/65/67/3c/65673cd4-870e-47c3-4fde-876f5e2614b2/mzaf_2061870496733172225.plus.aac.p.m4a",
+    "title": "不是因為天氣晴朗才愛你",
+    "artist": "理想混蛋",
+    "album": "不是因為天氣晴朗才愛你 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "meiyourenxiang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f9/67/4c/f9674cdb-680e-7639-20ea-098a9efb4c21/mzaf_12992705835811042817.plus.aac.p.m4a",
+    "title": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲)",
+    "artist": "宇宙人",
+    "album": "沒有人像我一樣 (影集《欠妳的那場婚禮》主題曲) - Single",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "shiaidongwu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/47/2e/d1/472ed182-a013-bfa1-0611-72e32458a035/mzaf_9844944299503737761.plus.aac.p.m4a",
+    "title": "嗜愛動物",
+    "artist": "麋先生",
+    "album": "嗜愛動物",
+    "offset": 0,
+    "conf": "high"
+  },
+  "nizhongjiu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c3/8d/c5/c38dc5f9-597c-9581-7ade-6203c9a673f4/mzaf_6383447833253092137.plus.aac.p.m4a",
+    "title": "你終究不愛這世界",
+    "artist": "傻子與白痴",
+    "album": "夜長夢少",
+    "offset": 0,
+    "conf": "high"
+  },
+  "taibeiliulang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d9/ce/5a/d9ce5ae9-93a0-53ad-58d5-68865f3398d4/mzaf_15334882785007016963.plus.aac.p.m4a",
+    "title": "台北流浪指南",
+    "artist": "傷心欲絕",
+    "album": "遜到簡直是個藝術品",
+    "offset": 0,
+    "conf": "high"
+  },
+  "lydia": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview122/v4/68/48/d3/6848d34c-acf7-7ce2-b178-90420a59b075/mzaf_5359114771321590775.plus.aac.p.m4a",
+    "title": "Lydia",
+    "artist": "飛兒樂團",
+    "album": "鬥魚 (電視原聲帶)",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "langliulian": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/18/e1/55/18e15515-366c-fd51-7100-96ea08b501f0/mzaf_13829130285860608129.plus.aac.p.m4a",
+    "title": "浪流連",
+    "artist": "茄子蛋",
+    "album": "浪流連 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "wanqianhuarui": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b3/df/e7/b3dfe71f-58ff-b04c-cb29-24677ee05cff/mzaf_679443719987566524.plus.aac.p.m4a",
+    "title": "萬千花蕊慈母悲哀",
+    "artist": "珂拉琪 Collage",
+    "album": "MEmento·MORI",
     "offset": 0,
     "conf": "high"
   }
