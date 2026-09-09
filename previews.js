@@ -1164,14 +1164,6 @@ window.SONG_PREVIEWS = {
     "offset": 0,
     "conf": "high"
   },
-  "rencuo": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/6b/07/4f/6b074fe5-a6e7-4bd4-b051-83aa3eecf0d3/mzaf_12080975956906491044.plus.aac.p.m4a",
-    "title": "認錯",
-    "artist": "優客李林",
-    "album": "認錯",
-    "offset": 0,
-    "conf": "high"
-  },
   "yazi": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/91/31/b6/9131b67f-fbd0-434a-82aa-80723757a902/mzaf_8363800565225377303.plus.aac.p.m4a",
     "title": "鴨子",
@@ -1500,14 +1492,6 @@ window.SONG_PREVIEWS = {
     "offset": 0,
     "conf": "high"
   },
-  "ningxia": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/2d/4c/e8/2d4ce836-696f-7b9e-de7d-132c68421e0a/mzaf_12750866858583997904.plus.aac.p.m4a",
-    "title": "寧夏",
-    "artist": "梁靜茹",
-    "album": "滾石三十青春音樂記事簿: 畢業旅行",
-    "offset": 0,
-    "conf": "high"
-  },
   "huanghun": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/76/56/83/765683a1-d8e9-3d3b-acff-a104475b6de7/mzaf_15603137596913480651.plus.aac.p.m4a",
     "title": "黃昏",
@@ -1569,14 +1553,6 @@ window.SONG_PREVIEWS = {
     "title": "挪威的森林",
     "artist": "伍佰",
     "album": "愛你伍佰年: 2",
-    "offset": 0,
-    "conf": "high"
-  },
-  "youyongdeyu": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b4/2b/54/b42b5463-3af3-003c-53b7-fccbb908dcb0/mzaf_4419109344387272084.plus.aac.p.m4a",
-    "title": "一天到晚游泳的魚",
-    "artist": "張雨生",
-    "album": "一天到晚游泳的魚",
     "offset": 0,
     "conf": "high"
   },
