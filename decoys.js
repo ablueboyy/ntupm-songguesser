@@ -111,11 +111,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "無人知曉",
-  "artist": "田馥甄",
-  "genre": "mando"
- },
- {
   "title": "魔鬼中的天使 (Angel devil)",
   "artist": "田馥甄",
   "genre": "mando"
@@ -853,11 +848,6 @@ window.DECOYS = [
  {
   "title": "芬蘭距離",
   "artist": "蔡健雅",
-  "genre": "mando"
- },
- {
-  "title": "太聰明",
-  "artist": "陳綺貞",
   "genre": "mando"
  },
  {

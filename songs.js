@@ -167,6 +167,8 @@ window.SONGS = [
   { id: "diqiubaozha",        title: "在地球爆炸之前",                artist: "理想混蛋",       genre: "mando" },
   { id: "nideweixiao",        title: "你的微笑",                      artist: "F.I.R.",         genre: "mando" },
   { id: "chongai",            title: "寵愛",                          artist: "TFBOYS",         genre: "mando" },
+  { id: "taicongming",        title: "太聰明",                        artist: "陳綺貞",         genre: "mando" },
+  { id: "wurenzhixiao",       title: "無人知曉",                      artist: "田馥甄",         genre: "mando" },
   /* ---------- 華語經典 ---------- */
   { id: "tianmimi",        title: "甜蜜蜜",         artist: "鄧麗君", genre: "classic" },
   { id: "zhishaohaiyouni", title: "至少還有你",     artist: "林憶蓮", genre: "classic" },
@@ -201,7 +203,6 @@ window.SONGS = [
   { id: "jianai",          title: "剪愛",           artist: "張惠妹", genre: "classic" },
   { id: "xinbuleqing",     title: "新不了情",       artist: "萬芳",   genre: "classic" },
   { id: "nuoweisenlin",    title: "挪威的森林",     artist: "伍佰",   genre: "classic" },
-  { id: "lingwu",          title: "領悟",           artist: "辛曉琪", genre: "classic" },
   { id: "nuannuan",        title: "暖暖",           artist: "梁靜茹", genre: "classic" },
   /* ---------- 台語 ---------- */
   { id: "chiqingnanzihan", title: "癡情男子漢",       artist: "玖壹壹",     genre: "tw" },

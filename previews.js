@@ -1,5 +1,5 @@
 /* 自動產生,請勿手動編輯 —— 由 tools/fetch-previews.js 產出
- * 產生時間:2026-09-09T17:44:54.353Z
+ * 產生時間:2026-09-09T17:55:23.251Z
  * 這裡只存 Apple 官方 30 秒試聽的網址,音檔不落地,遊戲執行時直接串流。
  * conf 是配對信心度,low 的請人工確認是不是配錯歌。
  */
@@ -1420,14 +1420,6 @@ window.SONG_PREVIEWS = {
     "offset": 0,
     "conf": "high"
   },
-  "lingwu": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/64/3e/31/643e312b-ae85-5127-0ffc-508fddd45f48/mzaf_15711813470077099238.plus.aac.p.m4a",
-    "title": "領悟",
-    "artist": "辛曉琪",
-    "album": "領悟",
-    "offset": 0,
-    "conf": "high"
-  },
   "niania": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e5/33/bb/e533bb5c-ecdc-f79b-14c7-396e95caec91/mzaf_10869841361505167476.plus.aac.p.m4a",
     "title": "你啊你啊",
@@ -2073,6 +2065,22 @@ window.SONG_PREVIEWS = {
     "title": "晩餐歌 - Bansanka",
     "artist": "tuki.",
     "album": "15",
+    "offset": 0,
+    "conf": "high"
+  },
+  "taicongming": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/34/5c/6f/345c6f7a-3fc7-c085-86b6-394c919995fc/mzaf_2568625725453958612.plus.aac.p.m4a",
+    "title": "太聰明",
+    "artist": "陳綺貞",
+    "album": "吉他手",
+    "offset": 0,
+    "conf": "high"
+  },
+  "wurenzhixiao": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f9/5a/d9/f95ad97f-5cf5-1e2e-8a2c-4e3869bffac5/mzaf_7066015529007804880.plus.aac.p.m4a",
+    "title": "無人知曉",
+    "artist": "田馥甄",
+    "album": "無人知曉",
     "offset": 0,
     "conf": "high"
   }
