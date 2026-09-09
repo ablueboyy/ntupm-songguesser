@@ -24,7 +24,7 @@
 
   --night:#0B0C18;    /* 夜空:頁面底 */
   --deep:#171A33;     /* 海面下:表面 */
-  --tide:#2F3A6B;     /* 海面:可按的東西 */
+  --tide:#252C55;     /* 海面:可按的東西(九宮格) */
   --foam:#CFCAF0;     /* 前景文字 */
   --bottle:#F2C86A;   /* 漂流瓶的光 —— 得分 / 正解 / 達標 */
   --miss:#E08098;     /* 答錯 */
@@ -287,9 +287,11 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 /* ═══════════ 結算 ═══════════ */
 #screen-result{justify-content:flex-end;gap:var(--s5)}
 .scorecard .title{font-weight:var(--w-title);font-size:var(--t-h2);line-height:1.2;color:var(--foam)}
+.scorecard .line{font-weight:var(--w-quiet);font-size:var(--t-small);line-height:1.9;color:var(--dim);margin-top:var(--s2)}
+.scorecard .line:empty{display:none}
 .scorecard .big{
   font-weight:var(--w-title);font-size:var(--t-display);line-height:1;
-  color:var(--bottle);font-variant-numeric:tabular-nums;margin:var(--s2) 0;
+  color:var(--bottle);font-variant-numeric:tabular-nums;margin:var(--s4) 0 var(--s2);
 }
 .scorecard .meta{font-size:var(--t-small);color:var(--dim);font-weight:var(--w-quiet)}
 
@@ -445,6 +447,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 <div class="screen" id="screen-result" hidden>
   <div class="scorecard">
     <div class="title" id="res-title">金曲猜歌王</div>
+    <div class="line" id="res-line"></div>
     <div class="big" id="res-score">0</div>
     <div class="meta" id="res-meta">答對 0 題,共 10 題</div>
   </div>
@@ -493,11 +496,11 @@ const CONFIG = {
   foreignMin: 1,
   optionCount: 9,
   timeLimit: 12,          // 每題秒數
-  baseScore: 240,         // 答對底分
-  speedScore: 560,        // 速度分上限(240+560=800,10 題滿分 8000)
+  baseScore: 300,         // 答對底分
+  speedScore: 700,        // 速度分上限(300+700=1000,10 題滿分 10000)
   revealMs: 2200,         // 顯示答案的停頓
   clipSeconds: 15,        // 音檔片段長度
-  prizeScore: 5000,       // 兌獎門檻(滿分 8000),沒到就是再接再厲
+  prizeScore: 8000,       // 兌獎門檻(滿分 10000)
   maxSameArtist: 2        // 同一歌手在九格中最多出現幾次
 };
 const FOREIGN_GENRES = ['kpop', 'west', 'jp'];
@@ -1021,13 +1024,31 @@ function answer(opt, index){
 }
 
 /* ---------- 結算 ---------- */
-// 稱號只是給玩家截圖用的,跟兌獎門檻分開,改門檻不會影響這裡
+
+/* ╔══════════════════════════════════════════════════════════════╗
+   ║  稱號與結語 —— 要改文字改這張表就好,底下的程式不用動         ║
+   ╚══════════════════════════════════════════════════════════════╝
+
+   min   門檻分數。由上往下比,第一個「分數 >= min」的就是他的稱號。
+         滿分 10000(10 題 × 1000)。兌獎門檻是 CONFIG.prizeScore = 8000,
+         跟這張表是分開的 —— 改這裡不會影響誰能兌獎,反之亦然。
+   title 稱號。玩家會截圖傳出去的就是這行,所以短一點、好唸一點。
+   line  稱號底下那句話。想留白就寫成空字串 ''。
+
+   想多一個或少一個級距,直接加減這張表的列,程式會自己跟上。
+   最後一列的 min 一定要是 0 —— 那是所有人都符合的保底。
+   稱號跟兌獎是分開的,改這裡不會影響誰能兌獎。                     */
+
+const TITLES = [
+  { min: 8000, title: '流唱社之光',   line: '拜託你來我們流唱社當教學啦！' },
+  { min: 6767, title: '金曲點唱機',   line: '來流唱社你一定會找到很多志同道合喜歡聽歌的朋友！' },
+  { min: 5000, title: '移動 KTV',   line: '快要拿到獎品了，要不要來參加流唱社！' },
+  { min: 3000, title: '持續聽歌中',    line: '來流唱社一定會大大增加你的曲庫~~' },
+  { min: 0,    title: '聽歌小萌新',     line: '沒關係,來流唱社聽一年就會了' },
+];
+
 function titleFor(score){
-  if(score >= 6500) return '流唱社之光';
-  if(score >= 5000) return '金曲猜歌王';
-  if(score >= 3000) return 'KTV 常客';
-  if(score >= 1200) return '副歌才想起來';
-  return '音癡新星';
+  return TITLES.find(t => score >= t.min) || TITLES[TITLES.length - 1];
 }
 
 let freshTimer = null;
@@ -1043,7 +1064,9 @@ function finish(){
   // 排行榜還沒接伺服器,所以只講這支手機自己的最佳成績,不講名次
   const best = board.find(r => r.nickname === entry.nickname);
 
-  $('res-title').textContent = titleFor(G.total);
+  const rank = titleFor(G.total);
+  $('res-title').textContent = rank.title;
+  $('res-line').textContent  = rank.line;
   $('res-score').textContent = G.total.toLocaleString();
   $('res-meta').textContent = `答對 ${entry.correct} 題,共 ${CONFIG.questionCount} 題`
     + (best && best.score > entry.score
