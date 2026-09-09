@@ -2076,11 +2076,6 @@ window.DECOYS = [
   "genre": "kpop"
  },
  {
-  "title": "What is Love?",
-  "artist": "TWICE",
-  "genre": "kpop"
- },
- {
   "title": "ONE SPARK",
   "artist": "TWICE",
   "genre": "kpop"
@@ -2368,11 +2363,6 @@ window.DECOYS = [
  {
   "title": "Ice Cream Cake",
   "artist": "Red Velvet",
-  "genre": "kpop"
- },
- {
-  "title": "BANG BANG BANG",
-  "artist": "BIGBANG",
   "genre": "kpop"
  },
  {
@@ -3172,11 +3162,6 @@ window.DECOYS = [
  },
  {
   "title": "Circles",
-  "artist": "Post Malone",
-  "genre": "west"
- },
- {
-  "title": "Overdrive",
   "artist": "Post Malone",
   "genre": "west"
  },

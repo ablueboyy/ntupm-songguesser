@@ -877,6 +877,10 @@ function cleanTitle(t){
   return s || String(t || '');
 }
 
+// 九宮格去重用的鍵。要壓成小寫 —— 「HAPPY / DAY6」和「Happy / Pharrell Williams」
+// 是兩首不同的歌,但同時出現在一題裡,螢幕上長得一模一樣,玩家只會覺得出題出錯。
+function titleKey(t){ return cleanTitle(t).toLowerCase(); }
+
 // 依歌名長度決定字級,九格必須一屏看完、不能捲動
 function sizeClass(label){
   const cjk = /[㐀-鿿぀-ヿ]/.test(label);
@@ -918,7 +922,7 @@ function buildQuestions(){
 
   return answers.map(answer => {
     const options = [answer];
-    const usedTitle = new Set([cleanTitle(answer.title)]);
+    const usedTitle = new Set([titleKey(answer.title)]);
     const byArtist = { [answer.artist]: 1 };
 
     // 干擾項先挑同 genre 的 —— 華語歌就配華語選項。
@@ -932,7 +936,7 @@ function buildQuestions(){
       if(options.length >= CONFIG.optionCount) break;
       for(const o of shuffle(pass.list)){
         if(options.length >= CONFIG.optionCount) break;
-        const key = cleanTitle(o.title);
+        const key = titleKey(o.title);
         if(usedTitle.has(key)) continue;
         if((byArtist[o.artist] || 0) >= pass.max) continue;
         usedTitle.add(key);

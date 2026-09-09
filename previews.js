@@ -1,5 +1,5 @@
 /* 自動產生,請勿手動編輯 —— 由 tools/fetch-previews.js 產出
- * 產生時間:2026-09-09T15:44:42.740Z
+ * 產生時間:2026-09-09T17:44:54.353Z
  * 這裡只存 Apple 官方 30 秒試聽的網址,音檔不落地,遊戲執行時直接串流。
  * conf 是配對信心度,low 的請人工確認是不是配錯歌。
  */
@@ -1937,6 +1937,150 @@ window.SONG_PREVIEWS = {
     "title": "打開太陽",
     "artist": "血肉果汁機",
     "album": "血肉講鬼: 老宅豪門",
+    "offset": 0,
+    "conf": "high"
+  },
+  "jiuerling": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1d/03/c4/1d03c45a-8a73-5730-26b4-faa5cecf8452/mzaf_10646475169066901326.plus.aac.p.m4a",
+    "title": "920",
+    "artist": "A-Lin",
+    "album": "幸福了 然後呢 (慶功版)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "crushon": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/2e/3a/14/2e3a1452-7289-6519-7928-996ff2f74783/mzaf_5339705554975669470.plus.aac.p.m4a",
+    "title": "Crush on (Acoustic version)",
+    "artist": "李浩瑋",
+    "album": "Diamond In The Rough (Acoustic version) - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "zhenxinhua": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e8/65/65/e86565bd-2c46-4f8c-9183-f921463d5515/mzaf_1404676490542815886.plus.aac.p.m4a",
+    "title": "真心話",
+    "artist": "李浩瑋",
+    "album": "真心話 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "jisuanlangman": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e7/ac/a1/e7aca14e-0eba-fe71-99aa-d1d9bf564403/mzaf_13242663060991473496.plus.aac.p.m4a",
+    "title": "計算浪漫",
+    "artist": "艾薇",
+    "album": "計算浪漫 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "buaijiubuai": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/fc/d7/e6/fcd7e6e6-b204-ce57-49fb-84d5e80b3dcb/mzaf_3854676708584411248.plus.aac.p.m4a",
+    "title": "不愛就不愛",
+    "artist": "艾薇",
+    "album": "當大人",
+    "offset": 0,
+    "conf": "high"
+  },
+  "diqiubaozha": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d8/26/f0/d826f013-c506-74b6-3e70-365067698516/mzaf_4029898450872485568.plus.aac.p.m4a",
+    "title": "在地球爆炸之前",
+    "artist": "理想混蛋",
+    "album": "關掉 / 打開",
+    "offset": 0,
+    "conf": "high"
+  },
+  "nideweixiao": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b1/68/45/b1684589-dd63-9448-0e7b-3a028ca07e03/mzaf_12682811126149834836.plus.aac.p.m4a",
+    "title": "你的微笑",
+    "artist": "飛兒樂團",
+    "album": "飛兒樂團",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "chongai": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a7/49/c4/a749c461-37ca-03f4-79b8-94e74922760f/mzaf_3992964028226908626.plus.aac.p.m4a",
+    "title": "寵愛",
+    "artist": "TFBOYS",
+    "album": "大夢想家 - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "nuannuan": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a6/d1/0d/a6d10dce-6cee-3b17-b856-d2ca2765707e/mzaf_18399825378220852817.plus.aac.p.m4a",
+    "title": "暖暖",
+    "artist": "梁靜茹",
+    "album": "現在開始我愛你 (戀愛的力量-下集) [新歌+精選]",
+    "offset": 0,
+    "conf": "high"
+  },
+  "overdrive": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/b1/33/28/b133283f-7aa6-8461-f701-9fbc0f6cb3d0/mzaf_7632951359159156579.plus.aac.p.m4a",
+    "title": "OVERDRIVE",
+    "artist": "TWS",
+    "album": "play hard",
+    "offset": 0,
+    "conf": "high"
+  },
+  "day6happy": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/83/3e/6b/833e6baa-3767-5f1d-e651-8b27fc4c9a25/mzaf_6192446484966640638.plus.aac.p.m4a",
+    "title": "HAPPY",
+    "artist": "DAY6",
+    "album": "Fourever",
+    "offset": 0,
+    "conf": "high"
+  },
+  "dinosaur": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d4/4e/ca/d44eca9f-0a29-dbb9-5e90-ee7c248379db/mzaf_14361741256570688489.plus.aac.p.m4a",
+    "title": "DINOSAUR",
+    "artist": "AKMU",
+    "album": "SUMMER EPISODE - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "mrchu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/23/b0/45/23b04545-9854-b863-f5d0-c974efd868eb/mzaf_8714009102318342462.plus.aac.p.m4a",
+    "title": "Mr. Chu",
+    "artist": "Apink",
+    "album": "Pink Blossom",
+    "offset": 0,
+    "conf": "high"
+  },
+  "baby": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f7/07/2a/f7072acb-5519-0b2f-fd93-a25d1560cec4/mzaf_2314284840032197135.plus.aac.p.m4a",
+    "title": "Baby (feat. Ludacris)",
+    "artist": "Justin Bieber",
+    "album": "My World 2.0",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "nothingholding": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/87/1c/bc/871cbc00-24a6-c95a-b9bb-49ff209c6777/mzaf_13131899989124950522.plus.aac.p.m4a",
+    "title": "There's Nothing Holdin' Me Back",
+    "artist": "Shawn Mendes",
+    "album": "Illuminate (Deluxe)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "whatmakesyou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/c4/a6/fa/c4a6fa2b-710c-4eee-c32d-583ae013d99d/mzaf_9620667473679053888.plus.aac.p.m4a",
+    "title": "What Makes You Beautiful",
+    "artist": "One Direction",
+    "album": "Up All Night (Deluxe Version)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "ganzaohua": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/78/66/28/7866287d-f34b-9b3a-24dc-fca78a709153/mzaf_7226301736226398991.plus.aac.p.m4a",
+    "title": "Dried Flower",
+    "artist": "Yuuri",
+    "album": "壱",
+    "offset": 0,
+    "conf": "high"
+  },
+  "wancange": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/8a/d5/86/8ad58608-f9a2-81eb-5609-8f9edde8e2e3/mzaf_7716433166965675474.plus.aac.p.m4a",
+    "title": "晩餐歌 - Bansanka",
+    "artist": "tuki.",
+    "album": "15",
     "offset": 0,
     "conf": "high"
   }
