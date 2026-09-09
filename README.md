@@ -135,6 +135,22 @@ node tools/fetch-previews.js --delay 3000      # 放慢(API 約 20 次/分鐘)
 
 每首還有一個 `offset` 欄位(預設 0)。試聽片段如果從不夠好認的地方開始,可以填秒數往後挪。
 
+### 抽聽:check.html
+
+腳本擋得掉的只有「專輯名稱看得出來」的假貨,剩下要靠耳朵。`check.html` 就是拿來做這件事的:
+
+```
+http://localhost:8000/check.html          本機
+https://ablueboyy.github.io/ntupm-songguesser/check.html   手機
+```
+
+- 預設只列 **重點抽聽** —— 商店曲名/歌手跟題庫不一樣、信心度不是 high、
+  或專輯名稱可疑的那幾首。219 首裡目前是 46 首,大約 25 分鐘聽得完
+- 商店資料跟題庫不一樣的地方會標成黃字,一眼看得到差在哪
+- 鍵盤:`空白` 播放 · `↑↓` 移動 · `1` 正常 · `2` 有問題
+- 判定存在瀏覽器的 localStorage,**只留在那台裝置**,換手機要重聽
+- 聽完按「匯出有問題的」,會直接產生 `--force --only` 的重抓指令
+
 ### 兩個要注意的地方
 
 **條款**:iTunes Search API 是公開的,但條款原意是為了推廣 iTunes 商店的內容。拿來當猜歌題庫屬於灰色地帶,所以這裡刻意做成「執行時串流、不下載存檔」,盡量貼近它原本的用途。這是社團自己承擔的判斷。
@@ -273,6 +289,7 @@ create policy "anyone can read"   on scores for select to anon using (true);
 
 ```
 index.html                遊戲本體(HTML + CSS + JS 全在裡面)
+check.html                音源檢查台(抽聽用,不是給玩家的頁面)
 songs.js                  題庫 219 首(手工維護)
 decoys.js                 干擾選項庫(自動產生)
 previews.js               官方試聽網址(自動產生)

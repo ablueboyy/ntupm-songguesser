@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0B0C18">
+<title>音源檢查 · 金曲猜歌王</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&display=swap">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   音源檢查台 —— 攤位開張前抽聽用的內部工具,不是給玩家看的頁面。
+
+   沿用遊戲的顏色,但排版邏輯相反:遊戲要留白與戲劇性,這裡要密度。
+   歌名維持 Noto Serif TC —— 你在這裡看到的字,就是玩家在九宮格看到的字。
+   其他中繼資料改用系統無襯線體:219 列明體小字掃下來會瞎。
+
+   判定只存在這台裝置的 localStorage,不會上傳,換裝置要重聽。
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  color-scheme:dark;
+  --night:#0B0C18; --deep:#171A33; --tide:#252C55;
+  --foam:#CFCAF0; --bottle:#F2C86A; --miss:#E08098;
+  --ok:#8FD9A8;
+  --line:rgba(207,202,240,.16); --line-2:rgba(207,202,240,.32);
+  --dim:rgba(207,202,240,.62);
+  --face:"Noto Serif TC","Noto Serif CJK TC","Songti TC",serif;
+  --ui:system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--ui);color:var(--foam);background:var(--night);
+  min-height:100dvh;font-size:15px;line-height:1.5;
+}
+
+/* ── 頂部:標題 + 進度 + 篩選,捲動時固定 ── */
+header{
+  position:sticky;top:0;z-index:5;
+  background:rgba(11,12,24,.94);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  padding:14px 16px 10px;
+}
+h1{
+  font-family:var(--face);font-weight:900;font-size:1.25rem;
+  margin:0 0 2px;letter-spacing:.02em;
+}
+.sub{font-size:.8rem;color:var(--dim);margin-bottom:10px}
+.sub b{color:var(--foam);font-weight:600}
+
+.bar{height:4px;background:var(--deep);border-radius:2px;overflow:hidden;margin-bottom:10px;display:flex}
+.bar i{display:block;height:100%;transition:width .25s ease}
+.bar .b-ok{background:var(--ok)}
+.bar .b-bad{background:var(--miss)}
+
+.filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+button.f{
+  font:inherit;font-size:.78rem;font-weight:600;
+  color:var(--dim);background:transparent;
+  border:1px solid var(--line);border-radius:999px;
+  padding:4px 11px;cursor:pointer;white-space:nowrap;
+}
+button.f:hover{border-color:var(--line-2);color:var(--foam)}
+button.f[aria-pressed="true"]{background:var(--tide);border-color:transparent;color:var(--foam)}
+button.f .n{opacity:.6;font-variant-numeric:tabular-nums;margin-left:4px}
+input[type=search]{
+  font:inherit;font-size:.8rem;color:var(--foam);
+  background:var(--deep);border:1px solid var(--line);border-radius:999px;
+  padding:4px 12px;min-width:120px;flex:1;
+}
+input[type=search]::placeholder{color:var(--dim)}
+
+/* ── 清單 ── */
+ol{list-style:none;margin:0;padding:0 0 40vh}
+header > *, li{max-width:820px}
+li{margin-left:0}
+li{
+  display:grid;
+  grid-template-columns:34px 1fr auto;
+  gap:0 10px;align-items:start;
+  padding:9px 16px;border-bottom:1px solid var(--line);
+  scroll-margin-top:150px;
+}
+li.cursor{background:rgba(37,44,85,.5)}
+li.playing{background:rgba(242,200,106,.09)}
+li[data-mark="bad"]{background:rgba(224,128,152,.07)}
+
+.idx{
+  font-size:.72rem;color:var(--dim);font-variant-numeric:tabular-nums;
+  padding-top:4px;text-align:right;
+}
+li.playing .idx{color:var(--bottle)}
+
+.main{min-width:0}
+.song{font-family:var(--face);font-weight:600;font-size:1.02rem;line-height:1.35}
+.who{font-size:.78rem;color:var(--dim);margin-top:1px}
+.who .g{
+  display:inline-block;font-size:.66rem;font-weight:700;letter-spacing:.04em;
+  border:1px solid var(--line);border-radius:4px;padding:0 4px;margin-right:6px;
+  vertical-align:1px;text-transform:uppercase;
+}
+/* 商店抓到的東西跟題庫寫的一樣時就不顯示 —— 219 列都印重複資訊只會蓋掉真正要看的 */
+.store{
+  font-size:.74rem;color:var(--dim);margin-top:3px;
+  padding-left:8px;border-left:2px solid var(--line);
+}
+.store b{color:var(--bottle);font-weight:600}
+.risk{
+  display:inline-block;font-size:.66rem;font-weight:700;
+  border-radius:4px;padding:0 5px;margin-left:6px;vertical-align:2px;
+}
+.risk.hi{background:rgba(224,128,152,.22);color:var(--miss)}
+.risk.mid{background:rgba(242,200,106,.16);color:var(--bottle)}
+
+.acts{display:flex;gap:6px;align-items:center;padding-top:2px}
+.acts button{
+  font:inherit;font-size:.95rem;line-height:1;
+  width:34px;height:34px;border-radius:9px;cursor:pointer;
+  background:var(--deep);border:1px solid var(--line);color:var(--foam);
+  display:grid;place-items:center;
+}
+.acts button:hover{border-color:var(--line-2)}
+.acts .play[data-on="1"]{background:var(--bottle);color:var(--night);border-color:transparent}
+li.playing .play{animation:pulse 1.2s ease-in-out infinite}
+li.playing .play[data-on="1"]{animation:none}
+@keyframes pulse{50%{opacity:.45}}
+.acts .ok[aria-pressed="true"]{background:var(--ok);color:var(--night);border-color:transparent}
+.acts .bad[aria-pressed="true"]{background:var(--miss);color:var(--night);border-color:transparent}
+.err{font-size:.72rem;color:var(--miss);margin-top:3px}
+
+/* ── 底部固定列 ── */
+footer{
+  position:fixed;left:0;right:0;bottom:0;z-index:6;
+  background:rgba(11,12,24,.94);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);
+  padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+  display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+}
+footer .hint{font-size:.72rem;color:var(--dim);flex:1;min-width:130px}
+kbd{
+  font:inherit;font-size:.68rem;font-weight:700;
+  border:1px solid var(--line-2);border-radius:4px;padding:0 4px;
+}
+button.act{
+  font:inherit;font-size:.78rem;font-weight:600;cursor:pointer;
+  background:var(--tide);color:var(--foam);
+  border:1px solid transparent;border-radius:8px;padding:6px 12px;
+}
+button.act:hover{background:#2E3768}
+button.act.quiet{background:transparent;border-color:var(--line);color:var(--dim)}
+
+dialog{
+  border:1px solid var(--line-2);border-radius:12px;padding:0;
+  background:var(--deep);color:var(--foam);max-width:min(640px,92vw);width:100%;
+}
+dialog::backdrop{background:rgba(11,12,24,.7)}
+dialog .body{padding:16px}
+dialog h2{font-family:var(--face);font-size:1.05rem;margin:0 0 8px}
+textarea{
+  width:100%;height:44vh;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:.76rem;line-height:1.55;
+  background:var(--night);color:var(--foam);
+  border:1px solid var(--line);border-radius:8px;padding:10px;resize:vertical;
+}
+.empty{padding:48px 16px;text-align:center;color:var(--dim);font-size:.85rem}
+@media (max-width:520px){
+  li{grid-template-columns:26px 1fr;padding:9px 12px}
+  .acts{grid-column:2;padding-top:6px}
+  header,footer{padding-left:12px;padding-right:12px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>音源檢查台</h1>
+  <div class="sub" id="sub">載入中⋯</div>
+  <div class="bar"><i class="b-ok" id="bar-ok" style="width:0"></i><i class="b-bad" id="bar-bad" style="width:0"></i></div>
+  <div class="filters" id="filters">
+    <button class="f" data-f="risk" aria-pressed="true">重點抽聽<span class="n"></span></button>
+    <button class="f" data-f="todo" aria-pressed="false">未聽<span class="n"></span></button>
+    <button class="f" data-f="bad"  aria-pressed="false">有問題<span class="n"></span></button>
+    <button class="f" data-f="all"  aria-pressed="false">全部<span class="n"></span></button>
+    <input type="search" id="q" placeholder="搜尋歌名 / 歌手">
+  </div>
+</header>
+
+<ol id="list"></ol>
+
+<footer>
+  <div class="hint">
+    <kbd>空白</kbd> 播放 · <kbd>↑↓</kbd> 移動 · <kbd>1</kbd> 正常 · <kbd>2</kbd> 有問題
+  </div>
+  <button class="act quiet" id="reset">清除全部判定</button>
+  <button class="act" id="export">匯出有問題的</button>
+</footer>
+
+<dialog id="dlg"><div class="body">
+  <h2>有問題的音源</h2>
+  <p class="sub" style="margin:0 0 8px">整段複製貼給 Claude,或自己照著底下的指令重抓。</p>
+  <textarea id="out" readonly></textarea>
+  <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
+    <button class="act quiet" id="close">關閉</button>
+    <button class="act" id="copy">複製</button>
+  </div>
+</div></dialog>
+
+<script src="songs.js"></script>
+<script src="previews.js"></script>
+<script>
+const SONGS = window.SONGS || [];
+const PREV  = window.SONG_PREVIEWS || {};
+const KEY   = 'pm-songguesser-audio-check';
+
+/* ---------- 風險評估 ----------
+   219 首全聽完要一個半小時,沒人會做。所以先算出「值得先聽」的那幾首:
+   商店回傳的曲名/歌手跟題庫寫的不一樣,或專輯名稱看起來不是原版錄音。
+   分數對得剛剛好的重唱版(光年之外那種)就是靠專輯名稱抓出來的。     */
+const SUSPECT_ALBUM = /第\s*\d+\s*期|演唱會|跨年|金曲撈|我是歌手|蒙面|聲生不息|好聲音|影音全記錄|全記錄|串燒|卡拉|karaoke|オルゴール|音樂盒|instrumental|伴奏|精選|合輯|Live/i;
+const SUSPECT_TRACK = /live|remix|cover|karaoke|instrumental|伴奏|現場/i;
+
+// 比對用:去掉副標與標點。原版常帶「(電影⋯主題曲)」,那不算不一樣。
+const norm = s => String(s || '').toLowerCase()
+  .replace(/[\s　]/g, '')
+  .replace(/[（(【「][^）)】」]*[）)】」]/g, '')
+  .replace(/[（）()\[\]【】「」『』、・·,，.。!！?？\-—_'"']/g, '');
+
+function assess(song){
+  const p = PREV[song.id];
+  if(!p || !p.url) return { level:2, why:['沒有音源'] };
+  const why = [];
+  if(p.conf === 'low') why.push('比對信心度 low');
+  if(SUSPECT_TRACK.test(p.title || '')) why.push('曲名有 live / remix 字樣');
+  if(SUSPECT_ALBUM.test(p.album || '')) why.push('專輯不像原版錄音');
+  if(norm(p.title)  !== norm(song.title))  why.push('商店曲名不同');
+  if(norm(p.artist) !== norm(song.artist)) why.push('商店歌手不同');
+  if(!why.length && p.conf !== 'high') why.push('比對信心度 medium');
+  const level = why.some(w => /low|沒有音源|live/.test(w)) ? 2 : (why.length ? 1 : 0);
+  return { level, why };
+}
+
+const ROWS = SONGS.map((s, i) => {
+  const p = PREV[s.id] || {};
+  const a = assess(s);
+  return { i, song:s, prev:p, level:a.level, why:a.why,
+           hay:(s.title + s.artist + s.id + (p.title||'') + (p.artist||'')).toLowerCase() };
+});
+
+/* ---------- 判定的儲存 ---------- */
+let marks = {};
+try { marks = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { marks = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch(e) {} };
+
+/* ---------- 狀態 ---------- */
+let filter = 'risk', query = '', cursor = 0, playingId = null, loadingId = null;
+let current = null, token = 0;
+
+const $ = id => document.getElementById(id);
+const listEl = $('list');
+const esc = s => String(s == null ? '' : s)
+  .replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+
+function visible(){
+  return ROWS.filter(r => {
+    if(query && !r.hay.includes(query)) return false;
+    const m = marks[r.song.id];
+    if(filter === 'todo') return !m;
+    if(filter === 'bad')  return m === 'bad';
+    if(filter === 'risk') return r.level > 0 && m !== 'ok';
+    return true;
+  });
+}
+
+function render(){
+  const rows = visible();
+  if(cursor >= rows.length) cursor = Math.max(0, rows.length - 1);
+
+  listEl.innerHTML = rows.length ? '' : '<li class="empty">這個篩選沒有東西了 —— 換一個看看</li>';
+  rows.forEach((r, n) => {
+    const s = r.song, p = r.prev, m = marks[s.id];
+    const li = document.createElement('li');
+    li.dataset.id = s.id;
+    if(m) li.dataset.mark = m;
+    li.className = (n === cursor ? 'cursor ' : '') + (playingId === s.id || loadingId === s.id ? 'playing' : '');
+
+    const diffTitle  = norm(p.title)  !== norm(s.title);
+    const diffArtist = norm(p.artist) !== norm(s.artist);
+    const showStore  = diffTitle || diffArtist || r.level > 0;
+    const riskTag = r.level === 2 ? '<span class="risk hi">要聽</span>'
+                  : r.level === 1 ? '<span class="risk mid">留意</span>' : '';
+
+    li.innerHTML =
+      '<div class="idx">' + (r.i + 1) + '</div>' +
+      '<div class="main">' +
+        '<div class="song">' + esc(s.title) + riskTag + '</div>' +
+        '<div class="who"><span class="g">' + s.genre + '</span>' + esc(s.artist) + '</div>' +
+        (showStore
+          ? '<div class="store">商店:' +
+              (diffTitle ? '<b>' + esc(p.title || '—') + '</b>' : esc(p.title || '—')) +
+              (diffArtist ? ' / <b>' + esc(p.artist || '') + '</b>' : '') +
+              (p.album ? '<br>專輯:' + esc(p.album) : '') +
+              (r.why.length ? '<br>' + esc(r.why.join(' · ')) : '') +
+            '</div>'
+          : '') +
+        '<div class="err" hidden></div>' +
+      '</div>' +
+      '<div class="acts">' +
+        '<button class="play" data-on="' + (playingId === s.id ? 1 : 0) + '" title="播放 30 秒試聽">' +
+          (loadingId === s.id ? '⋯' : playingId === s.id ? '❚❚' : '▶') + '</button>' +
+        '<button class="ok"  aria-pressed="' + (m === 'ok')  + '" title="沒問題">✓</button>' +
+        '<button class="bad" aria-pressed="' + (m === 'bad') + '" title="有問題">✕</button>' +
+      '</div>';
+
+    li.querySelector('.play').onclick = e => { e.stopPropagation(); toggle(s.id); };
+    li.querySelector('.ok').onclick   = e => { e.stopPropagation(); mark(s.id, 'ok'); };
+    li.querySelector('.bad').onclick  = e => { e.stopPropagation(); mark(s.id, 'bad'); };
+    li.onclick = () => { cursor = n; render(); };
+    listEl.appendChild(li);
+  });
+  stats();
+}
+
+function stats(){
+  const ok   = ROWS.filter(r => marks[r.song.id] === 'ok').length;
+  const bad  = ROWS.filter(r => marks[r.song.id] === 'bad').length;
+  const risk = ROWS.filter(r => r.level > 0 && marks[r.song.id] !== 'ok').length;
+  const todo = ROWS.filter(r => !marks[r.song.id]).length;
+  $('sub').innerHTML = '共 <b>' + ROWS.length + '</b> 首 · 已聽 <b>' + (ok + bad) +
+    '</b> · 有問題 <b>' + bad + '</b> · 還沒聽 <b>' + todo + '</b>';
+  $('bar-ok').style.width  = (ok  / ROWS.length * 100) + '%';
+  $('bar-bad').style.width = (bad / ROWS.length * 100) + '%';
+  const n = { risk:risk, todo:todo, bad:bad, all:ROWS.length };
+  document.querySelectorAll('#filters .f').forEach(b => {
+    b.querySelector('.n').textContent = n[b.dataset.f];
+    b.setAttribute('aria-pressed', b.dataset.f === filter);
+  });
+}
+
+function mark(id, v){
+  if(marks[id] === v) delete marks[id]; else marks[id] = v;
+  save(); render();
+}
+
+/* ---------- 播放 ----------
+   不能直接 audio.src = url 然後 play() —— Chrome 會卡在 stalled,
+   play() 的 promise 永遠不 settle,畫面就一直停在「正在播」但沒有聲音。
+   遊戲的 probeAudio()(index.html)早就踩過這個坑:要先用新的 Audio 元素
+   preload='metadata' + load(),等 canplay / loadedmetadata 再播,並且要有逾時。
+   這裡照抄同一套 —— 順便讓這頁測到的就是遊戲實際會走的那條路徑。
+
+   一次只播一首,播完就停、不自動跳下一首 ——
+   自動連播會讓你錯過「剛剛那首怪怪的」的那一刻。 */
+function probeAudio(src, timeoutMs){
+  return new Promise(resolve => {
+    const a = new Audio(src);
+    a.preload = 'metadata';
+    let settled = false;
+    const ok = () => { if(!settled){ settled = true; resolve(a); } };
+    const no = () => { if(!settled){ settled = true; try{ a.src = ''; }catch(e){} resolve(null); } };
+    a.addEventListener('canplay', ok, { once:true });
+    a.addEventListener('loadeddata', ok, { once:true });
+    a.addEventListener('loadedmetadata', ok, { once:true });
+    a.addEventListener('error', no, { once:true });
+    setTimeout(no, timeoutMs);
+    a.load();
+  });
+}
+
+function stopAudio(){
+  token++;
+  if(current){ try{ current.pause(); }catch(e){} current = null; }
+  playingId = null; loadingId = null;
+}
+
+async function toggle(id){
+  if(playingId === id || loadingId === id){ stopAudio(); render(); return; }
+  stopAudio();
+  const p = PREV[id];
+  if(!p || !p.url){ render(); showErr(id, '這首沒有音源網址'); return; }
+
+  const mine = ++token;
+  loadingId = id;
+  render();
+
+  const el = await probeAudio(p.url, 12000);
+  if(mine !== token){ if(el) try{ el.pause(); }catch(e){}  return; }   // 等的時候你已經換歌了
+
+  if(!el){
+    loadingId = null; render();
+    showErr(id, '載不下來 —— 網路不通,或這個試聽網址已經失效');
+    return;
+  }
+
+  current = el;
+  el.preload = 'auto';
+  try{ el.currentTime = p.offset || 0; }catch(e){}
+  el.addEventListener('ended', () => { if(mine === token){ stopAudio(); render(); } }, { once:true });
+
+  loadingId = null; playingId = id;
+  render();
+  el.play().catch(err => {
+    if(mine !== token) return;
+    stopAudio(); render();
+    showErr(id, '瀏覽器擋住播放(' + ((err && err.name) || '未知') + ')—— 先點一下畫面再試');
+  });
+}
+
+function showErr(id, msg){
+  const el = listEl.querySelector('li[data-id="' + id + '"] .err');
+  if(el){ el.hidden = false; el.textContent = msg; }
+}
+
+/* ---------- 鍵盤 ---------- */
+document.addEventListener('keydown', e => {
+  if(e.target.matches('input,textarea') || $('dlg').open) return;
+  const rows = visible();
+  const cur = rows[cursor];
+  const go = d => {
+    cursor = Math.max(0, Math.min(rows.length - 1, cursor + d));
+    render();
+    const el = listEl.children[cursor];
+    if(el && el.scrollIntoView) el.scrollIntoView({ block:'nearest' });
+  };
+  if(e.key === 'ArrowDown' || e.key === 'j'){ e.preventDefault(); go(1); }
+  else if(e.key === 'ArrowUp' || e.key === 'k'){ e.preventDefault(); go(-1); }
+  else if(e.key === ' '){ e.preventDefault(); if(cur) toggle(cur.song.id); }
+  else if(e.key === '1'){ if(cur){ mark(cur.song.id, 'ok');  go(1); } }
+  else if(e.key === '2'){ if(cur){ mark(cur.song.id, 'bad'); go(1); } }
+});
+
+/* ---------- 篩選 / 搜尋 ---------- */
+document.querySelectorAll('#filters .f').forEach(b => {
+  b.onclick = () => { filter = b.dataset.f; cursor = 0; render(); };
+});
+$('q').oninput = e => { query = e.target.value.trim().toLowerCase(); cursor = 0; render(); };
+
+/* ---------- 匯出 ---------- */
+$('export').onclick = () => {
+  const bad = ROWS.filter(r => marks[r.song.id] === 'bad');
+  const ids = bad.map(r => r.song.id).join(',');
+  const lines = bad.map(r =>
+    r.song.id + '\t' + r.song.title + ' / ' + r.song.artist +
+    '\t→ 商店:' + (r.prev.title || '—') + ' / ' + (r.prev.artist || '—') +
+    (r.prev.album ? ' 《' + r.prev.album + '》' : ''));
+  $('out').value = bad.length
+    ? '這 ' + bad.length + ' 首聽起來不對:\n\n' + lines.join('\n') +
+      '\n\n重抓指令:\nnode tools/fetch-previews.js --force --only ' + ids + '\n'
+    : '目前沒有標成「有問題」的歌。';
+  $('dlg').showModal();
+};
+$('close').onclick = () => $('dlg').close();
+$('copy').onclick = async () => {
+  $('out').select();
+  try { await navigator.clipboard.writeText($('out').value); }
+  catch(e){ document.execCommand('copy'); }
+  $('copy').textContent = '已複製';
+  setTimeout(() => { $('copy').textContent = '複製'; }, 1500);
+};
+$('reset').onclick = () => {
+  if(!Object.keys(marks).length) return;
+  if(confirm('清除這台裝置上的全部判定?')){ marks = {}; save(); render(); }
+};
+
+render();
+</script>
+</body>
+</html>
