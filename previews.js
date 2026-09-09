@@ -1,5 +1,5 @@
 /* 自動產生,請勿手動編輯 —— 由 tools/fetch-previews.js 產出
- * 產生時間:2026-09-09T15:04:38.890Z
+ * 產生時間:2026-09-09T15:24:41.153Z
  * 這裡只存 Apple 官方 30 秒試聽的網址,音檔不落地,遊戲執行時直接串流。
  * conf 是配對信心度,low 的請人工確認是不是配錯歌。
  */
@@ -1729,6 +1729,62 @@ window.SONG_PREVIEWS = {
     "title": "愛你但說不出口",
     "artist": "Karencici",
     "album": "愛你但說不出口 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "tiaolouji": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/1e/64/41/1e644195-37c2-22bd-da08-ca2133de02aa/mzaf_5147800977918659510.plus.aac.p.m4a",
+    "title": "跳樓機",
+    "artist": "LBI利比",
+    "album": "跳樓機 - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "taiyangdiqiu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4c/39/cd/4c39cdc5-c7c7-2859-6d62-57df888a042a/mzaf_14173839558323177399.plus.aac.p.m4a",
+    "title": "太陽與地球",
+    "artist": "盧廣仲",
+    "album": "HeartBreakFast 傷心早餐店",
+    "offset": 0,
+    "conf": "high"
+  },
+  "xingfugechang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/5f/e1/26/5fe126a5-cbbd-0f8a-9851-2dc2e632b6c8/mzaf_14507138141119915707.plus.aac.p.m4a",
+    "title": "幸福在歌唱",
+    "artist": "A-Lin",
+    "album": "《陽光女子合唱團》電影原聲帶",
+    "offset": 0,
+    "conf": "high"
+  },
+  "jiayibingding": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/99/06/52/99065271-bfaa-b1c1-dfe1-da1c194ba815/mzaf_13310490662920709314.plus.aac.p.m4a",
+    "title": "甲乙丙丁Strangers",
+    "artist": "李佳薇",
+    "album": "甲乙丙丁Strangers - Single",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "boli": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/da/91/54/da9154c7-6462-cb68-5851-fd901ec06404/mzaf_594024198387560560.plus.aac.p.m4a",
+    "title": "玻璃",
+    "artist": "Gareth.T",
+    "album": "玻璃 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "whiplash": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/91/84/e5/9184e5d0-54c8-eccc-e62c-e3175a88b396/mzaf_13467227653896090925.plus.aac.p.m4a",
+    "title": "Whiplash",
+    "artist": "aespa",
+    "album": "Whiplash - The 5th Mini Album - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "strategy": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/aa/cd/bb/aacdbbf5-894c-a547-1642-c6805422d877/mzaf_3671953991573159804.plus.aac.p.m4a",
+    "title": "Strategy",
+    "artist": "TWICE",
+    "album": "KPop Demon Hunters (Soundtrack from the Netflix Film)",
     "offset": 0,
     "conf": "high"
   }

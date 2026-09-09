@@ -1,6 +1,6 @@
-/* 金曲猜歌王 — 題庫(219 首)
+/* 金曲猜歌王 — 題庫(223 首)
  *
- * 這 219 首是「會被當成題目」的歌,每一首都需要音源
+ * 這 223 首是「會被當成題目」的歌,每一首都需要音源
  * (audio/<id>.m4a 本地檔,或 previews.js 裡的官方試聽網址)。
  *
  * 每一局固定抽 10 題,抽法寫在 index.html 的 CONFIG:
@@ -140,6 +140,11 @@ window.SONGS = [
   { id: "nianlun",            title: "年輪",                   artist: "張碧晨",       genre: "mando" },
   { id: "anheqiao",           title: "安和橋",                 artist: "宋冬野",       genre: "mando" },
   { id: "yanhuochenai",       title: "煙火裡的塵埃",           artist: "華晨宇",       genre: "mando" },
+  { id: "tiaolouji",          title: "跳樓機",                 artist: "LBI利比",      genre: "mando" },
+  { id: "taiyangdiqiu",       title: "太陽與地球",             artist: "盧廣仲",       genre: "mando" },
+  { id: "xingfugechang",      title: "幸福在歌唱",             artist: "A-Lin",        genre: "mando" },
+  { id: "jiayibingding",      title: "甲乙丙丁",               artist: "李佳薇",       genre: "mando" },
+  { id: "boli",               title: "玻璃",                   artist: "Gareth.T",     genre: "mando" },
   /* ---------- 華語經典 ---------- */
   { id: "tianmimi",        title: "甜蜜蜜",         artist: "鄧麗君", genre: "classic" },
   { id: "zhishaohaiyouni", title: "至少還有你",     artist: "林憶蓮", genre: "classic" },
@@ -210,6 +215,8 @@ window.SONGS = [
   { id: "magnetic",       title: "Magnetic",          artist: "ILLIT",        genre: "kpop" },
   { id: "bangbangbang",   title: "Bang Bang Bang",    artist: "BIGBANG",      genre: "kpop" },
   { id: "nobody",         title: "Nobody",            artist: "Wonder Girls", genre: "kpop" },
+  { id: "whiplash",       title: "Whiplash",          artist: "aespa",        genre: "kpop" },
+  { id: "strategy",       title: "Strategy",          artist: "TWICE",        genre: "kpop" },
   /* ---------- 西洋 ---------- */
   { id: "shapeofyou",     title: "Shape of You",     artist: "Ed Sheeran",        genre: "west" },
   { id: "blindinglights", title: "Blinding Lights",  artist: "The Weeknd",        genre: "west" },

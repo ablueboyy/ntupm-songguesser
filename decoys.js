@@ -251,11 +251,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "太陽與地球",
-  "artist": "盧廣仲",
-  "genre": "mando"
- },
- {
   "title": "幾分之幾 (電影《花甲大人轉男孩》主題曲)",
   "artist": "盧廣仲",
   "genre": "mando"
@@ -2282,11 +2277,6 @@ window.DECOYS = [
  },
  {
   "title": "LEMONADE",
-  "artist": "aespa",
-  "genre": "kpop"
- },
- {
-  "title": "Whiplash",
   "artist": "aespa",
   "genre": "kpop"
  },
