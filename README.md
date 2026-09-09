@@ -2,7 +2,7 @@
 
 台大流行音樂演唱社社團聯展擺攤用的猜歌遊戲。掃 QR → 取暱稱 → 十題九宮格搶答 → 達標兌獎。
 
-**試玩版:https://ablueboyy.github.io/ntupm-songguesser/**
+**試玩版:https://ntupm18th.github.io/ntupm-songguesser/**
 
 企劃書:https://claude.ai/code/artifact/f1f27848-a50f-4f9c-bc45-545944605b1a
 
@@ -141,7 +141,7 @@ node tools/fetch-previews.js --delay 3000      # 放慢(API 約 20 次/分鐘)
 
 ```
 http://localhost:8000/check.html          本機
-https://ablueboyy.github.io/ntupm-songguesser/check.html   手機
+https://ntupm18th.github.io/ntupm-songguesser/check.html   手機
 ```
 
 - 預設只列 **重點抽聽** —— 商店曲名/歌手跟題庫不一樣、信心度不是 high、
