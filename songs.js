@@ -204,7 +204,6 @@ window.SONGS = [
   { id: "lingwu",          title: "領悟",           artist: "辛曉琪", genre: "classic" },
   { id: "nuannuan",        title: "暖暖",           artist: "梁靜茹", genre: "classic" },
   /* ---------- 台語 ---------- */
-  { id: "langzihuitou",    title: "浪子回頭",         artist: "茄子蛋",     genre: "tw" },
   { id: "chiqingnanzihan", title: "癡情男子漢",       artist: "玖壹壹",     genre: "tw" },
   { id: "nishiwodehuaduo", title: "妳是我的花朵",     artist: "伍佰",       genre: "tw" },
   { id: "daoyutianguang",  title: "島嶼天光",         artist: "滅火器",     genre: "tw" },

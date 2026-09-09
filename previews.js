@@ -540,14 +540,6 @@ window.SONG_PREVIEWS = {
     "offset": 0,
     "conf": "high"
   },
-  "langzihuitou": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/19/31/2e/19312e5e-3fcb-c59c-fe35-6fe431bfad67/mzaf_14325981858551569708.plus.aac.p.m4a",
-    "title": "浪子回頭",
-    "artist": "茄子蛋",
-    "album": "卡通人物",
-    "offset": 0,
-    "conf": "high"
-  },
   "daoyutianguang": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/35/39/ec/3539ec94-dec1-3067-d014-6fbe6e0132ba/mzaf_15259289685927828921.plus.aac.p.m4a",
     "title": "島嶼天光",

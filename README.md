@@ -59,7 +59,7 @@ audio/xiaoxingyun.m4a   ← 小幸運
 
 ### 批次剪輯工具
 
-`tools/clips.csv` 已經把 260 首歌的 id 都列好了,只要填兩欄:
+`tools/clips.csv` 已經把 259 首歌的 id 都列好了,只要填兩欄:
 
 ```csv
 id,title,artist,source,start
@@ -165,7 +165,7 @@ https://ntupm18th.github.io/ntupm-songguesser/check.html   手機
 
 | 檔案 | 內容 | 需要音源? |
 |---|---|---|
-| `songs.js` | 260 首,會被抽成題目 | 要 |
+| `songs.js` | 259 首,會被抽成題目 | 要 |
 | `decoys.js` | 743 首,只當九宮格的干擾選項 | 不用 |
 
 九宮格的九個選項從「`songs.js` + `decoys.js`」合起來的池子抽。干擾項不需要音檔,所以可以放很多 —— 這樣重玩很多次也不會一直看到同一批選項。
@@ -211,7 +211,7 @@ prizeScore: 8000,     // 兌獎門檻
 ```
 
 **抽題分三步**:先照 `quota` 抽保底配額(7 題)→ 再從韓/西洋/日文混在一起抽 `foreignMin` 題
-→ 剩下的名額從 260 首裡隨機補滿 `questionCount`。
+→ 剩下的名額從 259 首裡隨機補滿 `questionCount`。
 
 第三步的池子包含非中文,所以**非中文保證至少 1 題,但常常不只 1 題**。跑 20,000 局的實際分布:
 
@@ -330,7 +330,7 @@ index.html                遊戲本體(HTML + CSS + JS 全在裡面)
 board-config.js           排行榜的伺服器設定(留空 = 只有本機榜)
 staff.html                排行榜管理台(工作人員登入後可下架 / 刪除)
 check.html                音源檢查台(抽聽用,不是給玩家的頁面)
-songs.js                  題庫 260 首(手工維護)
+songs.js                  題庫 259 首(手工維護)
 decoys.js                 干擾選項庫(自動產生)
 previews.js               官方試聽網址(自動產生)
 assets/theme.png          社團主視覺,當背景用
