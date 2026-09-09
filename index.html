@@ -152,6 +152,12 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   font-size:var(--t-small);
 }
 .sound.ok .txt b{color:var(--bottle)}
+/* 只差測聲音的時候,把這一區點亮 —— 按鈕說「請先測試聲音」,要看得出來是哪裡 */
+.sound.want{
+  box-shadow:inset 2px 0 0 var(--bottle);
+  padding-left:var(--s3);margin-left:calc(var(--s3) * -1);
+  transition:box-shadow .25s var(--ease);
+}
 
 .volrow{display:flex;align-items:center;gap:var(--s4)}
 .volslider{flex:1;min-width:0;height:22px;accent-color:var(--foam);cursor:pointer}
@@ -970,13 +976,28 @@ function nickError(v){
   return null;
 }
 
+// 按鈕變灰卻不說原因,是這個畫面最容易卡住玩家的地方 ——
+// 攤位上沒人會停下來研究,他們只會覺得壞掉了然後走掉。
+// 所以按鈕上永遠寫著「還差什麼」,細節寫在暱稱欄底下。
 function refreshStartBtn(){
-  const ok = !nickError($('nick').value) && G.soundOk;
-  $('btn-start').disabled = !ok;
-  $('btn-start').textContent = G.soundOk ? '開始遊戲' : '請先測試聲音';
+  const raw = $('nick').value;
+  const err = nickError(raw);
+  const typed = raw.trim().length > 0;
+
+  $('btn-start').disabled = !(!err && G.soundOk);
+  $('btn-start').textContent =
+    !typed        ? '請先輸入暱稱' :
+    err           ? '暱稱不能用'   :
+    !G.soundOk    ? '請先測試聲音' :
+                    '開始遊戲';
+
+  // 還沒開始打字就跳錯誤訊息太兇,等他真的輸入了再說
+  showNickError(typed ? err : '');
+  // 暱稱過關但還沒測聲音時,把視線引到聲音那一區
+  $('sound').classList.toggle('want', !err && typed && !G.soundOk);
 }
 
-$('nick').addEventListener('input', () => { showNickError(''); refreshStartBtn(); });
+$('nick').addEventListener('input', refreshStartBtn);   // 訊息由 refreshStartBtn 統一決定
 
 $('btn-test').addEventListener('click', () => {
   const ctx = ensureCtx();
