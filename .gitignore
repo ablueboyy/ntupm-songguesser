@@ -4,3 +4,7 @@ tools/*-log.txt
 # 音檔另外管理(檔案大、且是社員自己錄的素材)
 audio/*
 !audio/.gitkeep
+
+# 設計草稿,不進版本庫(留在本機備查)
+design-v*.html
+title-picker.html
