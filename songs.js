@@ -1,6 +1,6 @@
-/* 金曲猜歌王 — 題庫(200 首)
+/* 金曲猜歌王 — 題庫(219 首)
  *
- * 這 200 首是「會被當成題目」的歌,每一首都需要音源
+ * 這 219 首是「會被當成題目」的歌,每一首都需要音源
  * (audio/<id>.m4a 本地檔,或 previews.js 裡的官方試聽網址)。
  *
  * 每一局固定抽 10 題,抽法寫在 index.html 的 CONFIG:
@@ -185,6 +185,9 @@ window.SONGS = [
   { id: "daoyutianguang",  title: "島嶼天光",     artist: "滅火器", genre: "tw" },
   { id: "jiahou",          title: "家後",         artist: "江蕙",   genre: "tw" },
   { id: "amadehua",        title: "阿嬤的話",     artist: "蕭煌奇", genre: "tw" },
+  { id: "shijiediyideng",  title: "世界第一等",   artist: "伍佰",   genre: "tw" },
+  { id: "wunv",            title: "舞女",         artist: "陳小雲", genre: "tw" },
+  { id: "huanxijiuhao",    title: "歡喜就好",     artist: "陳雷",   genre: "tw" },
   /* ---------- 韓語 ---------- */
   { id: "dynamite",       title: "Dynamite",          artist: "BTS",          genre: "kpop" },
   { id: "gangnamstyle",   title: "Gangnam Style",     artist: "PSY",          genre: "kpop" },
@@ -200,6 +203,16 @@ window.SONGS = [
   { id: "psycho",         title: "Psycho",            artist: "Red Velvet",   genre: "kpop" },
   { id: "verynice",       title: "Very Nice",         artist: "SEVENTEEN",    genre: "kpop" },
   { id: "gee",            title: "Gee",               artist: "少女時代",     genre: "kpop" },
+  { id: "apt",            title: "APT.",              artist: "ROSÉ",         genre: "kpop" },
+  { id: "golden",         title: "Golden",            artist: "HUNTR/X",      genre: "kpop" },
+  { id: "killthislove",   title: "Kill This Love",    artist: "BLACKPINK",    genre: "kpop" },
+  { id: "whatislove",     title: "What Is Love?",     artist: "TWICE",        genre: "kpop" },
+  { id: "cheerup",        title: "Cheer Up",          artist: "TWICE",        genre: "kpop" },
+  { id: "queencard",      title: "Queencard",         artist: "(G)I-DLE",     genre: "kpop" },
+  { id: "nextlevel",      title: "Next Level",        artist: "aespa",        genre: "kpop" },
+  { id: "magnetic",       title: "Magnetic",          artist: "ILLIT",        genre: "kpop" },
+  { id: "bangbangbang",   title: "Bang Bang Bang",    artist: "BIGBANG",      genre: "kpop" },
+  { id: "nobody",         title: "Nobody",            artist: "Wonder Girls", genre: "kpop" },
   /* ---------- 西洋 ---------- */
   { id: "shapeofyou",     title: "Shape of You",     artist: "Ed Sheeran",        genre: "west" },
   { id: "blindinglights", title: "Blinding Lights",  artist: "The Weeknd",        genre: "west" },
@@ -216,10 +229,16 @@ window.SONGS = [
   { id: "believer",       title: "Believer",         artist: "Imagine Dragons",   genre: "west" },
   { id: "vivalavida",     title: "Viva La Vida",     artist: "Coldplay",          genre: "west" },
   /* ---------- 日文 / 動漫 ---------- */
-  { id: "lemon",       title: "Lemon",     artist: "米津玄師",         genre: "jp" },
-  { id: "idol",        title: "Idol",      artist: "YOASOBI",          genre: "jp" },
-  { id: "gurenge",     title: "紅蓮華",    artist: "LiSA",             genre: "jp" },
-  { id: "pretender",   title: "Pretender", artist: "Official髭男dism", genre: "jp" },
-  { id: "zankyosanka", title: "残響散歌",  artist: "Aimer",            genre: "jp" },
-  { id: "zenzenzense", title: "前前前世",  artist: "RADWIMPS",         genre: "jp" }
+  { id: "lemon",         title: "Lemon",                artist: "米津玄師",         genre: "jp" },
+  { id: "idol",          title: "Idol",                 artist: "YOASOBI",          genre: "jp" },
+  { id: "gurenge",       title: "紅蓮華",               artist: "LiSA",             genre: "jp" },
+  { id: "pretender",     title: "Pretender",            artist: "Official髭男dism", genre: "jp" },
+  { id: "zankyosanka",   title: "残響散歌",             artist: "Aimer",            genre: "jp" },
+  { id: "zenzenzense",   title: "前前前世",             artist: "RADWIMPS",         genre: "jp" },
+  { id: "yorunikakeru",  title: "夜に駆ける",           artist: "YOASOBI",          genre: "jp" },
+  { id: "gunjo",         title: "群青",                 artist: "YOASOBI",          genre: "jp" },
+  { id: "uchiagehanabi", title: "打上花火",             artist: "米津玄師",         genre: "jp" },
+  { id: "homura",        title: "炎",                   artist: "LiSA",             genre: "jp" },
+  { id: "bbbb",          title: "Bling-Bang-Bang-Born", artist: "Creepy Nuts",      genre: "jp" },
+  { id: "firstlove",     title: "First Love",           artist: "宇多田ヒカル",     genre: "jp" }
 ];

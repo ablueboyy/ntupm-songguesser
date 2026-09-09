@@ -54,6 +54,11 @@ function norm(s) {
 
 const BAD = /live|instrumental|karaoke|cover|remix|version|伴奏|現場|演唱會|純音樂/i;
 
+// 專輯名稱看得出不是原版錄音的 —— 綜藝節目、演唱會實錄、卡拉OK、音樂盒。
+// 這種最陰險:歌名和歌手都對得剛剛好,分數還比原版高(原版常常帶「(電影⋯主題曲)」副標),
+// 但播出來是完全不同的編曲,玩家會聽到一首認不出來的歌。
+const BAD_ALBUM = /第\s*\d+\s*期|演唱會|跨年|金曲撈|我是歌手|蒙面|聲生不息|好聲音|影音全記錄|串燒|卡拉|karaoke|オルゴール|音樂盒|音乐盒|instrumental|伴奏/i;
+
 function score(song, item) {
   const t = norm(item.trackName), a = norm(item.artistName);
   const st = norm(song.title), sa = norm(song.artist);
@@ -63,6 +68,7 @@ function score(song, item) {
   if (a === sa) s += 3;
   else if (a.includes(sa) || sa.includes(a)) s += 2;
   if (BAD.test(item.trackName)) s -= 3;
+  if (BAD_ALBUM.test(item.collectionName || '')) s -= 5;
   return s;
 }
 

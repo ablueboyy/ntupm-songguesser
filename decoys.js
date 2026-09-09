@@ -2036,11 +2036,6 @@ window.DECOYS = [
   "genre": "kpop"
  },
  {
-  "title": "Kill This Love",
-  "artist": "BLACKPINK",
-  "genre": "kpop"
- },
- {
   "title": "BOOMBAYAH",
   "artist": "BLACKPINK",
   "genre": "kpop"
@@ -2121,11 +2116,6 @@ window.DECOYS = [
   "genre": "kpop"
  },
  {
-  "title": "Cheer Up",
-  "artist": "TWICE",
-  "genre": "kpop"
- },
- {
   "title": "Feel Special",
   "artist": "TWICE",
   "genre": "kpop"
@@ -2133,11 +2123,6 @@ window.DECOYS = [
  {
   "title": "I CAN'T STOP ME",
   "artist": "TWICE",
-  "genre": "kpop"
- },
- {
-  "title": "Queencard",
-  "artist": "i-dle",
   "genre": "kpop"
  },
  {
@@ -2327,11 +2312,6 @@ window.DECOYS = [
  },
  {
   "title": "Rich Man",
-  "artist": "aespa",
-  "genre": "kpop"
- },
- {
-  "title": "Next Level",
   "artist": "aespa",
   "genre": "kpop"
  },
@@ -2826,11 +2806,6 @@ window.DECOYS = [
   "genre": "west"
  },
  {
-  "title": "APT.",
-  "artist": "ROSÉ & Bruno Mars",
-  "genre": "west"
- },
- {
   "title": "That's What I Like",
   "artist": "Bruno Mars",
   "genre": "west"
@@ -3246,11 +3221,6 @@ window.DECOYS = [
   "genre": "jp"
  },
  {
-  "title": "打上花火",
-  "artist": "米津玄師",
-  "genre": "jp"
- },
- {
   "title": "JANE DOE",
   "artist": "米津玄師 & Hikaru Utada",
   "genre": "jp"
@@ -3278,16 +3248,6 @@ window.DECOYS = [
  {
   "title": "KICK BACK",
   "artist": "米津玄師",
-  "genre": "jp"
- },
- {
-  "title": "群青",
-  "artist": "YOASOBI",
-  "genre": "jp"
- },
- {
-  "title": "夜に駆ける",
-  "artist": "YOASOBI",
   "genre": "jp"
  },
  {

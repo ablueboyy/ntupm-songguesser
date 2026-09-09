@@ -1,5 +1,5 @@
 /* 自動產生,請勿手動編輯 —— 由 tools/fetch-previews.js 產出
- * 產生時間:2026-09-09T14:09:40.570Z
+ * 產生時間:2026-09-09T14:28:00.941Z
  * 這裡只存 Apple 官方 30 秒試聽的網址,音檔不落地,遊戲執行時直接串流。
  * conf 是配對信心度,low 的請人工確認是不是配錯歌。
  */
@@ -77,12 +77,12 @@ window.SONG_PREVIEWS = {
     "conf": "medium"
   },
   "guangnianzhiwai": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/dc/59/1c/dc591cca-09b0-9d38-9c9b-cbddf4f02a60/mzaf_11965447431641442372.plus.aac.p.m4a",
-    "title": "光年之外",
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/97/4f/e7/974fe739-8319-f45d-a4fa-34d77b1bec25/mzaf_2902864200094899486.plus.aac.p.m4a",
+    "title": "光年之外 (電影《Passengers》中國區主題曲)",
     "artist": "鄧紫棋",
-    "album": "嗨,唱起來 第5期 - EP",
+    "album": "光年之外 (電影《Passengers》中國區主題曲) - Single",
     "offset": 0,
-    "conf": "high"
+    "conf": "medium"
   },
   "yanyuan": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5c/1d/bc/5c1dbc23-bde6-7276-a97b-78f5c325fa59/mzaf_1879729394428684960.plus.aac.p.m4a",
@@ -1109,10 +1109,10 @@ window.SONG_PREVIEWS = {
     "conf": "high"
   },
   "yongxinliangku": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/16/81/85/16818558-409c-88c5-614e-db184f55fa7b/mzaf_9371845855727545564.plus.aac.p.m4a",
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/8c/5a/67/8c5a674b-bcc0-a03f-3706-770ad9650bad/mzaf_11343991640212778786.plus.aac.p.m4a",
     "title": "用心良苦",
     "artist": "張宇",
-    "album": "男人的好 新歌精選影音全記錄",
+    "album": "奇蹟",
     "offset": 0,
     "conf": "high"
   },
@@ -1389,10 +1389,10 @@ window.SONG_PREVIEWS = {
     "conf": "high"
   },
   "dachengxiaoai": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7c/4f/0d/7c4f0d5c-28df-4641-bdaa-fa1509a80a2e/mzaf_9942415203867350938.plus.aac.p.m4a",
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/d2/76/2a/d2762a44-5372-2765-e4e4-2b4d62b8ed3d/mzaf_14732069843267269757.plus.aac.p.m4a",
     "title": "大城小愛",
     "artist": "王力宏",
-    "album": "2006王力宏蓋世英雄演唱會影音全記錄",
+    "album": "蓋世英雄",
     "offset": 0,
     "conf": "high"
   },
@@ -1603,5 +1603,157 @@ window.SONG_PREVIEWS = {
     "album": "末路狂花",
     "offset": 0,
     "conf": "high"
+  },
+  "shijiediyideng": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/44/10/47/4410471f-6151-0ea6-0b9d-e9486836e1d7/mzaf_5307687819124962439.plus.aac.p.m4a",
+    "title": "世界第一等",
+    "artist": "伍佰",
+    "album": "愛你伍佰年: 3",
+    "offset": 0,
+    "conf": "high"
+  },
+  "wunv": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/9c/f2/e4/9cf2e490-02a3-e485-e445-f5e67b37004e/mzaf_13263719061775514744.plus.aac.p.m4a",
+    "title": "舞女",
+    "artist": "陳小雲",
+    "album": "陳小雲 百萬張成名曲 1",
+    "offset": 0,
+    "conf": "high"
+  },
+  "huanxijiuhao": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/bb/7b/1e/bb7b1ea1-33e1-67aa-cefe-5c3e34d80b9d/mzaf_12928851226758047848.plus.aac.p.m4a",
+    "title": "歡喜就好",
+    "artist": "陳雷",
+    "album": "歡喜就好",
+    "offset": 0,
+    "conf": "high"
+  },
+  "apt": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7a/15/38/7a1538f3-f41a-a2eb-0f24-8eb6712ee043/mzaf_7740628412097685267.plus.aac.p.m4a",
+    "title": "APT.",
+    "artist": "ROSÉ & Bruno Mars",
+    "album": "APT. - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "golden": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/4a/9d/a1/4a9da1c4-096f-8f45-4a3b-c883c45ca451/mzaf_3059921854949935161.plus.aac.p.m4a",
+    "title": "Golden",
+    "artist": "HUNTR/X, EJAE, AUDREY NUNA, REI AMI & KPop Demon Hunters Cast",
+    "album": "KPop Demon Hunters (Soundtrack from the Netflix Film)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "killthislove": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2d/d3/09/2dd30920-9a52-f451-55cf-a1afb93bce56/mzaf_1716061757220142621.plus.aac.p.m4a",
+    "title": "Kill This Love",
+    "artist": "BLACKPINK",
+    "album": "KILL THIS LOVE - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "whatislove": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/11/29/e2/1129e2b9-2d59-c3bf-9242-982aa012cb95/mzaf_2107069738025586373.plus.aac.p.m4a",
+    "title": "What is Love?",
+    "artist": "TWICE",
+    "album": "What is Love? - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "cheerup": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/3d/50/30/3d5030a5-41ef-aaeb-0bf4-0c7bad2a75ba/mzaf_2690744486775202166.plus.aac.p.m4a",
+    "title": "Cheer Up",
+    "artist": "TWICE",
+    "album": "Page Two - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "queencard": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/45/40/a5/4540a5a8-906d-718e-6681-86c8b4c0c019/mzaf_1989940222119268016.plus.aac.p.m4a",
+    "title": "Queencard",
+    "artist": "i-dle",
+    "album": "I feel - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "nextlevel": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/43/1e/0a/431e0a24-2c04-e738-2632-87462a20984d/mzaf_3158159453623406671.plus.aac.p.m4a",
+    "title": "Next Level",
+    "artist": "aespa",
+    "album": "Next Level - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "magnetic": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/e8/7e/67/e87e6795-4ada-2f65-d562-1fd2a3eddfdf/mzaf_11263458879279601822.plus.aac.p.m4a",
+    "title": "Magnetic",
+    "artist": "ILLIT",
+    "album": "SUPER REAL ME - EP",
+    "offset": 0,
+    "conf": "high"
+  },
+  "bangbangbang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/0e/8a/1d/0e8a1d90-932f-1b6f-7722-a4edc86c28db/mzaf_7401823611514722385.plus.aac.p.m4a",
+    "title": "BANG BANG BANG",
+    "artist": "BIGBANG",
+    "album": "A - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "nobody": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/8b/8e/ef/8b8eef3e-ee1e-23ab-951a-fa29f4b70a48/mzaf_11412424461222179962.plus.aac.p.m4a",
+    "title": "Nobody",
+    "artist": "Wonder Girls",
+    "album": "The Wonder Years - Trilogy",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yorunikakeru": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/4e/73/ae/4e73ae7f-96d6-5100-d3d3-3c50c28a1f19/mzaf_6031201848020469124.plus.aac.p.m4a",
+    "title": "夜に駆ける",
+    "artist": "YOASOBI",
+    "album": "夜に駆ける - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "gunjo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/8e/3f/38/8e3f3837-5084-56b3-981c-e2d99d722b60/mzaf_1457094438102075041.plus.aac.p.m4a",
+    "title": "群青",
+    "artist": "YOASOBI",
+    "album": "THE BOOK",
+    "offset": 0,
+    "conf": "high"
+  },
+  "uchiagehanabi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e1/fb/f1/e1fbf133-dbaa-e9e2-906f-379fe9d8ae7a/mzaf_7470945555199788596.plus.aac.p.m4a",
+    "title": "打上花火",
+    "artist": "米津玄師",
+    "album": "BOOTLEG",
+    "offset": 0,
+    "conf": "high"
+  },
+  "homura": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2b/ac/dd/2bacdd8f-cbfc-86bc-e41a-399a42d79f7a/mzaf_10539133262224010339.plus.aac.p.m4a",
+    "title": "炎",
+    "artist": "LiSA",
+    "album": "LANDER",
+    "offset": 0,
+    "conf": "high"
+  },
+  "bbbb": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5c/54/5e/5c545e9a-c8ca-c673-f85d-a74b14c2c882/mzaf_2313943576213161760.plus.aac.p.m4a",
+    "title": "Bling-Bang-Bang-Born",
+    "artist": "Creepy Nuts",
+    "album": "Bling-Bang-Bang-Born - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "firstlove": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/8a/ef/99/8aef99aa-02e7-a0ed-62c2-52b8b7e0c438/mzaf_18106053477060712364.plus.aac.p.m4a",
+    "title": "First Love",
+    "artist": "Hikaru Utada",
+    "album": "First Love - EP",
+    "offset": 0,
+    "conf": "medium"
   }
 };
