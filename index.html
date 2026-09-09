@@ -334,6 +334,11 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 .rowitem.top1 .rk,.rowitem.top2 .rk,.rowitem.top3 .rk{color:var(--bottle)}
 .rowitem.me{box-shadow:inset 3px 0 0 var(--foam);padding-left:var(--s3)}
 .rowitem.me .sc{color:var(--bottle)}
+.board-note{margin-top:var(--s2);font-size:var(--t-small);color:var(--dim);line-height:1.7}
+.board-note b{color:var(--bottle);font-weight:var(--w-item)}
+/* 自己不在前 20 名時,把自己那一列單獨釘在底下 —— 玩家最想知道的就是自己第幾 */
+.rowitem.detached{border-top:1px solid var(--line-2);margin-top:var(--s3)}
+.fielderr{margin-top:var(--s2);font-size:var(--t-small);color:var(--miss);font-weight:var(--w-item)}
 .empty{color:var(--dim);font-size:var(--t-small);padding:var(--s7) 0;line-height:2.1}
 .empty b{display:block;color:var(--foam);font-weight:var(--w-title);font-size:var(--t-h3);margin-bottom:var(--s4)}
 
@@ -362,6 +367,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
     <div class="field">
       <label class="label" for="nick">暱稱</label>
       <input type="text" id="nick" maxlength="8" placeholder="2–8 個字,別用真名" autocomplete="off" enterkeyhint="done">
+      <div class="fielderr" id="nick-err" hidden></div>
     </div>
 
     <div class="sound" id="sound">
@@ -474,6 +480,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 <div class="screen" id="screen-board" hidden>
   <div class="board-head">
     <h2>排行榜</h2>
+    <div class="board-note" id="board-note"></div>
   </div>
   <div class="board-list" id="board-list"></div>
   <button class="btn ghost" id="btn-back">返回</button>
@@ -481,6 +488,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 <script src="songs.js"></script>
 <script src="decoys.js"></script>
 <script src="previews.js"></script>
+<script src="board-config.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════
    金曲猜歌王 — 原型版
@@ -691,10 +699,49 @@ function playClip(q){
   return synthClip(q.song, CONFIG.clipSeconds);
 }
 
-/* ---------- 排行榜儲存(正式版換成 Supabase)---------- */
+/* ---------- 排行榜儲存 ----------
+   兩種模式,開場自動決定:
+
+     server  board-config.js 填了 Supabase 的網址與金鑰 —— 全場共用一張榜
+     local   沒填,或伺服器連不上 —— 退回只有這支手機看得到的榜
+
+   退回 local 絕對不是靜默的:排行榜畫面會寫明「現在只有這支手機的分數」。
+   攤位網路掛掉時遊戲要照常能玩,但玩家不能誤以為自己已經上了全場榜。
+
+   「同一個人」是用 device_id 認的,不是用暱稱 ——
+   兩支手機各自取「小明」是兩個人,同一支手機玩十次才是同一個人。
+   暱稱撞名在進場時就先擋掉(nicknameTaken),免得榜上出現兩個小明。 */
+
+const BOARD = (window.BOARD_CONFIG || { url: '', anonKey: '' });
+const BOARD_ON = !!(BOARD.url && BOARD.anonKey);
+
+// 打 Supabase 的 REST API。不載入 supabase-js —— 只是兩個 HTTP 請求,
+// 為它多背一個 CDN 相依(在校園網路下多一個會失敗的東西)不划算。
+async function boardApi(path, opts = {}, timeoutMs = 6000){
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try{
+    const res = await fetch(BOARD.url.replace(/\/+$/, '') + '/rest/v1/' + path, {
+      ...opts,
+      signal: ctrl.signal,
+      headers: {
+        apikey: BOARD.anonKey,
+        Authorization: 'Bearer ' + BOARD.anonKey,
+        'Content-Type': 'application/json',
+        ...(opts.headers || {})
+      }
+    });
+    if(!res.ok) throw new Error('HTTP ' + res.status + ' ' + await res.text().catch(() => ''));
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
+  } finally { clearTimeout(timer); }
+}
+
 const Store = {
   KEY: 'pmsg_scores_v1',
   DEV: 'pmsg_device_v1',
+  degraded: false,        // 設定有填,但伺服器連不上 —— 排行榜畫面要說出來
+
   deviceId(){
     let d = null;
     try{ d = localStorage.getItem(this.DEV); }catch(e){}
@@ -704,21 +751,90 @@ const Store = {
     }
     return d;
   },
-  all(){
+
+  /* ----- 本機(localStorage)----- */
+  localAll(){
     try{ return JSON.parse(localStorage.getItem(this.KEY)) || []; }
     catch(e){ return []; }
   },
-  // 同一暱稱只留最高分
-  submit(entry){
-    const list = this.all();
+  localSubmit(entry){
+    const list = this.localAll();
     const i = list.findIndex(r => r.nickname === entry.nickname);
     if(i >= 0){ if(entry.score > list[i].score) list[i] = entry; }
     else list.push(entry);
     try{ localStorage.setItem(this.KEY, JSON.stringify(list)); }catch(e){}
-    return this.ranked();
   },
-  ranked(){
-    return this.all().sort((a,b) => b.score - a.score || a.at - b.at);
+
+  /* ----- 同一支裝置只留最高分 -----
+     資料庫是 append-only(每一局都存),合併在這裡做。
+     先照分數排好再走一遍,每個 device_id 只留第一次遇到的那筆。 */
+  dedupe(rows){
+    const sorted = rows.slice().sort((a, b) =>
+      b.score - a.score || new Date(a.created_at || a.at) - new Date(b.created_at || b.at));
+    const seen = new Set(), out = [];
+    for(const r of sorted){
+      const key = r.device_id || r.device || r.nickname;
+      if(seen.has(key)) continue;
+      seen.add(key);
+      out.push(r);
+    }
+    return out;
+  },
+
+  /* ----- 寫入 -----
+     回傳 true 代表確定進了全場榜。伺服器失敗時照樣寫進本機,
+     讓玩家至少留得住自己的紀錄,但不會謊稱上榜。 */
+  async submit(entry){
+    this.localSubmit(entry);
+    if(!BOARD_ON) return false;
+    try{
+      await boardApi('scores', {
+        method: 'POST',
+        headers: { Prefer: 'return=minimal' },
+        body: JSON.stringify({
+          nickname: entry.nickname, score: entry.score,
+          correct: entry.correct, device_id: entry.device
+        })
+      });
+      this.degraded = false;
+      return true;
+    }catch(e){
+      this.degraded = true;
+      return false;
+    }
+  },
+
+  /* ----- 讀榜 -----
+     一次抓 500 筆再在前端合併。攤位一天的量遠遠不到這個數,
+     真的爆掉的話再改成資料庫的 view 做合併。 */
+  async top(){
+    if(BOARD_ON){
+      try{
+        const rows = await boardApi(
+          'scores?select=nickname,score,correct,device_id,created_at&order=score.desc,created_at.asc&limit=500');
+        this.degraded = false;
+        return { rows: this.dedupe(rows || []), source: 'server' };
+      }catch(e){
+        this.degraded = true;
+      }
+    }
+    return { rows: this.dedupe(this.localAll()), source: 'local' };
+  },
+
+  /* ----- 暱稱是不是被「別台裝置」用走了 -----
+     只有伺服器明確回答「有」才擋人。查詢失敗一律放行 ——
+     現場網路不穩的時候,擋住玩家開局比讓兩個小明上榜嚴重得多。 */
+  async nicknameTaken(nick){
+    if(!BOARD_ON) return false;
+    try{
+      const rows = await boardApi(
+        'scores?select=device_id&nickname=eq.' + encodeURIComponent(nick) +
+        '&device_id=neq.' + encodeURIComponent(this.deviceId()) + '&limit=1',
+        {}, 1500);   // 逾時要短 —— 網路掛掉時每次開局都卡在這裡等,比撞名難受
+      return Array.isArray(rows) && rows.length > 0;
+    }catch(e){
+      return false;
+    }
   }
 };
 
@@ -840,7 +956,7 @@ function refreshStartBtn(){
   $('btn-start').textContent = G.soundOk ? '開始遊戲' : '請先測試聲音';
 }
 
-$('nick').addEventListener('input', refreshStartBtn);
+$('nick').addEventListener('input', () => { showNickError(''); refreshStartBtn(); });
 
 $('btn-test').addEventListener('click', () => {
   const ctx = ensureCtx();
@@ -912,11 +1028,34 @@ $('btn-retry').addEventListener('click', async () => {
   if(await loadFirst()){ show('screen-play'); nextQuestion(); }
 });
 
+function showNickError(msg){
+  const el = $('nick-err');
+  el.textContent = msg || '';
+  el.hidden = !msg;
+}
+
 async function startGame(){
   const err = nickError($('nick').value);
-  if(err){ alert(err); return; }
+  if(err){ showNickError(err); return; }
+  showNickError('');
 
-  G.nickname = $('nick').value.trim();
+  const nick = $('nick').value.trim();
+
+  // 撞名檢查:榜上是靠 device_id 認人的,兩支手機都叫「小明」不會互相蓋掉分數,
+  // 但榜上會並排兩個小明,誰也分不出哪個是自己。所以在進場時就先擋。
+  // 查不到答案(網路慢、伺服器掛)一律放行 —— 擋住玩家開局比兩個小明嚴重得多。
+  const btn = $('btn-start');
+  const label = btn.textContent;
+  btn.disabled = true; btn.textContent = '檢查暱稱⋯';
+  const taken = await Store.nicknameTaken(nick);
+  btn.disabled = false; btn.textContent = label;
+  if(taken){
+    showNickError('這個暱稱已經有人用了,換一個吧');
+    $('nick').focus();
+    return;
+  }
+
+  G.nickname = nick;
   G.questions = buildQuestions();
   G.index = 0; G.total = 0; G.log = [];
 
@@ -1060,17 +1199,16 @@ function finish(){
     device: Store.deviceId(),
     at: Date.now()
   };
-  const board = Store.submit(entry);
-  // 排行榜還沒接伺服器,所以只講這支手機自己的最佳成績,不講名次
-  const best = board.find(r => r.nickname === entry.nickname);
-
   const rank = titleFor(G.total);
   $('res-title').textContent = rank.title;
   $('res-line').textContent  = rank.line;
   $('res-score').textContent = G.total.toLocaleString();
-  $('res-meta').textContent = `答對 ${entry.correct} 題,共 ${CONFIG.questionCount} 題`
-    + (best && best.score > entry.score
-        ? ` · 這支手機的最佳成績 ${best.score.toLocaleString()} 分` : '');
+
+  // 名次要等伺服器回話,但結算畫面不能等 —— 這是整局情緒的高點,
+  // 先把稱號和分數放出來,名次晚一秒補上就好。
+  const baseMeta = `答對 ${entry.correct} 題,共 ${CONFIG.questionCount} 題`;
+  $('res-meta').textContent = baseMeta + (BOARD_ON ? ' · 名次計算中⋯' : '');
+  reportRank(entry, baseMeta);
 
   // 兌獎:不發代碼,達標就直接把螢幕拿給關主看
   const box = $('res-code');
@@ -1105,16 +1243,88 @@ function finish(){
   show('screen-result');
 }
 
+/* 上傳成績,然後把名次補到結算畫面上。
+   任何一步失敗都只是少一行字,不會影響玩家看到自己的分數與稱號。 */
+async function reportRank(entry, baseMeta){
+  const uploaded = await Store.submit(entry);
+  const { rows, source } = await Store.top();
+  const me = Store.deviceId();
+
+  if(source === 'server' && uploaded){
+    const i = rows.findIndex(r => (r.device_id || r.device) === me);
+    $('res-meta').textContent = baseMeta +
+      (i >= 0 ? ` · 全場第 ${i + 1} 名,共 ${rows.length} 人` : '');
+    return;
+  }
+
+  // 沒進全場榜的話講清楚是本機成績,不要含糊帶過
+  const best = rows.find(r => (r.device_id || r.device) === me);
+  $('res-meta').textContent = baseMeta +
+    (best && best.score > entry.score
+      ? ` · 這支手機的最佳成績 ${best.score.toLocaleString()} 分` : '') +
+    (BOARD_ON && !uploaded ? ' · 連不上伺服器,成績只存在這支手機' : '');
+}
+
 /* ---------- 排行榜 ---------- */
-function renderBoard(){
-  // 排行榜要等接上伺服器才有意義 —— 現在做只會顯示這支手機自己的分數
-  $('board-list').innerHTML = `<div class="empty">
-      <b>還在製作中</b>
-      正式版會接上伺服器,全場共用同一張即時榜,<br>
-      攤位上也會有一面螢幕跑排名。<br><br>
-      現在先專心玩,分數暫時只留在這支手機裡。
+
+let boardTimer = null;
+
+function boardRowHtml(r, rank, mine, detached){
+  const cls = ['rowitem'];
+  if(rank <= 3) cls.push('top' + rank);
+  if(mine) cls.push('me');
+  if(detached) cls.push('detached');
+  return `<div class="${cls.join(' ')}">
+      <div class="rk">${rank}</div>
+      <div class="nm">${escapeHtml(r.nickname)}</div>
+      <div class="sc">${Number(r.score).toLocaleString()}</div>
     </div>`;
+}
+
+async function renderBoard(){
   show('screen-board');
+  const list = $('board-list'), note = $('board-note');
+
+  if(!list.children.length) list.innerHTML = '<div class="empty">正在讀取⋯</div>';
+
+  const { rows, source } = await Store.top();
+  const me = Store.deviceId();
+
+  if(!rows.length){
+    list.innerHTML = `<div class="empty">
+        <b>還沒有人上榜</b>
+        當第一個吧。
+      </div>`;
+  }else{
+    const top = rows.slice(0, 20);
+    let html = top.map((r, i) =>
+      boardRowHtml(r, i + 1, (r.device_id || r.device) === me, false)).join('');
+
+    // 自己掉出前 20 名的話,把自己那一列接在後面 —— 不然玩家根本找不到自己
+    const myIndex = rows.findIndex(r => (r.device_id || r.device) === me);
+    if(myIndex >= 20) html += boardRowHtml(rows[myIndex], myIndex + 1, true, true);
+
+    list.innerHTML = html;
+  }
+
+  // 現在看到的到底是哪一種榜 —— 這行不能省。
+  // 玩家以為自己上了全場榜、結果只是存在自己手機裡,是最糟的誤解。
+  if(source === 'server'){
+    note.innerHTML = `全場共用 · 共 ${rows.length} 位玩家 · 同一支手機只計最高分`;
+  }else if(BOARD_ON){
+    note.innerHTML = `<b>連不上伺服器</b> —— 下面只有這支手機的分數。分數有存下來,網路恢復後再打開就會重新讀取。`;
+  }else{
+    note.innerHTML = `<b>目前只有這支手機的分數</b> —— 全場共用的榜還沒接上伺服器。`;
+  }
+
+  // 開著的時候每 15 秒重新讀一次,離開畫面就停掉
+  clearInterval(boardTimer);
+  if(source === 'server'){
+    boardTimer = setInterval(() => {
+      if($('screen-board').hidden){ clearInterval(boardTimer); return; }
+      renderBoard();
+    }, 15000);
+  }
 }
 
 function escapeHtml(s){

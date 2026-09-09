@@ -32,7 +32,7 @@ python -m http.server 8000
 | 暱稱輸入、音量測試 | 完成 |
 | 結算、五級稱號、兌獎判定(門檻 8,000 分) | 完成 |
 | 音源 | Apple 官方試聽,執行時串流 |
-| 排行榜 | **還沒做**,畫面上顯示「還在製作中」 |
+| 排行榜 | 程式好了,**等接上 Supabase**(見下面「排行榜」一節) |
 | 本地音檔 | **還沒放**,`audio/` 是空的 |
 
 ## 部署
@@ -254,34 +254,51 @@ prizeScore: 8000,     // 兌獎門檻
 
 ---
 
-## 接排行榜(下一步)
+## 排行榜
 
-現在 `Store` 這個物件把分數寫在 localStorage,所以**每支手機看到的榜都不一樣**。
-正式版要換成 Supabase,只要改 `Store` 的三個方法,其他程式碼都不用動。
+程式已經寫好了,**但預設是關的** —— `board-config.js` 兩個欄位留空時,
+排行榜會退回「只有這支手機」的模式,而且畫面上會寫明,不會讓玩家誤以為上了全場榜。
 
-1. 開一個 Supabase 專案,建 `scores` 資料表:
+### 開啟全場共用的榜
 
-```sql
-create table scores (
-  id uuid primary key default gen_random_uuid(),
-  nickname text not null,
-  score int not null,
-  correct int not null,
-  device_id text,
-  created_at timestamptz default now()
-);
+1. 到 supabase.com 開一個免費專案
+2. 左邊 **SQL Editor** → 把 `sql/leaderboard.sql` 整份貼上 → Run
+3. **Project Settings → API Keys**,把 Project URL 和 **anon public** key 填進 `board-config.js`
+4. commit + push,GitHub Pages 更新後就生效
 
-alter table scores enable row level security;
-create policy "anyone can insert" on scores for insert to anon with check (true);
-create policy "anyone can read"   on scores for select to anon using (true);
--- 不開 update / delete,金鑰外流也改不了既有分數
-```
+`anon key` 是設計成可以公開的 —— 它本來就會出現在網頁原始碼裡。真正把關的是 RLS 政策:
+**只開 insert 和 select,不開 update / delete**,金鑰外流也改不掉、刪不掉任何既有分數。
+要清測試資料或不當暱稱,到 Supabase 後台的 Table Editor 手動刪。
 
-2. 把 `Store.submit` 改成 `insert`、`Store.ranked` 改成 `select ... order by score desc limit 20`。
-3. 想要即時更新,再訂閱 Realtime channel。
+### 「同一個人」是怎麼認的
+
+**用 `device_id`,不是用暱稱。** 每支手機第一次開頁面時產生一組隨機 id 存在 localStorage,
+榜上同一個 id 只留最高分。所以:
+
+- 同一支手機玩十次 → 榜上一列,取最高分
+- 兩支手機都取「小明」 → 是兩個人,分數不會互相蓋掉
+
+但榜上並排兩個小明還是很怪,所以**進場時會先查暱稱有沒有被別台裝置用過**,
+撞名就擋下來請他改。這個查詢逾時只給 1.5 秒,而且**查不到答案一律放行** ——
+現場網路不穩的時候,擋住玩家開局比兩個小明嚴重得多。
+
+### 資料是怎麼存的
+
+資料庫是 append-only,每一局都存一筆(之後要看遊玩次數、時段分布都還有原始資料);
+「同裝置只留最高分」是讀榜時在前端合併的。一次抓 500 筆,攤位一天的量遠遠不到。
+
+沒有用 supabase-js,直接 `fetch` 打它的 REST API —— 為了兩個 HTTP 請求多背一個 CDN 相依
+(在校園網路下就是多一個會失敗的東西)不划算。
+
+### 網路掛掉的時候
+
+- **開局**:暱稱檢查 1.5 秒逾時後直接放行,照常開始
+- **結算**:成績寫進本機,結算畫面寫「連不上伺服器,成績只存在這支手機」
+- **排行榜**:顯示本機的分數,狀態列寫明「連不上伺服器」
+
+沒有任何一條路徑會安靜地假裝成功。
 
 **待辦**:`board.html`(攤位螢幕用的全螢幕榜)、`staff.html`(刪除不當暱稱、清除異常分數)。
-這兩頁要等接上伺服器才有意義 —— 現在做只會顯示那台電腦自己的分數。
 
 ---
 
@@ -289,6 +306,7 @@ create policy "anyone can read"   on scores for select to anon using (true);
 
 ```
 index.html                遊戲本體(HTML + CSS + JS 全在裡面)
+board-config.js           排行榜的伺服器設定(留空 = 只有本機榜)
 check.html                音源檢查台(抽聽用,不是給玩家的頁面)
 songs.js                  題庫 242 首(手工維護)
 decoys.js                 干擾選項庫(自動產生)
@@ -299,6 +317,7 @@ tools/fetch-previews.js   抓試聽網址
 tools/build-decoys.js     建干擾選項庫
 tools/make-clips.ps1      把自有音樂檔剪成 15 秒片段
 tools/clips.csv           剪輯清單
+sql/leaderboard.sql       排行榜的資料表與 RLS 政策
 ```
 
 自動產生的三個檔案裡,`previews.js` 和 `decoys.js` 可以手動微調單一項目(腳本預設不會覆蓋既有內容),但別整檔重寫。
