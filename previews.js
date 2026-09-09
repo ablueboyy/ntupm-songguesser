@@ -1,5 +1,5 @@
 /* 自動產生,請勿手動編輯 —— 由 tools/fetch-previews.js 產出
- * 產生時間:2026-09-09T15:37:39.902Z
+ * 產生時間:2026-09-09T15:44:42.740Z
  * 這裡只存 Apple 官方 30 秒試聽的網址,音檔不落地,遊戲執行時直接串流。
  * conf 是配對信心度,low 的請人工確認是不是配錯歌。
  */
@@ -1172,14 +1172,6 @@ window.SONG_PREVIEWS = {
     "offset": 0,
     "conf": "medium"
   },
-  "zhizu": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/49/37/a8/4937a807-fb5c-6ec3-04dd-86e5547f25d3/mzaf_9753000863767078148.plus.aac.p.m4a",
-    "title": "知足",
-    "artist": "五月天",
-    "album": "步步自選作品輯 1999-2013",
-    "offset": 0,
-    "conf": "high"
-  },
   "shangxinderen": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6e/31/e7/6e31e739-50a8-19f1-f575-0a6c6988e16a/mzaf_8383747156617748237.plus.aac.p.m4a",
     "title": "傷心的人別聽慢歌 (貫徹快樂)",
@@ -1187,14 +1179,6 @@ window.SONG_PREVIEWS = {
     "album": "傷心的人別聽慢歌 (貫徹快樂) - Single",
     "offset": 0,
     "conf": "medium"
-  },
-  "ganbei": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5a/65/68/5a6568fe-ffd9-d7c2-d552-abecf307e382/mzaf_8546411924806899679.plus.aac.p.m4a",
-    "title": "乾杯",
-    "artist": "五月天",
-    "album": "第二人生 (末日版)",
-    "offset": 0,
-    "conf": "high"
   },
   "jimojiuhao": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/3f/5c/bf/3f5cbf80-cf7d-47bd-ca4f-f733dbe7eb6e/mzaf_11186607586721731408.plus.aac.p.m4a",
@@ -1793,6 +1777,166 @@ window.SONG_PREVIEWS = {
     "title": "萬千花蕊慈母悲哀",
     "artist": "珂拉琪 Collage",
     "album": "MEmento·MORI",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f1/e9/97/f1e9975f-06e5-5293-f9ea-4290f3f2147e/mzaf_16109526403480839945.plus.aac.p.m4a",
+    "title": "魚",
+    "artist": "怕胖團",
+    "album": "青春只差兩撇",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yuepangyueguang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f3/ae/96/f3ae96f7-1381-d43c-0b3e-7540b5a244ad/mzaf_3369361126878797106.plus.aac.p.m4a",
+    "title": "月旁月光",
+    "artist": "怕胖團",
+    "album": "2049",
+    "offset": 0,
+    "conf": "high"
+  },
+  "lansedeni": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/f1/05/d9/f105d9f2-b04f-79a4-930d-e24cf9a3fcf4/mzaf_4958156269593305772.plus.aac.p.m4a",
+    "title": "藍色的你 (《比悲傷更悲傷的故事》影集版 插曲)",
+    "artist": "宇宙人",
+    "album": "理想狀態",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "ruguohaizaiyiqi": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/37/c0/ce/37c0ceb0-d3c1-5ed0-5f05-23a7cc4b1f93/mzaf_7051502383461865506.plus.aac.p.m4a",
+    "title": "如果我們還在一起",
+    "artist": "宇宙人",
+    "album": "右腦",
+    "offset": 0,
+    "conf": "high"
+  },
+  "dahuaidan": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e8/50/69/e8506980-f49c-f54b-f4d3-b36fe1e3de9a/mzaf_16997369965831067398.plus.aac.p.m4a",
+    "title": "愛情的大壞蛋",
+    "artist": "美秀集團",
+    "album": "美秀集團同名專輯",
+    "offset": 0,
+    "conf": "high"
+  },
+  "shoujiqianbao": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/c0/ec/27/c0ec274a-54be-c648-08dc-b63e0f2d2687/mzaf_17846924096290995528.plus.aac.p.m4a",
+    "title": "手機錢包鑰匙菸 (feat. 盧廣仲)",
+    "artist": "美秀集團",
+    "album": "手機錢包鑰匙菸 (feat. 盧廣仲) - Single",
+    "offset": 0,
+    "conf": "medium"
+  },
+  "balidezhou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/33/68/51/336851b0-1782-6b05-e136-7b90552e600e/mzaf_2551314217364573846.plus.aac.p.m4a",
+    "title": "巴黎德州",
+    "artist": "椅子樂團",
+    "album": "Real Love Is...",
+    "offset": 0,
+    "conf": "high"
+  },
+  "shizongrenkou": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/75/fc/47/75fc473a-7254-9460-039d-47a57a3759a6/mzaf_4227515316500508004.plus.aac.p.m4a",
+    "title": "失蹤人口",
+    "artist": "甜約翰",
+    "album": "Dear",
+    "offset": 0,
+    "conf": "high"
+  },
+  "beishangbeishang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/87/27/1e/87271e07-6168-0dd4-77d3-e2c8aa9cd642/mzaf_8686594118992367023.plus.aac.p.m4a",
+    "title": "揹上悲傷北上",
+    "artist": "脆樂團",
+    "album": "愛是我們必經的辛苦",
+    "offset": 0,
+    "conf": "high"
+  },
+  "meiyourenzaihu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/5b/9b/f2/5b9bf2eb-a317-9a47-b825-b1360932fe83/mzaf_8797109311012873144.plus.aac.p.m4a",
+    "title": "沒有人在乎你在乎的事",
+    "artist": "那我懂你意思了",
+    "album": "沒有人在乎你在乎的事",
+    "offset": 0,
+    "conf": "high"
+  },
+  "zhaobudaolangman": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/5f/b9/0f/5fb90f88-bb72-2e34-9675-33643e594771/mzaf_10159044949069443304.plus.aac.p.m4a",
+    "title": "在這個年代,找不到浪漫",
+    "artist": "溫室雜草",
+    "album": "春天有腳 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "qingchungeini": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/bf/3c/65/bf3c65cb-c264-fc89-a317-634271dd5b60/mzaf_5628660414481288161.plus.aac.p.m4a",
+    "title": "我把我的青春給你",
+    "artist": "好樂團",
+    "album": "我把我的青春給你 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "naxieshimiandeye": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview125/v4/27/87/6e/27876e0a-b96c-5aa3-6a81-22df758ee33b/mzaf_5049997580898820223.plus.aac.p.m4a",
+    "title": "那些失眠的夜與難以忘懷的事",
+    "artist": "老王樂隊",
+    "album": "那些失眠的夜與難以忘懷的事 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "dan": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/bf/92/50/bf925060-c312-68d4-9eed-50975308dfbf/mzaf_18045033365478587916.plus.aac.p.m4a",
+    "title": "但",
+    "artist": "草東沒有派對",
+    "album": "瓦合",
+    "offset": 0,
+    "conf": "high"
+  },
+  "woshiyizhiyu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6d/c8/42/6dc842d9-9132-c256-e569-8babe0609db6/mzaf_12447764100546380183.plus.aac.p.m4a",
+    "title": "我是一隻魚",
+    "artist": "落日飛車",
+    "album": "我是一隻魚 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "geqianderen": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ba/19/76/ba197657-ebfc-c9e9-fd4b-467c78da4d7b/mzaf_3298338913356865146.plus.aac.p.m4a",
+    "title": "擱淺的人",
+    "artist": "康士坦的變化球",
+    "album": "擱淺的人",
+    "offset": 0,
+    "conf": "high"
+  },
+  "danggen": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/19/1d/64/191d6417-68d3-be96-9781-809daf496a77/mzaf_7157982270462699307.plus.aac.p.m4a",
+    "title": "擋一根",
+    "artist": "美秀集團",
+    "album": "電火王",
+    "offset": 0,
+    "conf": "high"
+  },
+  "xinmen": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/4e/de/ac/4edeacfe-45fa-7383-813e-b960fab041ed/mzaf_1991775334001716782.plus.aac.p.m4a",
+    "title": "心悶",
+    "artist": "美秀集團",
+    "album": "多色寶山大王",
+    "offset": 0,
+    "conf": "high"
+  },
+  "anliu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7f/83/ee/7f83eeb2-62ac-d7b4-5dae-69f169e73920/mzaf_9855049191669713250.plus.aac.p.m4a",
+    "title": "暗流",
+    "artist": "拍謝少年",
+    "album": "兄弟沒夢不應該",
+    "offset": 0,
+    "conf": "high"
+  },
+  "dakaitaiyang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/90/e2/19/90e21956-6ce9-41ef-cb2d-41ae22c16702/mzaf_11292598115593219439.plus.aac.p.m4a",
+    "title": "打開太陽",
+    "artist": "血肉果汁機",
+    "album": "血肉講鬼: 老宅豪門",
     "offset": 0,
     "conf": "high"
   }

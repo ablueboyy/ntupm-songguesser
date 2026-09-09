@@ -871,11 +871,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "魚",
-  "artist": "陳綺貞",
-  "genre": "mando"
- },
- {
   "title": "台北某個地方",
   "artist": "陳綺貞",
   "genre": "mando"
@@ -1517,11 +1512,6 @@ window.DECOYS = [
  },
  {
   "title": "對摺",
-  "artist": "任賢齊",
-  "genre": "classic"
- },
- {
-  "title": "我是一隻魚",
   "artist": "任賢齊",
   "genre": "classic"
  },
