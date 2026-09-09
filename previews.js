@@ -1,5 +1,5 @@
 /* 自動產生,請勿手動編輯 —— 由 tools/fetch-previews.js 產出
- * 產生時間:2026-09-09T17:55:23.251Z
+ * 產生時間:2026-09-09T18:00:06.824Z
  * 這裡只存 Apple 官方 30 秒試聽的網址,音檔不落地,遊戲執行時直接串流。
  * conf 是配對信心度,low 的請人工確認是不是配錯歌。
  */
@@ -2081,6 +2081,22 @@ window.SONG_PREVIEWS = {
     "title": "無人知曉",
     "artist": "田馥甄",
     "album": "無人知曉",
+    "offset": 0,
+    "conf": "high"
+  },
+  "haishihuijimo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/36/e7/1d/36e71d63-79ec-8b7f-f48d-7b72b4d74eb3/mzaf_4839084293598746250.plus.aac.p.m4a",
+    "title": "還是會寂寞",
+    "artist": "陳綺貞",
+    "album": "還是會寂寞",
+    "offset": 0,
+    "conf": "high"
+  },
+  "manmanxihuanni": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/6d/70/50/6d7050d2-6c9a-a788-f460-45265166f378/mzaf_14652091816060298601.plus.aac.p.m4a",
+    "title": "慢慢喜歡你",
+    "artist": "莫文蔚",
+    "album": "慢慢喜歡你 - Single",
     "offset": 0,
     "conf": "high"
   }

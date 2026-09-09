@@ -169,6 +169,8 @@ window.SONGS = [
   { id: "chongai",            title: "寵愛",                          artist: "TFBOYS",         genre: "mando" },
   { id: "taicongming",        title: "太聰明",                        artist: "陳綺貞",         genre: "mando" },
   { id: "wurenzhixiao",       title: "無人知曉",                      artist: "田馥甄",         genre: "mando" },
+  { id: "haishihuijimo",      title: "還是會寂寞",                    artist: "陳綺貞",         genre: "mando" },
+  { id: "manmanxihuanni",     title: "慢慢喜歡你",                    artist: "莫文蔚",         genre: "mando" },
   /* ---------- 華語經典 ---------- */
   { id: "tianmimi",        title: "甜蜜蜜",         artist: "鄧麗君", genre: "classic" },
   { id: "zhishaohaiyouni", title: "至少還有你",     artist: "林憶蓮", genre: "classic" },

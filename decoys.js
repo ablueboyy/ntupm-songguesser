@@ -851,11 +851,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "還是會寂寞",
-  "artist": "陳綺貞",
-  "genre": "mando"
- },
- {
   "title": "小步舞曲",
   "artist": "陳綺貞",
   "genre": "mando"
@@ -1537,11 +1532,6 @@ window.DECOYS = [
  },
  {
   "title": "他不愛我",
-  "artist": "莫文蔚",
-  "genre": "classic"
- },
- {
-  "title": "慢慢喜歡你",
   "artist": "莫文蔚",
   "genre": "classic"
  },
