@@ -715,6 +715,20 @@ function playClip(q){
 const BOARD = (window.BOARD_CONFIG || { url: '', anonKey: '' });
 const BOARD_ON = !!(BOARD.url && BOARD.anonKey);
 
+// 資料庫有沒有 hidden 欄位(工作人員的下架旗標)。
+// 沒跑過最新的 sql/leaderboard.sql 就還沒有 —— 那時候查詢會 400。
+// 這裡不能讓整個排行榜跟著掛掉:第一次撞到就記下來,之後改查不過濾的版本。
+// 榜上已經有真的玩家在跑,「先跑 SQL 再推程式」這種順序依賴太脆弱了。
+let hasHiddenColumn = true;
+const hiddenFilter = () => hasHiddenColumn ? '&hidden=is.false' : '';
+function noteMissingColumn(err){
+  if(String(err && err.message).includes('scores.hidden does not exist')){
+    hasHiddenColumn = false;
+    return true;
+  }
+  return false;
+}
+
 // 打 Supabase 的 REST API。不載入 supabase-js —— 只是兩個 HTTP 請求,
 // 為它多背一個 CDN 相依(在校園網路下多一個會失敗的東西)不划算。
 async function boardApi(path, opts = {}, timeoutMs = 6000){
@@ -809,9 +823,12 @@ const Store = {
      真的爆掉的話再改成資料庫的 view 做合併。 */
   async top(){
     if(BOARD_ON){
+      const ask = () => boardApi('scores?select=nickname,score,correct,device_id,created_at' +
+        hiddenFilter() + '&order=score.desc,created_at.asc&limit=500');
       try{
-        const rows = await boardApi(
-          'scores?select=nickname,score,correct,device_id,created_at&order=score.desc,created_at.asc&limit=500');
+        let rows;
+        try{ rows = await ask(); }
+        catch(e){ if(!noteMissingColumn(e)) throw e; rows = await ask(); }
         this.degraded = false;
         return { rows: this.dedupe(rows || []), source: 'server' };
       }catch(e){
@@ -826,11 +843,14 @@ const Store = {
      現場網路不穩的時候,擋住玩家開局比讓兩個小明上榜嚴重得多。 */
   async nicknameTaken(nick){
     if(!BOARD_ON) return false;
+    // 逾時要短 —— 網路掛掉時每次開局都卡在這裡等,比撞名難受
+    const ask = () => boardApi('scores?select=device_id' + hiddenFilter() +
+      '&nickname=eq.' + encodeURIComponent(nick) +
+      '&device_id=neq.' + encodeURIComponent(this.deviceId()) + '&limit=1', {}, 1500);
     try{
-      const rows = await boardApi(
-        'scores?select=device_id&nickname=eq.' + encodeURIComponent(nick) +
-        '&device_id=neq.' + encodeURIComponent(this.deviceId()) + '&limit=1',
-        {}, 1500);   // 逾時要短 —— 網路掛掉時每次開局都卡在這裡等,比撞名難受
+      let rows;
+      try{ rows = await ask(); }
+      catch(e){ if(!noteMissingColumn(e)) throw e; rows = await ask(); }
       return Array.isArray(rows) && rows.length > 0;
     }catch(e){
       return false;

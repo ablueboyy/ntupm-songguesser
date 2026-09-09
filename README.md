@@ -298,7 +298,28 @@ prizeScore: 8000,     // 兌獎門檻
 
 沒有任何一條路徑會安靜地假裝成功。
 
-**待辦**:`board.html`(攤位螢幕用的全螢幕榜)、`staff.html`(刪除不當暱稱、清除異常分數)。
+### staff.html —— 排行榜管理台
+
+```
+https://ntupm18th.github.io/ntupm-songguesser/staff.html
+```
+
+刪改權限綁在 **Supabase Auth 的登入狀態**,不是綁金鑰。頁面裡只有那把本來就公開的
+anon key,所以誰都能打開這一頁,但沒有帳號密碼什麼都做不了 —— 擋人的是資料庫的 RLS。
+
+**開帳號**:Supabase 後台 → **Authentication → Users → Add user**,
+填 email 和密碼,勾 `Auto Confirm User`。要開幾個都行,輪班的人共用一個也可以。
+
+- **下架**:那筆從排行榜和撞名檢查裡消失,但資料還在,按「復原」就回來 ——
+  活動當下按錯的成本比留一筆髒資料高得多,所以這是預設動作
+- **永久刪除**:要按兩次才執行,救不回來
+- 登入狀態存在 `sessionStorage`,關掉分頁就登出(攤位共用電腦不會留著)
+
+實作上有個坑值得記著:**PostgREST 對「被 RLS 濾掉、實際 0 列」回的是 204 而不是 403**。
+只看狀態碼會以為刪成功了,所以刪改一律帶 `Prefer: return=representation`,
+回空陣列就代表沒權限(通常是登入過期)。
+
+**待辦**:`board.html`(攤位螢幕用的全螢幕榜)。
 
 ---
 
@@ -307,6 +328,7 @@ prizeScore: 8000,     // 兌獎門檻
 ```
 index.html                遊戲本體(HTML + CSS + JS 全在裡面)
 board-config.js           排行榜的伺服器設定(留空 = 只有本機榜)
+staff.html                排行榜管理台(工作人員登入後可下架 / 刪除)
 check.html                音源檢查台(抽聽用,不是給玩家的頁面)
 songs.js                  題庫 242 首(手工維護)
 decoys.js                 干擾選項庫(自動產生)

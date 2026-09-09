@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0B0C18">
+<title>排行榜管理 · 金曲猜歌王</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&display=swap">
+<style>
+/* ═══════════════════════════════════════════════════════════
+   排行榜管理台 —— 攤位工作人員用,不是給玩家的頁面。
+
+   這一頁是公開的(GitHub Pages 上誰都能打開),但打開沒有用:
+   刪改的權限綁在 Supabase Auth 的登入狀態上,由資料庫的 RLS 認人。
+   頁面裡只有那把本來就公開的 anon key,沒有任何祕密。
+
+   「下架」是預設動作,「永久刪除」要多按一次。
+   活動當下按錯的成本遠大於留一筆髒資料的成本 —— 下架救得回來,刪掉救不回來。
+   ═══════════════════════════════════════════════════════════ */
+:root{
+  color-scheme:dark;
+  --night:#0B0C18; --deep:#171A33; --tide:#252C55;
+  --foam:#CFCAF0; --bottle:#F2C86A; --miss:#E08098; --ok:#8FD9A8;
+  --line:rgba(207,202,240,.16); --line-2:rgba(207,202,240,.32);
+  --dim:rgba(207,202,240,.62);
+  --face:"Noto Serif TC","Noto Serif CJK TC","Songti TC",serif;
+  --ui:system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{font-family:var(--ui);color:var(--foam);background:var(--night);min-height:100dvh;font-size:15px;line-height:1.5}
+
+.wrap{max-width:820px;margin:0 auto;padding:20px 16px 80px}
+h1{font-family:var(--face);font-weight:900;font-size:1.35rem;margin:0 0 4px;color:var(--bottle)}
+.sub{font-size:.8rem;color:var(--dim)}
+.sub b{color:var(--foam);font-weight:600}
+
+/* ── 登入 ── */
+#login{max-width:340px;margin:12vh auto 0}
+.field{margin-bottom:12px}
+label{display:block;font-size:.75rem;color:var(--dim);margin-bottom:4px}
+input[type=email],input[type=password],input[type=search]{
+  width:100%;font:inherit;font-size:.9rem;color:var(--foam);
+  background:var(--deep);border:1px solid var(--line);border-radius:8px;padding:9px 12px;
+}
+input:focus{outline:none;border-color:var(--line-2)}
+.msg{font-size:.78rem;margin-top:10px;min-height:1.2em}
+.msg.bad{color:var(--miss)}
+.msg.good{color:var(--ok)}
+
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid transparent}
+button:disabled{opacity:.5;cursor:default}
+.primary{width:100%;background:var(--bottle);color:var(--night);font-weight:700;padding:10px;font-size:.92rem}
+.ghost{background:transparent;border-color:var(--line);color:var(--dim);padding:5px 11px;font-size:.78rem}
+.ghost:hover{border-color:var(--line-2);color:var(--foam)}
+
+/* ── 工具列 ── */
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0 10px}
+.bar input[type=search]{flex:1;min-width:140px}
+.tabs{display:flex;gap:6px}
+.tabs button[aria-pressed="true"]{background:var(--tide);border-color:transparent;color:var(--foam)}
+
+/* ── 清單 ── */
+.row{
+  display:grid;grid-template-columns:auto 1fr auto;gap:2px 12px;align-items:center;
+  padding:10px 0;border-top:1px solid var(--line);
+}
+.row.hid{opacity:.45}
+.who{font-family:var(--face);font-weight:600;font-size:1.02rem;min-width:0;
+     overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank{font-size:.78rem;color:var(--dim);font-variant-numeric:tabular-nums;min-width:2.2em;text-align:right}
+.meta{grid-column:2;font-size:.73rem;color:var(--dim);font-variant-numeric:tabular-nums}
+.acts{grid-row:1/3;display:flex;gap:6px;align-items:center}
+.tag{display:inline-block;font-size:.66rem;font-weight:700;border-radius:4px;padding:0 5px;margin-left:6px;vertical-align:1px}
+.tag.hid{background:rgba(224,128,152,.2);color:var(--miss)}
+.tag.dup{background:rgba(207,202,240,.14);color:var(--dim)}
+.danger{background:transparent;border-color:rgba(224,128,152,.5);color:var(--miss);padding:5px 11px;font-size:.78rem}
+.danger.armed{background:var(--miss);color:var(--night);border-color:transparent;font-weight:700}
+.empty{padding:44px 0;text-align:center;color:var(--dim);font-size:.85rem}
+.note{font-size:.73rem;color:var(--dim);line-height:1.8;border-top:1px solid var(--line);margin-top:20px;padding-top:14px}
+.note code{background:var(--deep);padding:1px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div id="login">
+  <h1>排行榜管理</h1>
+  <div class="sub" style="margin-bottom:18px">工作人員登入</div>
+  <form id="login-form">
+    <div class="field">
+      <label for="email">帳號</label>
+      <input type="email" id="email" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label for="pw">密碼</label>
+      <input type="password" id="pw" autocomplete="current-password" required>
+    </div>
+    <button class="primary" type="submit" id="btn-login">登入</button>
+    <div class="msg" id="login-msg"></div>
+  </form>
+  <div class="note" id="login-note"></div>
+</div>
+
+<div id="app" hidden>
+  <h1>排行榜管理</h1>
+  <div class="sub" id="stat">讀取中⋯</div>
+
+  <div class="bar">
+    <div class="tabs">
+      <button class="ghost" data-f="board" aria-pressed="true">榜上</button>
+      <button class="ghost" data-f="hidden" aria-pressed="false">已下架</button>
+      <button class="ghost" data-f="all" aria-pressed="false">全部紀錄</button>
+    </div>
+    <input type="search" id="q" placeholder="搜尋暱稱">
+    <button class="ghost" id="refresh">重新讀取</button>
+    <button class="ghost" id="logout">登出</button>
+  </div>
+
+  <div class="msg" id="msg"></div>
+  <div id="list"></div>
+
+  <div class="note">
+    <b>下架</b>會把那筆從排行榜和撞名檢查裡拿掉,但資料還在,按「復原」就回來了 ——
+    活動當下按錯的成本比留一筆髒資料高得多。<br>
+    <b>永久刪除</b>要按兩次才會執行,而且救不回來。<br>
+    「榜上」這一頁跟玩家看到的一樣:<b>同一支手機只留最高分</b>。
+    同一個人的其他場次要到「全部紀錄」才看得到。<br>
+    登入狀態存在 <code>sessionStorage</code>,關掉分頁就登出 —— 攤位共用電腦不會留著。
+  </div>
+</div>
+
+</div>
+
+<script src="board-config.js"></script>
+<script>
+const CFG = window.BOARD_CONFIG || { url:'', anonKey:'' };
+const BASE = String(CFG.url || '').replace(/\/+$/, '');
+const TOKEN_KEY = 'pmsg_staff_token';
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s == null ? '' : s)
+  .replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+
+let token = null, rows = [], filter = 'board', query = '', armed = null;
+
+/* ---------- 打 API ----------
+   讀取用 anon key 就夠;刪改一定要帶登入後的 token,
+   沒帶或過期的話資料庫會回 0 列(RLS 濾掉),不是回錯誤 —— 所以要自己檢查。 */
+async function api(path, opts = {}){
+  const res = await fetch(BASE + '/rest/v1/' + path, {
+    ...opts,
+    headers: {
+      apikey: CFG.anonKey,
+      Authorization: 'Bearer ' + (token || CFG.anonKey),
+      'Content-Type': 'application/json',
+      ...(opts.headers || {})
+    }
+  });
+  const text = await res.text();
+  if(!res.ok) throw new Error(res.status + ' ' + text.slice(0, 200));
+  return text ? JSON.parse(text) : null;
+}
+
+function say(el, text, kind){
+  el.textContent = text || '';
+  el.className = 'msg' + (kind ? ' ' + kind : '');
+}
+
+/* ---------- 登入 ---------- */
+if(!BASE || !CFG.anonKey){
+  $('login-note').innerHTML = '<b style="color:var(--miss)">board-config.js 還沒設定</b><br>' +
+    '排行榜還沒接上伺服器,這一頁沒有東西可以管。';
+  $('btn-login').disabled = true;
+}else{
+  $('login-note').innerHTML =
+    '帳號要先在 Supabase 後台開:<br><b>Authentication → Users → Add user</b>,' +
+    '填 email 和密碼並勾選 <code>Auto Confirm User</code>。<br><br>' +
+    '這一頁本身沒有任何祕密 —— 它用的是公開的 anon key,' +
+    '刪改的權限是資料庫依登入狀態給的。';
+}
+
+$('login-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('btn-login');
+  btn.disabled = true; btn.textContent = '登入中⋯';
+  say($('login-msg'), '');
+  try{
+    const res = await fetch(BASE + '/auth/v1/token?grant_type=password', {
+      method: 'POST',
+      headers: { apikey: CFG.anonKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: $('email').value.trim(), password: $('pw').value })
+    });
+    const data = await res.json();
+    if(!res.ok || !data.access_token){
+      throw new Error(data.error_description || data.msg || data.error || ('HTTP ' + res.status));
+    }
+    token = data.access_token;
+    try{ sessionStorage.setItem(TOKEN_KEY, token); }catch(e){}
+    $('pw').value = '';
+    enter();
+  }catch(err){
+    say($('login-msg'), '登入失敗:' + err.message, 'bad');
+  }finally{
+    btn.disabled = false; btn.textContent = '登入';
+  }
+});
+
+function enter(){
+  $('login').hidden = true;
+  $('app').hidden = false;
+  load();
+}
+
+$('logout').addEventListener('click', () => {
+  token = null;
+  try{ sessionStorage.removeItem(TOKEN_KEY); }catch(e){}
+  $('app').hidden = true;
+  $('login').hidden = false;
+  say($('login-msg'), '已登出', 'good');
+});
+
+/* ---------- 讀資料 ---------- */
+async function load(){
+  try{
+    rows = await api('scores?select=id,nickname,score,correct,device_id,created_at,hidden' +
+                     '&order=score.desc,created_at.asc&limit=2000');
+    say($('msg'), '');
+  }catch(err){
+    say($('msg'), '讀取失敗:' + err.message, 'bad');
+    return;
+  }
+  render();
+}
+$('refresh').addEventListener('click', load);
+$('q').addEventListener('input', e => { query = e.target.value.trim().toLowerCase(); render(); });
+document.querySelectorAll('.tabs button').forEach(b => {
+  b.addEventListener('click', () => { filter = b.dataset.f; armed = null; render(); });
+});
+
+/* 榜上看到的是「同一支手機只留最高分」,跟玩家那邊同一套規則。
+   合併掉的其他場次標成「同機較低分」,免得工作人員以為資料重複了。 */
+function view(){
+  const live = rows.filter(r => !r.hidden);
+  const best = new Set();
+  const seen = new Set();
+  for(const r of live){                       // rows 已經照分數排好
+    if(seen.has(r.device_id)) continue;
+    seen.add(r.device_id); best.add(r.id);
+  }
+  let out;
+  if(filter === 'board')       out = live.filter(r => best.has(r.id));
+  else if(filter === 'hidden') out = rows.filter(r => r.hidden);
+  else                         out = rows.slice();
+  if(query) out = out.filter(r => r.nickname.toLowerCase().includes(query));
+  return { list: out, best };
+}
+
+function render(){
+  const { list, best } = view();
+  const live = rows.filter(r => !r.hidden);
+  const devices = new Set(live.map(r => r.device_id)).size;
+  $('stat').innerHTML = `榜上 <b>${devices}</b> 位玩家 · 總紀錄 <b>${rows.length}</b> 筆 · 已下架 <b>${rows.filter(r => r.hidden).length}</b> 筆`;
+
+  if(!list.length){ $('list').innerHTML = '<div class="empty">這個篩選沒有資料</div>'; return; }
+
+  $('list').innerHTML = list.map((r, i) => {
+    const when = new Date(r.created_at).toLocaleString('zh-TW', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
+    const tags = (r.hidden ? '<span class="tag hid">已下架</span>' : '') +
+      (!r.hidden && !best.has(r.id) ? '<span class="tag dup">同機較低分</span>' : '');
+    return `<div class="row${r.hidden ? ' hid' : ''}">
+        <div class="rank">${filter === 'board' ? (i + 1) : ''}</div>
+        <div class="who">${esc(r.nickname)}${tags}</div>
+        <div class="acts">
+          <button class="ghost" data-act="toggle" data-id="${r.id}">${r.hidden ? '復原' : '下架'}</button>
+          <button class="danger${armed === r.id ? ' armed' : ''}" data-act="del" data-id="${r.id}">${armed === r.id ? '確定刪除?' : '刪除'}</button>
+        </div>
+        <div class="meta">${Number(r.score).toLocaleString()} 分 · 答對 ${r.correct} 題 · ${when} · ${esc(r.device_id)}</div>
+      </div>`;
+  }).join('');
+
+  $('list').querySelectorAll('button[data-act]').forEach(b => {
+    b.addEventListener('click', () => act(b.dataset.act, b.dataset.id));
+  });
+}
+
+/* ---------- 動作 ---------- */
+async function act(what, id){
+  const row = rows.find(r => r.id === id);
+  if(!row) return;
+
+  if(what === 'toggle'){
+    armed = null;
+    try{
+      // return=representation:RLS 擋住的話會回空陣列而不是錯誤,
+      // 只看 HTTP 狀態碼會以為成功了。
+      const back = await api('scores?id=eq.' + id, {
+        method: 'PATCH',
+        headers: { Prefer: 'return=representation' },
+        body: JSON.stringify({ hidden: !row.hidden })
+      });
+      if(!back || !back.length) throw new Error('沒有權限 —— 登入可能過期了,請重新登入');
+      row.hidden = back[0].hidden;
+      say($('msg'), `「${row.nickname}」已${row.hidden ? '下架' : '復原'}`, 'good');
+      render();
+    }catch(err){ say($('msg'), err.message, 'bad'); }
+    return;
+  }
+
+  if(what === 'del'){
+    if(armed !== id){ armed = id; render(); return; }   // 第一次點只是上膛
+    armed = null;
+    try{
+      const back = await api('scores?id=eq.' + id, {
+        method: 'DELETE', headers: { Prefer: 'return=representation' }
+      });
+      if(!back || !back.length) throw new Error('沒有權限 —— 登入可能過期了,請重新登入');
+      rows = rows.filter(r => r.id !== id);
+      say($('msg'), `「${row.nickname}」已永久刪除`, 'good');
+      render();
+    }catch(err){ say($('msg'), err.message, 'bad'); render(); }
+  }
+}
+
+/* 重新整理後如果 session 還在就直接進去 */
+try{
+  const saved = sessionStorage.getItem(TOKEN_KEY);
+  if(saved){ token = saved; enter(); }
+}catch(e){}
+</script>
+</body>
+</html>

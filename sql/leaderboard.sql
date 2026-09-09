@@ -12,6 +12,10 @@ create table if not exists public.scores (
   created_at timestamptz not null default now()
 );
 
+-- 下架用的旗標。工作人員把不當暱稱或異常分數標成 hidden 之後,
+-- 榜上就看不到了,但資料還在 —— 誤按可以救回來,活動當下這比「刪掉」重要。
+alter table public.scores add column if not exists hidden boolean not null default false;
+
 create index if not exists scores_score_idx  on public.scores (score desc, created_at asc);
 create index if not exists scores_device_idx on public.scores (device_id, created_at desc);
 
@@ -95,5 +99,26 @@ drop policy if exists "anyone can read" on public.scores;
 create policy "anyone can read" on public.scores
   for select to anon using (true);
 
--- 要清測試資料或不當暱稱,到後台 Table Editor 手動刪
--- (後台走 service role,不受上面的政策限制)。
+-- ══════════════════════════════════════════════════════════════
+-- 工作人員(staff.html)
+--
+-- 刪改權綁在「有沒有登入」,不是「知不知道金鑰」。
+-- staff.html 用的還是那把公開的 anon key,登入之後才換到
+-- authenticated 身分 —— 所以就算有人打開 staff.html,
+-- 沒帳號密碼一樣什麼都做不了。
+--
+-- 開帳號:Supabase 後台 → Authentication → Users → Add user,
+-- 填 email 和密碼,並勾選 Auto Confirm User。
+-- 帳號要開幾個都行,攤位輪班的人共用一個也可以。
+-- ══════════════════════════════════════════════════════════════
+
+drop policy if exists "staff can update" on public.scores;
+create policy "staff can update" on public.scores
+  for update to authenticated using (true) with check (true);
+
+drop policy if exists "staff can delete" on public.scores;
+create policy "staff can delete" on public.scores
+  for delete to authenticated using (true);
+
+-- 也可以完全不用 staff.html,直接到後台 Table Editor 改
+-- (後台走 service role,不受上面任何政策限制)。
