@@ -76,11 +76,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "可惜沒如果",
-  "artist": "林俊傑",
-  "genre": "mando"
- },
- {
   "title": "我對緣分小心翼翼 (劇集《逐玉》主題曲)",
   "artist": "林俊傑",
   "genre": "mando"
@@ -107,11 +102,6 @@ window.DECOYS = [
  },
  {
   "title": "你就不要想起我",
-  "artist": "田馥甄",
-  "genre": "mando"
- },
- {
-  "title": "寂寞寂寞就好",
   "artist": "田馥甄",
   "genre": "mando"
  },
@@ -191,11 +181,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "好久不見",
-  "artist": "陳奕迅",
-  "genre": "mando"
- },
- {
   "title": "婚禮的祝福",
   "artist": "陳奕迅",
   "genre": "mando"
@@ -227,11 +212,6 @@ window.DECOYS = [
  },
  {
   "title": "句號",
-  "artist": "鄧紫棋",
-  "genre": "mando"
- },
- {
-  "title": "倒數",
   "artist": "鄧紫棋",
   "genre": "mando"
  },
@@ -306,22 +286,12 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "大人中",
-  "artist": "盧廣仲",
-  "genre": "mando"
- },
- {
   "title": "當我們一起走過",
   "artist": "蘇打綠",
   "genre": "mando"
  },
  {
   "title": "無眠",
-  "artist": "蘇打綠",
-  "genre": "mando"
- },
- {
-  "title": "無與倫比的美麗",
   "artist": "蘇打綠",
   "genre": "mando"
  },
@@ -361,11 +331,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "綠光",
-  "artist": "孫燕姿",
-  "genre": "mando"
- },
- {
   "title": "愛情字典",
   "artist": "孫燕姿",
   "genre": "mando"
@@ -382,11 +347,6 @@ window.DECOYS = [
  },
  {
   "title": "倒帶",
-  "artist": "JOLIN蔡依林",
-  "genre": "mando"
- },
- {
-  "title": "說愛你",
   "artist": "JOLIN蔡依林",
   "genre": "mando"
  },
@@ -462,11 +422,6 @@ window.DECOYS = [
  },
  {
   "title": "其實",
-  "artist": "薛之謙",
-  "genre": "mando"
- },
- {
-  "title": "剛剛好",
   "artist": "薛之謙",
   "genre": "mando"
  },
@@ -771,11 +726,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "大城小愛",
-  "artist": "王力宏",
-  "genre": "mando"
- },
- {
   "title": "Kiss Goodbye",
   "artist": "王力宏",
   "genre": "mando"
@@ -841,11 +791,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "年少有為",
-  "artist": "李榮浩",
-  "genre": "mando"
- },
- {
   "title": "不將就 (電影《何以笙簫默》片尾曲)",
   "artist": "李榮浩",
   "genre": "mando"
@@ -897,11 +842,6 @@ window.DECOYS = [
  },
  {
   "title": "陌生人",
-  "artist": "蔡健雅",
-  "genre": "mando"
- },
- {
-  "title": "紅色高跟鞋",
   "artist": "蔡健雅",
   "genre": "mando"
  },
@@ -962,11 +902,6 @@ window.DECOYS = [
  },
  {
   "title": "遺失的美好",
-  "artist": "張韶涵",
-  "genre": "mando"
- },
- {
-  "title": "歐若拉",
   "artist": "張韶涵",
   "genre": "mando"
  },
@@ -1052,11 +987,6 @@ window.DECOYS = [
  },
  {
   "title": "原諒我",
-  "artist": "蕭敬騰",
-  "genre": "mando"
- },
- {
-  "title": "新不了情",
   "artist": "蕭敬騰",
   "genre": "mando"
  },
@@ -1808,11 +1738,6 @@ window.DECOYS = [
  {
   "title": "過來我家坐",
   "artist": "玖壹壹",
-  "genre": "tw"
- },
- {
-  "title": "挪威的森林",
-  "artist": "伍佰",
   "genre": "tw"
  },
  {
