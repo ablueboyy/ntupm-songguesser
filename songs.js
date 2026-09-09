@@ -136,7 +136,7 @@ window.SONGS = [
   { id: "xiaoban",            title: "小半",                   artist: "陳粒",         genre: "mando" },
   { id: "nidedaan",           title: "你的答案",               artist: "阿冗",         genre: "mando" },
   { id: "lvse",               title: "綠色",                   artist: "陳雪凝",       genre: "mando" },
-  { id: "wozeng",             title: "我曾",                   artist: "隔壁老樊",     genre: "mando" },
+  { id: "ainidanshuo",        title: "愛你但說不出口",         artist: "Karencici",    genre: "mando" },
   { id: "nianlun",            title: "年輪",                   artist: "張碧晨",       genre: "mando" },
   { id: "anheqiao",           title: "安和橋",                 artist: "宋冬野",       genre: "mando" },
   { id: "yanhuochenai",       title: "煙火裡的塵埃",           artist: "華晨宇",       genre: "mando" },

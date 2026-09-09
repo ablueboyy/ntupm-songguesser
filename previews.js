@@ -1,5 +1,5 @@
 /* 自動產生,請勿手動編輯 —— 由 tools/fetch-previews.js 產出
- * 產生時間:2026-09-09T14:28:00.941Z
+ * 產生時間:2026-09-09T15:04:38.890Z
  * 這裡只存 Apple 官方 30 秒試聽的網址,音檔不落地,遊戲執行時直接串流。
  * conf 是配對信心度,low 的請人工確認是不是配錯歌。
  */
@@ -1468,14 +1468,6 @@ window.SONG_PREVIEWS = {
     "offset": 0,
     "conf": "high"
   },
-  "wozeng": {
-    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b1/b5/36/b1b53616-8943-54ca-6ded-5c58b4c95827/mzaf_1633965969206454894.plus.aac.p.m4a",
-    "title": "我曾",
-    "artist": "隔壁老樊",
-    "album": "我曾",
-    "offset": 0,
-    "conf": "high"
-  },
   "nianlun": {
     "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/df/f3/76/dff3765a-2235-58d0-2dce-c55430aa82df/mzaf_4051956950590113861.plus.aac.p.m4a",
     "title": "年輪",
@@ -1755,5 +1747,13 @@ window.SONG_PREVIEWS = {
     "album": "First Love - EP",
     "offset": 0,
     "conf": "medium"
+  },
+  "ainidanshuo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/e0/3c/52/e03c5249-9160-356c-76cf-3eac9fbf0d58/mzaf_4708346931914144040.plus.aac.p.m4a",
+    "title": "愛你但說不出口",
+    "artist": "Karencici",
+    "album": "愛你但說不出口 - Single",
+    "offset": 0,
+    "conf": "high"
   }
 };
