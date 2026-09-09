@@ -91,13 +91,17 @@ create trigger scores_rate_limit_trg
 
 alter table public.scores enable row level security;
 
+-- 政策是「綁角色」的,而登入之後身分會從 anon 換成 authenticated。
+-- 只寫 to anon 的話,工作人員一登入反而什麼都看不到 ——
+-- 不會報錯,就是空的。所以這兩條要同時涵蓋兩種角色。
+-- (update / delete 帶 return=representation 也需要 select,一併靠這條。)
 drop policy if exists "anyone can insert" on public.scores;
 create policy "anyone can insert" on public.scores
-  for insert to anon with check (true);
+  for insert to anon, authenticated with check (true);
 
 drop policy if exists "anyone can read" on public.scores;
 create policy "anyone can read" on public.scores
-  for select to anon using (true);
+  for select to anon, authenticated using (true);
 
 -- ══════════════════════════════════════════════════════════════
 -- 工作人員(staff.html)

@@ -265,7 +265,17 @@ function render(){
   const devices = new Set(live.map(r => r.device_id)).size;
   $('stat').innerHTML = `榜上 <b>${devices}</b> 位玩家 · 總紀錄 <b>${rows.length}</b> 筆 · 已下架 <b>${rows.filter(r => r.hidden).length}</b> 筆`;
 
-  if(!list.length){ $('list').innerHTML = '<div class="empty">這個篩選沒有資料</div>'; return; }
+  if(!list.length){
+    // 登入了卻整個空的,幾乎都是同一個原因:RLS 的 select 政策只寫了 to anon。
+    // 政策綁角色,登入後身分是 authenticated,於是一列都讀不到 —— 而且不會報錯。
+    $('list').innerHTML = rows.length
+      ? '<div class="empty">這個篩選沒有資料</div>'
+      : '<div class="empty">一筆都讀不到。<br><br>' +
+        '如果排行榜上明明有人,通常是 RLS 的 select 政策只寫了 <code>to anon</code> ——<br>' +
+        '登入後身分是 <code>authenticated</code>,就什麼都看不到了。<br>' +
+        '把最新的 <code>sql/leaderboard.sql</code> 再跑一次即可。</div>';
+    return;
+  }
 
   $('list').innerHTML = list.map((r, i) => {
     const when = new Date(r.created_at).toLocaleString('zh-TW', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
