@@ -14,6 +14,6 @@
  * 也就是說,金鑰就算外流,別人頂多灌一些假分數進來,改不掉也刪不掉任何既有成績。
  */
 window.BOARD_CONFIG = {
-  url:     '',   // 例:https://abcdefghijk.supabase.co
-  anonKey: ''    // 例:eyJhbGciOi...(很長的一串)
+  url:     'https://onixomvicywcbrqpdvgv.supabase.co',   // 例:https://abcdefghijk.supabase.co
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9uaXhvbXZpY3l3Y2JycXBkdmd2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg5NjQ0MjksImV4cCI6MjEwNDU0MDQyOX0.dc8HfbYhu3oaAskFQQO9gdti-r8fNHWwTRtcg_8xCjA'    // 例:eyJhbGciOi...(很長的一串)
 };
