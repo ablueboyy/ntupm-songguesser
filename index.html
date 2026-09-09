@@ -14,7 +14,7 @@
    金曲猜歌王 — 視覺系統「深夜混音帶」
 
    顏色全部取樣自 assets/theme.png,只有 5 個色相。
-   黃色 (--bottle) 只代表一件事:得分 / 正解 / 達標。
+   黃色 (--bottle) 只出現在兩種地方:主標題,以及得分 / 正解 / 達標。
    字體只有 Noto Serif TC 一個家族,層次靠字重不靠字級硬撐。
    明體橫畫細,深色底上小字會消失 —— 內文一律 500 起跳,九宮格 600。
    ═══════════════════════════════════════════════════════════ */
@@ -124,7 +124,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{
 .brand h1{
   font-weight:var(--w-title);font-size:var(--t-display);
   line-height:1.14;letter-spacing:.04em;
-  margin:var(--s2) 0 var(--s3);color:var(--foam);
+  margin:var(--s2) 0 var(--s3);color:var(--bottle);
 }
 .slogan{font-weight:var(--w-quiet);font-size:var(--t-small);line-height:2.2;color:var(--dim)}
 
@@ -356,7 +356,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 <!-- ═══════════ 開始 ═══════════ -->
 <div class="screen" id="screen-start">
   <div class="brand">
-    <div class="eyebrow">台大流行音樂演唱社 第十八屆聯展</div>
+    <div class="eyebrow">台大流唱社 社團聯展</div>
     <h1>金曲猜歌王</h1>
     <div class="slogan">我們不一定最會唱歌<br>但我們一定最會猜歌</div>
   </div>
@@ -366,7 +366,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   <div class="entry">
     <div class="field">
       <label class="label" for="nick">暱稱</label>
-      <input type="text" id="nick" maxlength="8" placeholder="2–8 個字,別用真名" autocomplete="off" enterkeyhint="done">
+      <input type="text" id="nick" maxlength="8" placeholder="2–8 個字,會顯示在排行榜上的名字" autocomplete="off" enterkeyhint="done">
       <div class="fielderr" id="nick-err" hidden></div>
     </div>
 
@@ -386,7 +386,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
       <span class="label">聲音</span>
       <div class="txt">
         <b>先測一下聲音</b>
-        戴上耳機,確認手機沒靜音
+        確定聽得到音效再開始！
       </div>
       <button type="button" id="btn-test">試聽</button>
     </div>
