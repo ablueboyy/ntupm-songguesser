@@ -1356,7 +1356,7 @@ async function renderBoard(){
   // 現在看到的到底是哪一種榜 —— 這行不能省。
   // 玩家以為自己上了全場榜、結果只是存在自己手機裡,是最糟的誤解。
   if(source === 'server'){
-    note.innerHTML = `全場共用 · 共 ${rows.length} 位玩家 · 同一支手機只計最高分`;
+    note.innerHTML = `目前一共 ${rows.length} 位玩家投入流唱社的懷抱，同一支手機只計最高分喔！`;
   }else if(BOARD_ON){
     note.innerHTML = `<b>連不上伺服器</b> —— 下面只有這支手機的分數。分數有存下來,網路恢復後再打開就會重新讀取。`;
   }else{
