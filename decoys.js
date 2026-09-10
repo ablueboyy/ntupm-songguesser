@@ -71,11 +71,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "不為誰而作的歌",
-  "artist": "林俊傑",
-  "genre": "mando"
- },
- {
   "title": "我對緣分小心翼翼 (劇集《逐玉》主題曲)",
   "artist": "林俊傑",
   "genre": "mando"
@@ -333,11 +328,6 @@ window.DECOYS = [
  {
   "title": "愛情證書",
   "artist": "孫燕姿",
-  "genre": "mando"
- },
- {
-  "title": "倒帶",
-  "artist": "JOLIN蔡依林",
   "genre": "mando"
  },
  {
@@ -826,11 +816,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "達爾文",
-  "artist": "蔡健雅",
-  "genre": "mando"
- },
- {
   "title": "陌生人",
   "artist": "蔡健雅",
   "genre": "mando"
@@ -1312,11 +1297,6 @@ window.DECOYS = [
  },
  {
   "title": "不會消失的夜晚",
-  "artist": "信樂團",
-  "genre": "classic"
- },
- {
-  "title": "海闊天空",
   "artist": "信樂團",
   "genre": "classic"
  },
@@ -2746,11 +2726,6 @@ window.DECOYS = [
   "genre": "west"
  },
  {
-  "title": "Just the Way You Are",
-  "artist": "Bruno Mars",
-  "genre": "west"
- },
- {
   "title": "That's What I Like",
   "artist": "Bruno Mars",
   "genre": "west"
@@ -3053,11 +3028,6 @@ window.DECOYS = [
  {
   "title": "no tears left to cry",
   "artist": "Ariana Grande",
-  "genre": "west"
- },
- {
-  "title": "Roar",
-  "artist": "Katy Perry",
   "genre": "west"
  },
  {

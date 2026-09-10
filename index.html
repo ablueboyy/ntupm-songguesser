@@ -497,8 +497,9 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 <script src="board-config.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════
-   金曲猜歌王 — 原型版
-   排行榜目前寫在 localStorage,正式版請把 Store 換成 Supabase。
+   金曲猜歌王 — 攤位版
+   排行榜接的是 Supabase(設定在 board-config.js);兩個欄位留空時
+   會自動退回只有這支手機看得到的本機榜,並在畫面上寫明。
    ═══════════════════════════════════════════════════════ */
 
 const CONFIG = {
@@ -891,7 +892,7 @@ function sizeClass(label){
   return '';
 }
 
-// 選項池 = 100 首題目 + 純干擾歌名
+// 選項池 = 題庫裡的歌 + 純干擾歌名
 function optionPool(){
   return (window.SONGS || []).concat(window.DECOYS || []);
 }

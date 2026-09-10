@@ -15,7 +15,7 @@
 
    沿用遊戲的顏色,但排版邏輯相反:遊戲要留白與戲劇性,這裡要密度。
    歌名維持 Noto Serif TC —— 你在這裡看到的字,就是玩家在九宮格看到的字。
-   其他中繼資料改用系統無襯線體:219 列明體小字掃下來會瞎。
+   其他中繼資料改用系統無襯線體:兩百多列明體小字掃下來會瞎。
 
    判定只存在這台裝置的 localStorage,不會上傳,換裝置要重聽。
    ═══════════════════════════════════════════════════════════ */
@@ -101,7 +101,7 @@ li.playing .idx{color:var(--bottle)}
   border:1px solid var(--line);border-radius:4px;padding:0 4px;margin-right:6px;
   vertical-align:1px;text-transform:uppercase;
 }
-/* 商店抓到的東西跟題庫寫的一樣時就不顯示 —— 219 列都印重複資訊只會蓋掉真正要看的 */
+/* 商店抓到的東西跟題庫寫的一樣時就不顯示 —— 每一列都印重複資訊只會蓋掉真正要看的 */
 .store{
   font-size:.74rem;color:var(--dim);margin-top:3px;
   padding-left:8px;border-left:2px solid var(--line);
@@ -216,7 +216,7 @@ const PREV  = window.SONG_PREVIEWS || {};
 const KEY   = 'pm-songguesser-audio-check';
 
 /* ---------- 風險評估 ----------
-   219 首全聽完要一個半小時,沒人會做。所以先算出「值得先聽」的那幾首:
+   整份題庫全聽完要一個半小時,沒人會做。所以先算出「值得先聽」的那幾首:
    商店回傳的曲名/歌手跟題庫寫的不一樣,或專輯名稱看起來不是原版錄音。
    分數對得剛剛好的重唱版(光年之外那種)就是靠專輯名稱抓出來的。     */
 const SUSPECT_ALBUM = /第\s*\d+\s*期|演唱會|跨年|金曲撈|我是歌手|蒙面|聲生不息|好聲音|影音全記錄|全記錄|串燒|卡拉|karaoke|オルゴール|音樂盒|instrumental|伴奏|精選|合輯|Live/i;

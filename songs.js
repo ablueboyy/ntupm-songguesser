@@ -1,6 +1,6 @@
-/* 金曲猜歌王 — 題庫(223 首)
+/* 金曲猜歌王 — 題庫
  *
- * 這 223 首是「會被當成題目」的歌,每一首都需要音源
+ * 這裡的每一首都是「會被當成題目」的歌,所以每一首都需要音源
  * (audio/<id>.m4a 本地檔,或 previews.js 裡的官方試聽網址)。
  *
  * 每一局固定抽 10 題,抽法寫在 index.html 的 CONFIG:
@@ -171,6 +171,11 @@ window.SONGS = [
   { id: "wurenzhixiao",       title: "無人知曉",                      artist: "田馥甄",         genre: "mando" },
   { id: "haishihuijimo",      title: "還是會寂寞",                    artist: "陳綺貞",         genre: "mando" },
   { id: "manmanxihuanni",     title: "慢慢喜歡你",                    artist: "莫文蔚",         genre: "mando" },
+  { id: "yequ",               title: "夜曲",                          artist: "周杰倫",         genre: "mando" },
+  { id: "zhizu",              title: "知足",                          artist: "五月天",         genre: "mando" },
+  { id: "buweishuierzuo",     title: "不為誰而作的歌",                artist: "林俊傑",         genre: "mando" },
+  { id: "daodai",             title: "倒帶",                          artist: "蔡依林",         genre: "mando" },
+  { id: "wuniang",            title: "舞孃",                          artist: "蔡依林",         genre: "mando" },
   /* ---------- 華語經典 ---------- */
   { id: "tianmimi",        title: "甜蜜蜜",         artist: "鄧麗君", genre: "classic" },
   { id: "zhishaohaiyouni", title: "至少還有你",     artist: "林憶蓮", genre: "classic" },
@@ -206,6 +211,11 @@ window.SONGS = [
   { id: "xinbuleqing",     title: "新不了情",       artist: "萬芳",   genre: "classic" },
   { id: "nuoweisenlin",    title: "挪威的森林",     artist: "伍佰",   genre: "classic" },
   { id: "nuannuan",        title: "暖暖",           artist: "梁靜茹", genre: "classic" },
+  { id: "haikuotiankong",  title: "海闊天空",       artist: "Beyond", genre: "classic" },
+  { id: "santiansanye",    title: "三天三夜",       artist: "張惠妹", genre: "classic" },
+  { id: "lvguang",         title: "綠光",           artist: "孫燕姿", genre: "classic" },
+  { id: "meinamejiandan",  title: "沒那麼簡單",     artist: "黃小琥", genre: "classic" },
+  { id: "daerwen",         title: "達爾文",         artist: "蔡健雅", genre: "classic" },
   /* ---------- 台語 ---------- */
   { id: "chiqingnanzihan", title: "癡情男子漢",       artist: "玖壹壹",     genre: "tw" },
   { id: "nishiwodehuaduo", title: "妳是我的花朵",     artist: "伍佰",       genre: "tw" },
@@ -269,6 +279,9 @@ window.SONGS = [
   { id: "baby",           title: "Baby",                            artist: "Justin Bieber",     genre: "west" },
   { id: "nothingholding", title: "There's Nothing Holdin' Me Back", artist: "Shawn Mendes",      genre: "west" },
   { id: "whatmakesyou",   title: "What Makes You Beautiful",        artist: "One Direction",     genre: "west" },
+  { id: "justtheway",     title: "Just the Way You Are",            artist: "Bruno Mars",        genre: "west" },
+  { id: "allofme",        title: "All of Me",                       artist: "John Legend",       genre: "west" },
+  { id: "roar",           title: "Roar",                            artist: "Katy Perry",        genre: "west" },
   /* ---------- 日文 / 動漫 ---------- */
   { id: "lemon",         title: "Lemon",                artist: "米津玄師",         genre: "jp" },
   { id: "idol",          title: "Idol",                 artist: "YOASOBI",          genre: "jp" },

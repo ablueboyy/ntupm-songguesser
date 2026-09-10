@@ -1,5 +1,5 @@
 /* 自動產生,請勿手動編輯 —— 由 tools/fetch-previews.js 產出
- * 產生時間:2026-09-09T18:00:06.824Z
+ * 產生時間:2026-09-10T08:03:11.055Z
  * 這裡只存 Apple 官方 30 秒試聽的網址,音檔不落地,遊戲執行時直接串流。
  * conf 是配對信心度,low 的請人工確認是不是配錯歌。
  */
@@ -2097,6 +2097,110 @@ window.SONG_PREVIEWS = {
     "title": "慢慢喜歡你",
     "artist": "莫文蔚",
     "album": "慢慢喜歡你 - Single",
+    "offset": 0,
+    "conf": "high"
+  },
+  "haikuotiankong": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2b/e0/18/2be01806-30b4-7c8b-dd5b-d93f485aafef/mzaf_149015777681225583.plus.aac.p.m4a",
+    "title": "海闊天空",
+    "artist": "Beyond",
+    "album": "Rock'n'Roll",
+    "offset": 0,
+    "conf": "high"
+  },
+  "yequ": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/49/d9/63/49d96370-e197-5629-b8bb-bdd954c1b576/mzaf_217123187122990137.plus.aac.p.m4a",
+    "title": "夜曲",
+    "artist": "周杰倫",
+    "album": "11月的蕭邦",
+    "offset": 0,
+    "conf": "high"
+  },
+  "zhizu": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/49/37/a8/4937a807-fb5c-6ec3-04dd-86e5547f25d3/mzaf_9753000863767078148.plus.aac.p.m4a",
+    "title": "知足",
+    "artist": "五月天",
+    "album": "步步自選作品輯 1999-2013",
+    "offset": 0,
+    "conf": "high"
+  },
+  "buweishuierzuo": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/5f/49/b8/5f49b821-247b-af57-2bae-58c4886567b3/mzaf_12579894677612203670.plus.aac.p.m4a",
+    "title": "不為誰而作的歌",
+    "artist": "林俊傑",
+    "album": "和自己對話",
+    "offset": 0,
+    "conf": "high"
+  },
+  "daodai": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/2b/97/db/2b97db0a-0788-9a4c-9497-04562a6f02ec/mzaf_17970691770831062201.plus.aac.p.m4a",
+    "title": "倒帶",
+    "artist": "JOLIN蔡依林",
+    "album": "城堡",
+    "offset": 0,
+    "conf": "high"
+  },
+  "wuniang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/ca/bc/b9/cabcb9e6-3d11-5b74-5698-420db485070c/mzaf_14212037994139512200.plus.aac.p.m4a",
+    "title": "舞孃",
+    "artist": "JOLIN蔡依林",
+    "album": "舞孃",
+    "offset": 0,
+    "conf": "high"
+  },
+  "santiansanye": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/8f/01/62/8f016268-2b2d-9467-48f4-0c1b1ef6c0d8/mzaf_9543208026112278336.plus.aac.p.m4a",
+    "title": "三天三夜",
+    "artist": "張惠妹",
+    "album": "我可以抱你嗎?愛人",
+    "offset": 0,
+    "conf": "high"
+  },
+  "lvguang": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/99/93/1c/99931cb7-6314-dd1c-1a9d-a698758ac369/mzaf_4719229539469603560.plus.aac.p.m4a",
+    "title": "綠光",
+    "artist": "孫燕姿",
+    "album": "風箏",
+    "offset": 0,
+    "conf": "high"
+  },
+  "meinamejiandan": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f7/45/21/f74521fe-e784-5be9-c071-37e741672540/mzaf_13932802908184133262.plus.aac.p.m4a",
+    "title": "沒那麼簡單",
+    "artist": "黃小琥",
+    "album": "簡單不簡單",
+    "offset": 0,
+    "conf": "high"
+  },
+  "daerwen": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b0/c4/6c/b0c46c1e-4df4-7ed3-96d6-5150931ba238/mzaf_8333291403420670489.plus.aac.p.m4a",
+    "title": "達爾文",
+    "artist": "蔡健雅",
+    "album": "Goodbye & Hello",
+    "offset": 0,
+    "conf": "high"
+  },
+  "justtheway": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/aa/33/58/aa3358d7-f0a8-79f4-ffc7-9143adaf169b/mzaf_7115834128542848247.plus.aac.p.m4a",
+    "title": "Just the Way You Are",
+    "artist": "Bruno Mars",
+    "album": "Doo-Wops & Hooligans (Deluxe)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "allofme": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/74/4b/59/744b59b1-be90-82ea-0f80-9f14b25c43e3/mzaf_8467027091383143961.plus.aac.p.m4a",
+    "title": "All of Me",
+    "artist": "John Legend",
+    "album": "Darkness and Light (Asia Tour Edition)",
+    "offset": 0,
+    "conf": "high"
+  },
+  "roar": {
+    "url": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/21/a8/76/21a87607-1fe3-2bd2-753c-0b4b73c22b90/mzaf_9666996724668759977.plus.aac.p.m4a",
+    "title": "Roar",
+    "artist": "Katy Perry",
+    "album": "PRISM (Deluxe Version)",
     "offset": 0,
     "conf": "high"
   }
