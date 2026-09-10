@@ -180,6 +180,7 @@ textarea{
   <div class="sub" id="sub">載入中⋯</div>
   <div class="bar"><i class="b-ok" id="bar-ok" style="width:0"></i><i class="b-bad" id="bar-bad" style="width:0"></i></div>
   <div class="filters" id="filters">
+    <button class="f" data-f="new" aria-pressed="false" hidden>這次新增<span class="n"></span></button>
     <button class="f" data-f="risk" aria-pressed="true">重點抽聽<span class="n"></span></button>
     <button class="f" data-f="todo" aria-pressed="false">未聽<span class="n"></span></button>
     <button class="f" data-f="bad"  aria-pressed="false">有問題<span class="n"></span></button>
@@ -214,6 +215,31 @@ textarea{
 const SONGS = window.SONGS || [];
 const PREV  = window.SONG_PREVIEWS || {};
 const KEY   = 'pm-songguesser-audio-check';
+
+/* ---------- 這次新增的歌 ----------
+   2026-09-11 這批往題庫加了 65 首(275 → 340)。
+   新歌只有商店寫法對不上的那幾首會落進「重點抽聽」,其餘照樣要親耳聽過,
+   所以獨立開一個篩選,而且清單非空時預設就停在這裡。
+   這批審完就可以把整個 NEW_IDS 清空,篩選會自動消失、預設回到「重點抽聽」。 */
+const NEW_IDS = new Set([
+  "qilixiang", "ganbei", "caocao", "nizaifannao",
+  "pixingdaiyue", "nijiubuyao", "baobei", "xunrenqishi",
+  "daoshu", "mote", "taikongren", "dianqijiaojianai",
+  "taotai", "weiyi", "yanbuyouzhong", "shui",
+  "kaishidongle", "daiwozou", "luguorenjian", "shanqiu",
+  "huaxin", "waimiandeshijie", "dujiaoxi", "qiasiwenrou",
+  "xiangjianhenwan", "zhongxiaodonglu", "jide", "mengxingshifen",
+  "aiqingweida", "jiuhouxinsheng", "wowentian", "changtuyeche",
+  "jiejie", "mobanche", "butter", "boywithluv",
+  "hypeboy", "wannabe", "iamthebest", "fakelove",
+  "asifyourlast", "supershy", "loveshot", "rollindeep",
+  "perfect", "chandelier", "pokerface", "faded",
+  "closer", "hello", "lovestory", "grenade",
+  "payphone", "firework", "badromance", "diamonds",
+  "sorry", "loveyourself", "wewillrockyou", "birdsfeather",
+  "seeyouagain", "shinjidai", "shinunogaiiwa", "kaibutsu",
+  "kaikaikitan"
+]);
 
 /* ---------- 風險評估 ----------
    整份題庫全聽完要一個半小時,沒人會做。所以先算出「值得先聽」的那幾首:
@@ -255,7 +281,7 @@ try { marks = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { marks 
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch(e) {} };
 
 /* ---------- 狀態 ---------- */
-let filter = 'risk', query = '', cursor = 0, playingId = null, loadingId = null;
+let filter = NEW_IDS.size ? 'new' : 'risk', query = '', cursor = 0, playingId = null, loadingId = null;
 let current = null, token = 0;
 
 const $ = id => document.getElementById(id);
@@ -269,6 +295,7 @@ function visible(){
     const m = marks[r.song.id];
     if(filter === 'todo') return !m;
     if(filter === 'bad')  return m === 'bad';
+    if(filter === 'new')  return NEW_IDS.has(r.song.id);
     if(filter === 'risk') return r.level > 0 && m !== 'ok';
     return true;
   });
@@ -332,7 +359,9 @@ function stats(){
     '</b> · 有問題 <b>' + bad + '</b> · 還沒聽 <b>' + todo + '</b>';
   $('bar-ok').style.width  = (ok  / ROWS.length * 100) + '%';
   $('bar-bad').style.width = (bad / ROWS.length * 100) + '%';
-  const n = { risk:risk, todo:todo, bad:bad, all:ROWS.length };
+  const fresh = ROWS.filter(r => NEW_IDS.has(r.song.id)).length;
+  const n = { new:fresh, risk:risk, todo:todo, bad:bad, all:ROWS.length };
+  document.querySelector('#filters .f[data-f=new]').hidden = !fresh;
   document.querySelectorAll('#filters .f').forEach(b => {
     b.querySelector('.n').textContent = n[b.dataset.f];
     b.setAttribute('aria-pressed', b.dataset.f === filter);

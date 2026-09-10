@@ -96,11 +96,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "你就不要想起我",
-  "artist": "田馥甄",
-  "genre": "mando"
- },
- {
   "title": "愛著愛著就永遠",
   "artist": "田馥甄",
   "genre": "mando"
@@ -156,11 +151,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "淘汰",
-  "artist": "陳奕迅",
-  "genre": "mando"
- },
- {
   "title": "讓我留在你身邊",
   "artist": "陳奕迅",
   "genre": "mando"
@@ -178,11 +168,6 @@ window.DECOYS = [
  {
   "title": "不如這樣",
   "artist": "陳奕迅",
-  "genre": "mando"
- },
- {
-  "title": "唯一",
-  "artist": "鄧紫棋",
   "genre": "mando"
  },
  {
@@ -222,11 +207,6 @@ window.DECOYS = [
  },
  {
   "title": "在這座城市遺失了你 (戲劇《他們創業的那些鳥事》插曲)",
-  "artist": "告五人",
-  "genre": "mando"
- },
- {
-  "title": "披星戴月的想你",
   "artist": "告五人",
   "genre": "mando"
  },
@@ -298,11 +278,6 @@ window.DECOYS = [
  {
   "title": "再遇見",
   "artist": "蘇打綠",
-  "genre": "mando"
- },
- {
-  "title": "開始懂了",
-  "artist": "孫燕姿",
   "genre": "mando"
  },
  {
@@ -551,22 +526,12 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "言不由衷",
-  "artist": "徐佳瑩",
-  "genre": "mando"
- },
- {
   "title": "真的傻 (電影《一吻定情》追愛版主題曲)",
   "artist": "徐佳瑩",
   "genre": "mando"
  },
  {
   "title": "到此為止",
-  "artist": "徐佳瑩",
-  "genre": "mando"
- },
- {
-  "title": "尋人啟事",
   "artist": "徐佳瑩",
   "genre": "mando"
  },
@@ -582,11 +547,6 @@ window.DECOYS = [
  },
  {
   "title": "年輪說",
-  "artist": "楊丞琳",
-  "genre": "mando"
- },
- {
-  "title": "帶我走",
   "artist": "楊丞琳",
   "genre": "mando"
  },
@@ -736,11 +696,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "愛, 很簡單",
-  "artist": "陶喆",
-  "genre": "mando"
- },
- {
   "title": "天天",
   "artist": "陶喆",
   "genre": "mando"
@@ -787,11 +742,6 @@ window.DECOYS = [
  },
  {
   "title": "喜劇之王",
-  "artist": "李榮浩",
-  "genre": "mando"
- },
- {
-  "title": "模特",
   "artist": "李榮浩",
   "genre": "mando"
  },
@@ -1182,11 +1132,6 @@ window.DECOYS = [
  },
  {
   "title": "其實不想走",
-  "artist": "周華健",
-  "genre": "classic"
- },
- {
-  "title": "花心",
   "artist": "周華健",
   "genre": "classic"
  },
@@ -1616,11 +1561,6 @@ window.DECOYS = [
   "genre": "tw"
  },
  {
-  "title": "恰似你的溫柔",
-  "artist": "茄子蛋",
-  "genre": "tw"
- },
- {
   "title": "這款自作多情",
   "artist": "茄子蛋",
   "genre": "tw"
@@ -1686,11 +1626,6 @@ window.DECOYS = [
   "genre": "tw"
  },
  {
-  "title": "夢醒時分",
-  "artist": "伍佰 & China Blue",
-  "genre": "tw"
- },
- {
   "title": "浪人情歌",
   "artist": "伍佰",
   "genre": "tw"
@@ -1713,11 +1648,6 @@ window.DECOYS = [
  {
   "title": "牽掛",
   "artist": "伍佰 & China Blue",
-  "genre": "tw"
- },
- {
-  "title": "長途夜車",
-  "artist": "滅火器",
   "genre": "tw"
  },
  {
@@ -1836,11 +1766,6 @@ window.DECOYS = [
   "genre": "tw"
  },
  {
-  "title": "末班車",
-  "artist": "蕭煌奇",
-  "genre": "tw"
- },
- {
   "title": "上水的花",
   "artist": "蕭煌奇",
   "genre": "tw"
@@ -1873,11 +1798,6 @@ window.DECOYS = [
  {
   "title": "送予你的歌",
   "artist": "蕭煌奇",
-  "genre": "tw"
- },
- {
-  "title": "姐姐",
-  "artist": "謝金燕",
   "genre": "tw"
  },
  {
@@ -1926,11 +1846,6 @@ window.DECOYS = [
   "genre": "kpop"
  },
  {
-  "title": "FAKE LOVE",
-  "artist": "防彈少年團",
-  "genre": "kpop"
- },
- {
   "title": "Epiphany",
   "artist": "防彈少年團",
   "genre": "kpop"
@@ -1957,11 +1872,6 @@ window.DECOYS = [
  },
  {
   "title": "JUMP",
-  "artist": "BLACKPINK",
-  "genre": "kpop"
- },
- {
-  "title": "As If It's Your Last",
   "artist": "BLACKPINK",
   "genre": "kpop"
  },
@@ -2001,11 +1911,6 @@ window.DECOYS = [
   "genre": "kpop"
  },
  {
-  "title": "Hype Boy",
-  "artist": "NewJeans",
-  "genre": "kpop"
- },
- {
   "title": "OMG",
   "artist": "NewJeans",
   "genre": "kpop"
@@ -2022,11 +1927,6 @@ window.DECOYS = [
  },
  {
   "title": "Bubble Gum",
-  "artist": "NewJeans",
-  "genre": "kpop"
- },
- {
-  "title": "Super Shy",
   "artist": "NewJeans",
   "genre": "kpop"
  },
@@ -2256,11 +2156,6 @@ window.DECOYS = [
   "genre": "kpop"
  },
  {
-  "title": "WANNABE",
-  "artist": "ITZY",
-  "genre": "kpop"
- },
- {
   "title": "DALLA DALLA",
   "artist": "ITZY",
   "genre": "kpop"
@@ -2441,11 +2336,6 @@ window.DECOYS = [
   "genre": "kpop"
  },
  {
-  "title": "Love Shot",
-  "artist": "EXO",
-  "genre": "kpop"
- },
- {
   "title": "Crown",
   "artist": "EXO",
   "genre": "kpop"
@@ -2521,11 +2411,6 @@ window.DECOYS = [
   "genre": "kpop"
  },
  {
-  "title": "Perfect",
-  "artist": "Ed Sheeran",
-  "genre": "west"
- },
- {
   "title": "Shivers",
   "artist": "Ed Sheeran",
   "genre": "west"
@@ -2566,11 +2451,6 @@ window.DECOYS = [
   "genre": "west"
  },
  {
-  "title": "Love Story",
-  "artist": "Taylor Swift",
-  "genre": "west"
- },
- {
   "title": "I Knew It, I Knew You (From \"Toy Story 5\")",
   "artist": "Taylor Swift",
   "genre": "west"
@@ -2601,22 +2481,12 @@ window.DECOYS = [
   "genre": "west"
  },
  {
-  "title": "Rolling In the Deep",
-  "artist": "Adele",
-  "genre": "west"
- },
- {
   "title": "Easy On Me",
   "artist": "Adele",
   "genre": "west"
  },
  {
   "title": "Set Fire to the Rain",
-  "artist": "Adele",
-  "genre": "west"
- },
- {
-  "title": "Hello",
   "artist": "Adele",
   "genre": "west"
  },
@@ -2638,11 +2508,6 @@ window.DECOYS = [
  {
   "title": "Don't You Remember",
   "artist": "Adele",
-  "genre": "west"
- },
- {
-  "title": "BIRDS OF A FEATHER",
-  "artist": "Billie Eilish",
   "genre": "west"
  },
  {
@@ -2961,22 +2826,12 @@ window.DECOYS = [
   "genre": "west"
  },
  {
-  "title": "Love Yourself",
-  "artist": "Justin Bieber",
-  "genre": "west"
- },
- {
   "title": "Eenie Meenie",
   "artist": "Sean Kingston & Justin Bieber",
   "genre": "west"
  },
  {
   "title": "YUKON",
-  "artist": "Justin Bieber",
-  "genre": "west"
- },
- {
-  "title": "Sorry",
   "artist": "Justin Bieber",
   "genre": "west"
  },
@@ -3047,11 +2902,6 @@ window.DECOYS = [
  },
  {
   "title": "Last Friday Night (T.G.I.F.)",
-  "artist": "Katy Perry",
-  "genre": "west"
- },
- {
-  "title": "Firework",
   "artist": "Katy Perry",
   "genre": "west"
  },
@@ -3162,11 +3012,6 @@ window.DECOYS = [
  },
  {
   "title": "たぶん",
-  "artist": "YOASOBI",
-  "genre": "jp"
- },
- {
-  "title": "怪物",
   "artist": "YOASOBI",
   "genre": "jp"
  },
