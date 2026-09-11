@@ -301,16 +301,19 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 }
 .scorecard .meta{font-size:var(--t-small);color:var(--dim);font-weight:var(--w-quiet)}
 
-/* 兌獎:跟正解同一套語言 —— 填實的黃塊 = 好事 */
-.codebox{background:var(--bottle);color:var(--night);border-radius:var(--r-touch);padding:var(--s4) var(--s5)}
-.codebox .lab{font-size:var(--t-small);font-weight:var(--w-strong);opacity:.7}
-.codebox .msg{font-weight:var(--w-strong);font-size:var(--t-h3);line-height:1.5;margin:var(--s2) 0}
-.codebox .ttl{font-size:var(--t-small);opacity:.72;font-variant-numeric:tabular-nums}
-.notice{
-  background:none;box-shadow:inset 0 0 0 1px var(--line-2);color:var(--dim);
-  border-radius:var(--r-touch);padding:var(--s4) var(--s5);
-  font-size:var(--t-small);line-height:1.8;text-align:center;
+/* 成績跑出來多久了 —— 秒數一直跳,關主一眼就能分辨現場成績和翻出來的舊截圖 */
+.scorecard .fresh{
+  font-size:var(--t-small);color:var(--dim);font-weight:var(--w-quiet);
+  font-variant-numeric:tabular-nums;margin-top:var(--s2);
 }
+
+/* 結算的 IG:這一頁玩家看最久,也最可能順手追蹤 —— 比開始畫面放大一級並置中 */
+#screen-result .startfoot{justify-content:center}
+#screen-result .startfoot a{
+  font-size:var(--t-body);font-weight:var(--w-item);color:var(--foam);gap:var(--s3);
+}
+#screen-result .startfoot a .ig{width:22px;height:22px;stroke-width:1.6}
+#screen-result .startfoot a .handle{padding-bottom:3px}
 
 .misses{display:flex;flex-direction:column}
 .misses h4{margin:0 0 var(--s3);font-size:var(--t-small);color:var(--dim);font-weight:var(--w-quiet)}
@@ -462,8 +465,8 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
     <div class="line" id="res-line"></div>
     <div class="big" id="res-score">0</div>
     <div class="meta" id="res-meta">答對 0 題,共 10 題</div>
+    <div class="fresh" id="res-fresh"></div>
   </div>
-  <div id="res-code"></div>
   <div class="misses" id="res-misses"></div>
   <div class="row">
     <button class="btn ghost" id="btn-board-2">排行榜</button>
@@ -478,7 +481,6 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
       </svg>
       <span class="handle">ntupm__18th</span>
     </a>
-    <span id="res-hint"></span>
   </div>
 </div>
 
@@ -515,7 +517,6 @@ const CONFIG = {
   speedScore: 700,        // 速度分上限(300+700=1000,10 題滿分 10000)
   revealMs: 2200,         // 顯示答案的停頓
   clipSeconds: 15,        // 音檔片段長度
-  prizeScore: 8000,       // 兌獎門檻(滿分 10000)
   maxSameArtist: 2        // 同一歌手在九格中最多出現幾次
 };
 const FOREIGN_GENRES = ['kpop', 'west', 'jp'];
@@ -1215,19 +1216,19 @@ function answer(opt, index){
    ╚══════════════════════════════════════════════════════════════╝
 
    min   門檻分數。由上往下比,第一個「分數 >= min」的就是他的稱號。
-         滿分 10000(10 題 × 1000)。兌獎門檻是 CONFIG.prizeScore = 8000,
-         跟這張表是分開的 —— 改這裡不會影響誰能兌獎,反之亦然。
+         滿分 10000(10 題 × 1000)。
    title 稱號。玩家會截圖傳出去的就是這行,所以短一點、好唸一點。
    line  稱號底下那句話。想留白就寫成空字串 ''。
 
    想多一個或少一個級距,直接加減這張表的列,程式會自己跟上。
    最後一列的 min 一定要是 0 —— 那是所有人都符合的保底。
-   稱號跟兌獎是分開的,改這裡不會影響誰能兌獎。                     */
+
+   畫面上不寫任何領獎規則(現場用講的),所以這張表就是玩家看到的全部。 */
 
 const TITLES = [
   { min: 8000, title: '流唱社之光',   line: '拜託你來我們流唱社當教學啦！' },
   { min: 6767, title: '金曲點唱機',   line: '來流唱社你一定會找到很多志同道合喜歡聽歌的朋友！' },
-  { min: 5000, title: '移動 KTV',   line: '快要拿到獎品了，要不要來參加流唱社！' },
+  { min: 5000, title: '移動 KTV',   line: '就差那麼一點點，要不要來參加流唱社！' },
   { min: 3000, title: '持續聽歌中',    line: '來流唱社一定會大大增加你的曲庫~~' },
   { min: 0,    title: '聽歌小萌新',     line: '沒關係,來流唱社聽一年就會了' },
 ];
@@ -1256,28 +1257,17 @@ function finish(){
   $('res-meta').textContent = baseMeta + (BOARD_ON ? ' · 名次計算中⋯' : '');
   reportRank(entry, baseMeta);
 
-  // 兌獎:不發代碼,達標就直接把螢幕拿給關主看
-  const box = $('res-code');
+  // 畫面上不寫任何領獎規則 —— 現場關主用講的。
+  // 這裡只留「幾分鐘前跑出來的」,關主一眼就能分辨現場成績和翻出來的舊截圖。
   clearInterval(freshTimer);
-  if(G.total >= CONFIG.prizeScore){
-    box.innerHTML = `<div class="codebox">
-        <div class="lab">達標了</div>
-        <div class="msg">把這個畫面拿給關主看</div>
-        <div class="ttl" id="fresh">剛剛完成</div>
-      </div>`;
-    // 秒數一直跳,關主一眼就能分辨現場成績和翻出來的舊截圖
-    const at = Date.now();
-    freshTimer = setInterval(() => {
-      const el = $('fresh');
-      if(!el){ clearInterval(freshTimer); return; }
-      const s = Math.round((Date.now() - at) / 1000);
-      el.textContent = s < 60 ? `${s} 秒前完成` : `${Math.floor(s / 60)} 分鐘前完成`;
-    }, 1000);
-    $('res-hint').textContent = '';
-  }else{
-    box.innerHTML = `<div class="notice">再接再厲!再 ${(CONFIG.prizeScore - G.total).toLocaleString()} 分就能兌獎 —— 要不要再玩一次?</div>`;
-    $('res-hint').textContent = `兌獎門檻 ${CONFIG.prizeScore.toLocaleString()} 分`;
-  }
+  const at = Date.now();
+  $('res-fresh').textContent = '剛剛完成';
+  freshTimer = setInterval(() => {
+    const el = $('res-fresh');
+    if(!el){ clearInterval(freshTimer); return; }
+    const s = Math.round((Date.now() - at) / 1000);
+    el.textContent = s < 60 ? `${s} 秒前完成` : `${Math.floor(s / 60)} 分鐘前完成`;
+  }, 1000);
 
   // 答錯的歌
   const missed = G.log.filter(r => !r.correct);

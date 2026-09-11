@@ -82,12 +82,16 @@ select:focus{outline:none;border-color:var(--line-2)}
 .rank{grid-column:1;grid-row:1;font-size:.78rem;color:var(--dim);
       font-variant-numeric:tabular-nums;text-align:right}
 .meta{grid-column:2;grid-row:2;font-size:.73rem;color:var(--dim);font-variant-numeric:tabular-nums}
-.acts{grid-column:3;grid-row:1/3;display:flex;gap:6px;align-items:center}
+.acts{grid-column:3;grid-row:1/3;display:flex;gap:6px;align-items:center;
+      flex-wrap:wrap;justify-content:flex-end}
 .tag{display:inline-block;font-size:.66rem;font-weight:700;border-radius:4px;padding:0 5px;margin-left:6px;vertical-align:1px}
 .tag.hid{background:rgba(224,128,152,.2);color:var(--miss)}
 .tag.dup{background:rgba(207,202,240,.14);color:var(--dim)}
 .danger{background:transparent;border-color:rgba(224,128,152,.5);color:var(--miss);padding:5px 11px;font-size:.78rem}
 .danger.armed{background:var(--miss);color:var(--night);border-color:transparent;font-weight:700}
+/* 一鍵下架:一次動很多筆,所以不長得像旁邊那些單筆的按鈕 */
+.warn{background:transparent;border-color:rgba(242,200,106,.5);color:var(--bottle);padding:5px 11px;font-size:.78rem}
+.warn.armed{background:var(--bottle);color:var(--night);border-color:transparent;font-weight:700}
 .empty{padding:44px 0;text-align:center;color:var(--dim);font-size:.85rem}
 .note{font-size:.73rem;color:var(--dim);line-height:1.8;border-top:1px solid var(--line);margin-top:20px;padding-top:14px}
 .note code{background:var(--deep);padding:1px 5px;border-radius:4px}
@@ -133,6 +137,7 @@ select:focus{outline:none;border-color:var(--line-2)}
       <option value="name">暱稱 A→Z</option>
       <option value="correct">答對題數多到少</option>
     </select>
+    <button class="warn" id="bulk" hidden></button>
     <button class="ghost" id="refresh">重新讀取</button>
     <button class="ghost" id="logout">登出</button>
   </div>
@@ -143,6 +148,10 @@ select:focus{outline:none;border-color:var(--line-2)}
   <div class="note">
     <b>下架</b>會把那筆從排行榜和撞名檢查裡拿掉,但資料還在,按「復原」就回來了 ——
     活動當下按錯的成本比留一筆髒資料高得多。<br>
+    <b>整台下架</b>把同一支手機的每一場次一起拿掉 —— 只下架一筆的話,
+    他第二高的成績會遞補上榜,人還在榜上。<br>
+    工具列的<b>一鍵下架</b>動的是「目前這個篩選 / 搜尋看到的全部」,
+    一樣連人整台下架,要按兩次才會執行 —— 清測試資料最快。<br>
     <b>永久刪除</b>要按兩次才會執行,而且救不回來。<br>
     左邊的<b>名次號碼只在「分數高到低」時出現</b> —— 換了排序還標 1 2 3 會被誤讀成名次。<br>
     「榜上」這一頁跟玩家看到的一樣:<b>同一支手機只留最高分</b>。
@@ -164,6 +173,7 @@ const esc = s => String(s == null ? '' : s)
   .replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
 
 let token = null, rows = [], filter = 'board', query = '', armed = null, sort = 'score';
+let armedBulk = false;
 
 /* ---------- 打 API ----------
    讀取用 anon key 就夠;刪改一定要帶登入後的 token,
@@ -243,6 +253,7 @@ $('logout').addEventListener('click', () => {
 
 /* ---------- 讀資料 ---------- */
 async function load(){
+  armed = null; armedBulk = false;
   try{
     rows = await api('scores?select=id,nickname,score,correct,device_id,created_at,hidden' +
                      '&order=score.desc,created_at.asc&limit=2000');
@@ -254,11 +265,34 @@ async function load(){
   render();
 }
 $('refresh').addEventListener('click', load);
-$('q').addEventListener('input', e => { query = e.target.value.trim().toLowerCase(); render(); });
-$('sort').addEventListener('change', e => { sort = e.target.value; armed = null; render(); });
-document.querySelectorAll('.tabs button').forEach(b => {
-  b.addEventListener('click', () => { filter = b.dataset.f; armed = null; render(); });
+$('q').addEventListener('input', e => {
+  query = e.target.value.trim().toLowerCase(); armed = null; armedBulk = false; render();
 });
+$('sort').addEventListener('change', e => { sort = e.target.value; armed = null; armedBulk = false; render(); });
+document.querySelectorAll('.tabs button').forEach(b => {
+  b.addEventListener('click', () => {
+    filter = b.dataset.f; armed = null; armedBulk = false;
+    document.querySelectorAll('.tabs button').forEach(x =>
+      x.setAttribute('aria-pressed', String(x === b)));
+    render();
+  });
+});
+
+/* 一鍵下架要動的是哪幾筆。
+
+   「下架」是連人一起 —— 榜上一列只代表那個人的最高分,只拿掉那一筆的話
+   他第二高的成績會遞補上榜,看起來像沒下架成功。所以下架是把清單上這些
+   裝置的每一筆都拿掉。「復原」相反,只動列出來的那幾筆:誰是被單獨下架
+   的、誰是整台下架的,復原時不該由程式替工作人員決定。 */
+function bulkTargets(list){
+  if(filter === 'hidden'){
+    return { verb:'復原', hidden:false,
+             ids:list.map(r => r.id), people:new Set(list.map(r => r.device_id)).size };
+  }
+  const devices = new Set(list.map(r => r.device_id));
+  const hit = rows.filter(r => !r.hidden && devices.has(r.device_id));
+  return { verb:'下架', hidden:true, ids:hit.map(r => r.id), people:devices.size };
+}
 
 /* 榜上看到的是「同一支手機只留最高分」,跟玩家那邊同一套規則。
    合併掉的其他場次標成「同機較低分」,免得工作人員以為資料重複了。 */
@@ -307,6 +341,22 @@ function render(){
     return;
   }
 
+  const bulk = bulkTargets(list);
+  const bulkBtn = $('bulk');
+  bulkBtn.hidden = !bulk.ids.length;
+  if(!bulk.ids.length) armedBulk = false;
+  bulkBtn.classList.toggle('armed', armedBulk);
+  bulkBtn.textContent = armedBulk
+    ? `確定${bulk.verb}這 ${bulk.people} 人?`
+    : `一鍵${bulk.verb} · ${bulk.people} 人 ${bulk.ids.length} 筆`;
+
+  // 同一支手機的所有場次 —— 「整台下架」要動的就是這一群
+  const byDev = new Map();
+  for(const r of rows){
+    if(!byDev.has(r.device_id)) byDev.set(r.device_id, []);
+    byDev.get(r.device_id).push(r);
+  }
+
   $('list').innerHTML = list.map((r, i) => {
     const when = new Date(r.created_at).toLocaleString('zh-TW', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' });
     const tags = (r.hidden ? '<span class="tag hid">已下架</span>' : '') +
@@ -316,6 +366,10 @@ function render(){
         <div class="who">${esc(r.nickname)}${tags}</div>
         <div class="acts">
           <button class="ghost" data-act="toggle" data-id="${r.id}">${r.hidden ? '復原' : '下架'}</button>
+          ${(byDev.get(r.device_id) || []).length > 1
+            ? `<button class="ghost" data-act="dev" data-id="${r.id}">${
+                (byDev.get(r.device_id) || []).some(x => !x.hidden) ? '整台下架' : '整台復原'}</button>`
+            : ''}
           <button class="danger${armed === r.id ? ' armed' : ''}" data-act="del" data-id="${r.id}">${armed === r.id ? '確定刪除?' : '刪除'}</button>
         </div>
         <div class="meta">${Number(r.score).toLocaleString()} 分 · 答對 ${r.correct} 題 · ${when} · ${esc(r.device_id)}</div>
@@ -328,12 +382,52 @@ function render(){
 }
 
 /* ---------- 動作 ---------- */
+
+/* 一次改很多筆。id=in.(...) 的網址不能無限長,所以切成小批;
+   跟單筆一樣要看 return=representation 回來的內容 ——
+   被 RLS 擋掉時 PostgREST 回的是空陣列,不是錯誤。 */
+async function setHidden(ids, hidden){
+  let done = 0;
+  for(let i = 0; i < ids.length; i += 60){
+    const chunk = ids.slice(i, i + 60);
+    const back = await api('scores?id=in.(' + chunk.join(',') + ')', {
+      method: 'PATCH',
+      headers: { Prefer: 'return=representation' },
+      body: JSON.stringify({ hidden })
+    });
+    if(!back || !back.length) throw new Error('沒有權限 —— 登入可能過期了,請重新登入');
+    for(const got of back){
+      const row = rows.find(r => r.id === got.id);
+      if(row) row.hidden = got.hidden;
+    }
+    done += back.length;
+  }
+  return done;
+}
+
+$('bulk').addEventListener('click', async () => {
+  const bulk = bulkTargets(view().list);
+  if(!bulk.ids.length) return;
+  if(!armedBulk){ armedBulk = true; armed = null; render(); return; }   // 第一次點只是上膛
+  armedBulk = false;
+  $('bulk').disabled = true;
+  try{
+    const n = await setHidden(bulk.ids, bulk.hidden);
+    say($('msg'), `${bulk.people} 位玩家、共 ${n} 筆紀錄已${bulk.verb}`, 'good');
+  }catch(err){
+    say($('msg'), err.message, 'bad');
+  }finally{
+    $('bulk').disabled = false;
+    render();
+  }
+});
+
 async function act(what, id){
   const row = rows.find(r => r.id === id);
   if(!row) return;
 
   if(what === 'toggle'){
-    armed = null;
+    armed = null; armedBulk = false;
     try{
       // return=representation:RLS 擋住的話會回空陣列而不是錯誤,
       // 只看 HTTP 狀態碼會以為成功了。
@@ -350,8 +444,23 @@ async function act(what, id){
     return;
   }
 
+  /* 整台下架 —— 同一支手機的每一場次一起動。
+     還有沒下架的就是整台下架,全部都下架了就是整台復原。 */
+  if(what === 'dev'){
+    armed = null; armedBulk = false;
+    const mine = rows.filter(r => r.device_id === row.device_id);
+    const hide = mine.some(r => !r.hidden);
+    const ids = mine.filter(r => r.hidden !== hide).map(r => r.id);
+    try{
+      const n = await setHidden(ids, hide);
+      say($('msg'), `「${row.nickname}」這支手機的 ${n} 筆紀錄已${hide ? '下架' : '復原'}`, 'good');
+    }catch(err){ say($('msg'), err.message, 'bad'); }
+    render();
+    return;
+  }
+
   if(what === 'del'){
-    if(armed !== id){ armed = id; render(); return; }   // 第一次點只是上膛
+    if(armed !== id){ armed = id; armedBulk = false; render(); return; }   // 第一次點只是上膛
     armed = null;
     try{
       const back = await api('scores?id=eq.' + id, {
