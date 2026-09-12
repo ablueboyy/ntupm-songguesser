@@ -1,15 +1,16 @@
-/* 金曲猜歌王 — 建立干擾選項庫
+/* Build the decoy pool.
  *
- * 從 iTunes 商店撈一批歌手的代表作,當作九宮格的干擾選項。
- * 干擾項只需要「歌名」,不需要音源,所以可以放很多。
+ * Pulls well-known tracks per artist from the iTunes store to use as grid
+ * decoys. Decoys only need a title, never audio, so the pool can be large.
  *
- * 用 attribute=artistTerm 查詢,結果一定是該歌手的歌,
- * 歌名和歌手都直接採用 Apple 回傳的值,不靠人工記憶,不會記錯。
+ * Queries with attribute=artistTerm, so results are always that artist's
+ * work, and takes Apple's own title and artist strings rather than anyone's
+ * memory.
  *
  *   node tools/build-decoys.js
  *   node tools/build-decoys.js --per 10 --delay 3000
  *
- * 產出 decoys.js。已經在 songs.js 裡的歌會自動排除。
+ * Writes decoys.js. Anything already in songs.js is excluded automatically.
  */
 
 const fs = require('fs');
@@ -28,14 +29,14 @@ const COUNTRY = flag('country', 'TW');
 
 const { ARTISTS, knownArtist } = require('./artists.js');
 
-// 歌名比對用:全形轉半形、去空白、去標點,用來判斷是不是同一首歌
+// Title comparison: fullwidth to halfwidth, strip spaces and punctuation.
 const norm = s => String(s || '')
   .replace(/[！-～]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
   .toLowerCase()
   .replace(/[\s　]/g, '')
   .replace(/[（）()\[\]【】「」『』、・·,，.。!！?？\-—_'"'']/g, '');
 
-// 現場版、伴奏、翻唱這類不適合當選項 —— 玩家看到「(Live)」就知道是干擾項了
+// Live takes, karaoke and covers make poor decoys — a cell reading "(Live)" gives itself away
 const BAD = /live|instrumental|karaoke|inst\.|remix|version|edit|伴奏|現場|演唱會|純音樂|feat\.|cover/i;
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -54,7 +55,7 @@ async function byArtist(artist, attempt = 1) {
 }
 
 (async () => {
-  // 已經是題目的歌要排除,不然同一首歌會同時是答案和干擾項
+  // exclude anything already a question, or a song becomes its own decoy
   const taken = new Set(window.SONGS.map(s => norm(s.title)));
   const seen  = new Set(taken);
   const decoys = [];

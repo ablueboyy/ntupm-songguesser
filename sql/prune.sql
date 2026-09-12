@@ -1,17 +1,19 @@
--- 金曲猜歌王 — 把 scores 瘦下來
+-- Prune scores.
 --
--- 在 Supabase 的 SQL Editor 整份貼上執行。可以重複跑,跑幾次都一樣。
+-- Paste the whole file into Supabase's SQL Editor. Safe to run repeatedly.
 --
--- 為什麼要跑:排行榜只看「每台裝置的最高分」那一列,其餘的都是歷史紀錄。
--- 走紅之後一天進五十萬筆,免費方案 500MB 撐不到三天 —— 滿了專案會轉唯讀,
--- 那時候玩家連成績都交不上去。所以把歷史紀錄收成統計,列只留該留的。
+-- Why: the board only ever reads the best row per device; everything else is
+-- history. At peak this table took half a million rows a day, which fills the
+-- free tier's 500MB in under three days — and a full project goes read-only,
+-- at which point players cannot submit at all. So history becomes statistics
+-- and only the rows that matter stay.
 --
--- 這支會刪資料。刪之前先把你真正在意的東西(每天玩幾局、幾個人)存成統計,
--- 那是刪不掉的。
+-- This deletes data. What you actually care about (plays and players per day)
+-- is written to a stats table first, and that part is never deleted.
 
 
 -- ══════════════════════════════════════════════════════════════
--- 1. 先存統計 —— 刪掉的是紀錄,不是數字
+-- 1. Save the statistics first: rows go, numbers stay
 -- ══════════════════════════════════════════════════════════════
 
 create table if not exists public.play_daily (
@@ -21,12 +23,13 @@ create table if not exists public.play_daily (
   updated_at timestamptz not null default now()
 );
 
--- 這張表沒有任何政策,所以 anon 讀不到也寫不到 —— 只有後台和 service role 看得見。
--- 它是給你看的,不是給遊戲用的。
+-- No policies on this table, so anon can neither read nor write it; only the
+-- dashboard and the service role can see it. It is for you, not for the game.
 alter table public.play_daily enable row level security;
 
--- greatest() 是關鍵:剪過之後再跑一次,同一天重算出來的數字只會更小
--- (因為列被刪掉了),所以要保留「曾經量到的最大值」,不能直接覆蓋。
+-- greatest() is the point: re-running after a prune recomputes a smaller
+-- number for the same day, because rows are gone. Keep the largest figure
+-- ever measured rather than overwriting with the latest.
 insert into public.play_daily (day, plays, players)
 select (created_at at time zone 'Asia/Taipei')::date,
        count(*), count(distinct device_id)
@@ -39,16 +42,16 @@ on conflict (day) do update set
 
 
 -- ══════════════════════════════════════════════════════════════
--- 2. 每台裝置只留最高分的那一列
+-- 2. Keep only the best row per device
 -- ══════════════════════════════════════════════════════════════
 --
--- 三個東西刻意不刪:
---   · hidden 的列    —— 那是工作人員按過的判斷紀錄,不是垃圾
---   · 最近一小時的列 —— 免得跟正在玩的人打架(他那局剛交完就被掃掉)
---   · 每台的最高分   —— 榜上顯示的就是這一列
+-- Three things are deliberately kept:
+--   * hidden rows      a record of a staff decision, not junk
+--   * the last hour    so this does not race someone mid-round
+--   * each device's best   that is the row the board shows
 --
--- 留下來的那一列,跟 leaderboard view 挑的是同一列(同樣的排序規則),
--- 所以剪完之後排行榜、名次、總人數全都不會變。
+-- The surviving row is the same one the leaderboard view picks, by the same
+-- ordering, so the board, the ranks and the totals are unchanged by a prune.
 
 with keep as (
   select distinct on (device_id) id
@@ -63,31 +66,32 @@ where not s.hidden
 
 
 -- ══════════════════════════════════════════════════════════════
--- 3. 沒人在用的索引
+-- 3. Unused indexes
 -- ══════════════════════════════════════════════════════════════
 --
--- 索引大概佔每列成本的三分之二,留著沒用的等於白付空間。
---   scores_score_idx  全域照分數排序 —— 現在排序在 view 裡面做,走的是 best_idx
---   scores_device_idx best_idx 的第一欄也是 device_id,速率限制那個查詢照樣走得到
+-- Indexes are roughly two-thirds of the per-row cost; unused ones are pure
+-- overhead.
+--   scores_score_idx   global score ordering, now done inside the view via best_idx
+--   scores_device_idx  best_idx leads with device_id, so the rate-limit lookup still hits an index
 
 drop index if exists public.scores_score_idx;
 drop index if exists public.scores_device_idx;
 
 
 -- ══════════════════════════════════════════════════════════════
--- 4. 最後
+-- 4. Afterwards
 -- ══════════════════════════════════════════════════════════════
 --
--- 刪掉的空間不會自己還給硬碟,要 vacuum 過才會標成「可以再用」——
--- 之後新進來的成績就填回這些空位,檔案不會繼續長大。
--- 這行要單獨執行(vacuum 不能包在交易裡)。如果 SQL Editor 說不能跑,
--- 跳過也沒關係,autovacuum 自己會做,只是晚一點。
+-- Deleted space is not returned to disk until a vacuum marks it reusable;
+-- after that, new scores fill the gaps and the file stops growing.
+-- Run this on its own (vacuum cannot sit inside a transaction). If the SQL
+-- Editor refuses, skip it — autovacuum gets there eventually.
 --
 --   vacuum (analyze) public.scores;
 --
--- 不要用 vacuum full —— 它會鎖住整張表,現在這個流量下等於把遊戲關掉幾分鐘。
+-- Not vacuum full: it locks the whole table, which under load means taking the game offline for minutes.
 
 
--- 剪完看一下成果:
---   select count(*) from public.scores;          -- 應該剩下「玩家數 + 下架數 + 最近一小時」
---   select * from public.play_daily order by day; -- 你的歷史統計留在這裡
+-- Check the result:
+--   select count(*) from public.scores;          -- expect players + hidden + the last hour
+--   select * from public.play_daily order by day; -- your history lives here

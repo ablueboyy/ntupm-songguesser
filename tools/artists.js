@@ -1,10 +1,11 @@
-/* 干擾選項庫要撈哪些歌手,依 genre 分組。
+/* Which artists to pull decoys from, grouped by genre.
  *
- * build-decoys.js 用它去 iTunes 撈歌,clean-decoys.js 用它把撈錯的濾掉。
- * 要加歌手就加在這裡,兩支腳本會同時吃到。
+ * build-decoys.js searches iTunes with this list; clean-decoys.js uses it to
+ * throw out bad matches. Add an artist here and both scripts pick it up.
  *
- * ALIAS 是同一位歌手在台灣商店的其他寫法 —— 例如查 BTS 回來的
- * artistName 是「防彈少年團」,不列進來就會被當成撈錯的濾掉。
+ * ALIAS holds the other spellings the Taiwan store uses for the same artist.
+ * Searching BTS, for instance, comes back as 防彈少年團; without the alias
+ * those tracks would be discarded as mismatches.
  */
 
 const ARTISTS = {
@@ -36,15 +37,16 @@ const ARTISTS = {
   ]
 };
 
-/* 台灣商店回傳的別名。
+/* Aliases returned by the Taiwan store.
  *
- * 台灣 Apple Music 大量使用中文譯名和藝人改名後的新名字,
- * 名單漏了就會把正牌的歌當成「撈錯」濾掉 ——
- * 例如 The Weeknd 在商店裡叫 Abel Tesfaye(他的本名)。
- * 如果 build-decoys 回報某位歌手撈到 0 首,通常就是這裡少了一條。
+ * Apple Music TW leans heavily on Chinese translations and on whatever name
+ * an artist currently goes by, so a missing alias means real tracks get
+ * discarded as mismatches — The Weeknd is listed as Abel Tesfaye, his legal
+ * name. If build-decoys reports zero results for an artist, a line is
+ * usually missing here.
  */
 const ALIAS = {
-  // 韓語
+  // K-pop
   'BTS': ['防彈少年團','방탄소년단'],
   'Girls\' Generation': ['少女時代','소녀시대'],
   '(G)I-DLE': ['(여자)아이들','여자아이들','i-dle'],
@@ -52,7 +54,7 @@ const ALIAS = {
   'Super Junior': ['슈퍼주니어'],
   'EXO': ['엑소'],
   'BIGBANG': ['빅뱅'],
-  // 西洋
+  // Western
   'The Weeknd': ['Abel Tesfaye','威肯'],
   'Maroon 5': ['魔力紅'],
   'Ed Sheeran': ['紅髮艾德'],
@@ -69,9 +71,9 @@ const ALIAS = {
   'Katy Perry': ['凱蒂佩芮'],
   'Dua Lipa': ['杜娃黎波'],
   'Post Malone': ['波茲馬龍'],
-  // 日文
+  // Japanese
   'Official髭男dism': ['Official鬍子男dism','髭男'],
-  // 華語
+  // Mandarin
   '蘇打綠': ['魚丁糸']
 };
 
@@ -80,7 +82,7 @@ const norm = s => String(s || '')
   .toLowerCase()
   .replace(/[\s　'"'']/g, '');
 
-/* 這位 artistName 是不是名單上的人(或跟名單上的人合作)? */
+/* Is this artistName one of ours, or a collaboration with one of ours? */
 function knownArtist(artistName) {
   const a = norm(artistName);
   if (!a) return false;

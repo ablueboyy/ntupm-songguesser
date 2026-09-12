@@ -11,13 +11,16 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&display=swap">
 <style>
 /* ═══════════════════════════════════════════════════════════
-   音源檢查台 —— 攤位開張前抽聽用的內部工具,不是給玩家看的頁面。
+   Audio check bench. Internal tool for spot-listening the bank; not a
+   player-facing page.
 
-   沿用遊戲的顏色,但排版邏輯相反:遊戲要留白與戲劇性,這裡要密度。
-   歌名維持 Noto Serif TC —— 你在這裡看到的字,就是玩家在九宮格看到的字。
-   其他中繼資料改用系統無襯線體:兩百多列明體小字掃下來會瞎。
+   Same palette as the game, opposite layout logic: the game wants air and
+   drama, this wants density. Song titles stay in Noto Serif TC, because what
+   you read here is exactly what a player reads in a grid cell. Everything
+   else is system sans — two hundred rows of small serif is unreadable.
 
-   判定只存在這台裝置的 localStorage,不會上傳,換裝置要重聽。
+   Verdicts live in this browser's localStorage only. Nothing is uploaded,
+   and a different device starts over.
    ═══════════════════════════════════════════════════════════ */
 :root{
   color-scheme:dark;
@@ -36,7 +39,7 @@ body{
   min-height:100dvh;font-size:15px;line-height:1.5;
 }
 
-/* ── 頂部:標題 + 進度 + 篩選,捲動時固定 ── */
+/* ── header: title, progress, filters; sticky ── */
 header{
   position:sticky;top:0;z-index:5;
   background:rgba(11,12,24,.94);backdrop-filter:blur(12px);
@@ -72,7 +75,7 @@ input[type=search]{
 }
 input[type=search]::placeholder{color:var(--dim)}
 
-/* ── 清單 ── */
+/* ── list ── */
 ol{list-style:none;margin:0;padding:0 0 40vh}
 header > *, li{max-width:820px}
 li{margin-left:0}
@@ -101,7 +104,7 @@ li.playing .idx{color:var(--bottle)}
   border:1px solid var(--line);border-radius:4px;padding:0 4px;margin-right:6px;
   vertical-align:1px;text-transform:uppercase;
 }
-/* 商店抓到的東西跟題庫寫的一樣時就不顯示 —— 每一列都印重複資訊只會蓋掉真正要看的 */
+/* hide store metadata when it matches the bank — repeating it buries what matters */
 .store{
   font-size:.74rem;color:var(--dim);margin-top:3px;
   padding-left:8px;border-left:2px solid var(--line);
@@ -130,7 +133,7 @@ li.playing .play[data-on="1"]{animation:none}
 .acts .bad[aria-pressed="true"]{background:var(--miss);color:var(--night);border-color:transparent}
 .err{font-size:.72rem;color:var(--miss);margin-top:3px}
 
-/* ── 底部固定列 ── */
+/* ── sticky footer ── */
 footer{
   position:fixed;left:0;right:0;bottom:0;z-index:6;
   background:rgba(11,12,24,.94);backdrop-filter:blur(12px);
@@ -216,11 +219,12 @@ const SONGS = window.SONGS || [];
 const PREV  = window.SONG_PREVIEWS || {};
 const KEY   = 'pm-songguesser-audio-check';
 
-/* ---------- 這次新增的歌 ----------
-   2026-09-13 這批往題庫加了 50 首(340 → 390),歌是從 decoys.js 挑出來的。
-   新歌只有商店寫法對不上的那幾首會落進「重點抽聽」,其餘照樣要親耳聽過,
-   所以獨立開一個篩選,而且清單非空時預設就停在這裡。
-   這批審完就可以把整個 NEW_IDS 清空,篩選會自動消失、預設回到「重點抽聽」。 */
+/* ---------- This batch ----------
+   2026-09-13: 50 songs added to the bank (340 -> 390), picked out of
+   decoys.js. Only the ones whose store metadata disagrees land in "needs
+   checking", but new songs still have to be heard, so they get their own
+   filter and it is the default while the list is non-empty.
+   Once this batch is reviewed, empty NEW_IDS and the filter disappears. */
 const NEW_IDS = new Set([
   "gejian", "houlaidewomen", "aizheaizhejiuyongyuan", "douquan",
   "rangwoliuzainishenbian", "jifenzhiji", "dangwomenyiqizouguo", "gesongzhe",
@@ -237,14 +241,15 @@ const NEW_IDS = new Set([
   "easyonme", "diewithasmile"
 ]);
 
-/* ---------- 風險評估 ----------
-   整份題庫全聽完要一個半小時,沒人會做。所以先算出「值得先聽」的那幾首:
-   商店回傳的曲名/歌手跟題庫寫的不一樣,或專輯名稱看起來不是原版錄音。
-   分數對得剛剛好的重唱版(光年之外那種)就是靠專輯名稱抓出來的。     */
+/* ---------- Risk scoring ----------
+   Listening to the whole bank takes about ninety minutes, so nobody does.
+   This surfaces the ones worth hearing first: store title or artist differs
+   from the bank, or the album name does not look like the original release.
+   Cover versions that otherwise match exactly get caught by the album name. */
 const SUSPECT_ALBUM = /第\s*\d+\s*期|演唱會|跨年|金曲撈|我是歌手|蒙面|聲生不息|好聲音|影音全記錄|全記錄|串燒|卡拉|karaoke|オルゴール|音樂盒|instrumental|伴奏|精選|合輯|Live/i;
 const SUSPECT_TRACK = /live|remix|cover|karaoke|instrumental|伴奏|現場/i;
 
-// 比對用:去掉副標與標點。原版常帶「(電影⋯主題曲)」,那不算不一樣。
+// for comparison: strip subtitles and punctuation. An original release often carries "(theme from ...)"; that is not a mismatch.
 const norm = s => String(s || '').toLowerCase()
   .replace(/[\s　]/g, '')
   .replace(/[（(【「][^）)】」]*[）)】」]/g, '')
@@ -271,12 +276,12 @@ const ROWS = SONGS.map((s, i) => {
            hay:(s.title + s.artist + s.id + (p.title||'') + (p.artist||'')).toLowerCase() };
 });
 
-/* ---------- 判定的儲存 ---------- */
+/* ---------- verdict storage ---------- */
 let marks = {};
 try { marks = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) { marks = {}; }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(marks)); } catch(e) {} };
 
-/* ---------- 狀態 ---------- */
+/* ---------- state ---------- */
 let filter = NEW_IDS.size ? 'new' : 'risk', query = '', cursor = 0, playingId = null, loadingId = null;
 let current = null, token = 0;
 
@@ -369,15 +374,16 @@ function mark(id, v){
   save(); render();
 }
 
-/* ---------- 播放 ----------
-   不能直接 audio.src = url 然後 play() —— Chrome 會卡在 stalled,
-   play() 的 promise 永遠不 settle,畫面就一直停在「正在播」但沒有聲音。
-   遊戲的 probeAudio()(index.html)早就踩過這個坑:要先用新的 Audio 元素
-   preload='metadata' + load(),等 canplay / loadedmetadata 再播,並且要有逾時。
-   這裡照抄同一套 —— 順便讓這頁測到的就是遊戲實際會走的那條路徑。
+/* ---------- playback ----------
+   Setting audio.src and calling play() does not work: Chrome stalls and the
+   play() promise never settles, leaving the UI stuck on "playing" in silence.
+   probeAudio() in index.html hit this first. The fix is the same here — a
+   fresh Audio element with preload='metadata', load(), wait for canplay or
+   loadedmetadata, and a timeout. Copying the game's path also means this page
+   tests the path the game actually takes.
 
-   一次只播一首,播完就停、不自動跳下一首 ——
-   自動連播會讓你錯過「剛剛那首怪怪的」的那一刻。 */
+   One at a time, and it stops at the end rather than advancing. Autoplay
+   through the list makes you miss the moment something sounded wrong. */
 function probeAudio(src, timeoutMs){
   return new Promise(resolve => {
     const a = new Audio(src);
@@ -411,7 +417,7 @@ async function toggle(id){
   render();
 
   const el = await probeAudio(p.url, 12000);
-  if(mine !== token){ if(el) try{ el.pause(); }catch(e){}  return; }   // 等的時候你已經換歌了
+  if(mine !== token){ if(el) try{ el.pause(); }catch(e){}  return; }   // you switched songs while this was loading
 
   if(!el){
     loadingId = null; render();
@@ -438,7 +444,7 @@ function showErr(id, msg){
   if(el){ el.hidden = false; el.textContent = msg; }
 }
 
-/* ---------- 鍵盤 ---------- */
+/* ---------- keyboard ---------- */
 document.addEventListener('keydown', e => {
   if(e.target.matches('input,textarea') || $('dlg').open) return;
   const rows = visible();
@@ -456,13 +462,13 @@ document.addEventListener('keydown', e => {
   else if(e.key === '2'){ if(cur){ mark(cur.song.id, 'bad'); go(1); } }
 });
 
-/* ---------- 篩選 / 搜尋 ---------- */
+/* ---------- filter and search ---------- */
 document.querySelectorAll('#filters .f').forEach(b => {
   b.onclick = () => { filter = b.dataset.f; cursor = 0; render(); };
 });
 $('q').oninput = e => { query = e.target.value.trim().toLowerCase(); cursor = 0; render(); };
 
-/* ---------- 匯出 ---------- */
+/* ---------- export ---------- */
 $('export').onclick = () => {
   const bad = ROWS.filter(r => marks[r.song.id] === 'bad');
   const ids = bad.map(r => r.song.id).join(',');

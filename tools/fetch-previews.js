@@ -1,15 +1,17 @@
-/* 金曲猜歌王 — 抓 iTunes 官方 30 秒試聽網址
+/* Fetch Apple's official 30-second preview URLs.
  *
- * 用 Apple 公開的 iTunes Search API 查每首歌的 previewUrl,寫進 previews.js。
- * 只存「網址」,不下載音檔 —— 遊戲執行時直接串流 Apple 的伺服器。
+ * Looks up previewUrl per song through the public iTunes Search API and
+ * writes previews.js. Only URLs are stored; no audio is downloaded. The game
+ * streams from Apple at play time.
  *
- *   node tools/fetch-previews.js                   只補還沒有的
- *   node tools/fetch-previews.js --force           全部重抓
- *   node tools/fetch-previews.js --only daoxiang   只抓指定的幾首(逗號分隔)
- *   node tools/fetch-previews.js --country JP      換商店地區(預設 TW)
- *   node tools/fetch-previews.js --delay 3000      放慢速度(API 約 20 次/分鐘)
+ *   node tools/fetch-previews.js                   fill in what is missing
+ *   node tools/fetch-previews.js --force           refetch everything
+ *   node tools/fetch-previews.js --only daoxiang   specific ids, comma separated
+ *   node tools/fetch-previews.js --country JP      different store (default TW)
+ *   node tools/fetch-previews.js --delay 3000      slow down (API allows ~20/min)
  *
- * 抓完務必看一下 confidence 是 low 的那幾首,很可能配錯歌。
+ * Always review the entries that come back with low confidence — they are
+ * usually the wrong recording.
  */
 
 const fs = require('fs');
@@ -21,7 +23,7 @@ require('../songs.js');
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'previews.js');
 
-/* ---------- 參數 ---------- */
+/* ---------- arguments ---------- */
 const argv = process.argv.slice(2);
 const flag = (name, fallback) => {
   const i = argv.indexOf('--' + name);
@@ -32,7 +34,7 @@ const ONLY    = flag('only', '').split(',').map(s => s.trim()).filter(Boolean);
 const COUNTRY = flag('country', 'TW');
 const DELAY   = parseInt(flag('delay', '2000'), 10);
 
-/* ---------- 既有資料 ---------- */
+/* ---------- existing data ---------- */
 function loadExisting() {
   try {
     const src = fs.readFileSync(OUT, 'utf8');
@@ -43,7 +45,7 @@ function loadExisting() {
   }
 }
 
-/* ---------- 字串正規化與比對 ---------- */
+/* ---------- normalisation and matching ---------- */
 function norm(s) {
   return String(s || '')
     .replace(/[！-～]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0))
@@ -54,9 +56,9 @@ function norm(s) {
 
 const BAD = /live|instrumental|karaoke|cover|remix|version|伴奏|現場|演唱會|純音樂/i;
 
-// 專輯名稱看得出不是原版錄音的 —— 綜藝節目、演唱會實錄、卡拉OK、音樂盒。
-// 這種最陰險:歌名和歌手都對得剛剛好,分數還比原版高(原版常常帶「(電影⋯主題曲)」副標),
-// 但播出來是完全不同的編曲,玩家會聽到一首認不出來的歌。
+// Album names that give away a non-original recording: TV shows, live
+// albums, karaoke, music boxes. These are the dangerous ones — title and
+// artist match perfectly, often scoring higher than the original, but the arrangement is unrecognisable.
 const BAD_ALBUM = /第\s*\d+\s*期|演唱會|跨年|金曲撈|我是歌手|蒙面|聲生不息|好聲音|影音全記錄|串燒|卡拉|karaoke|オルゴール|音樂盒|音乐盒|instrumental|伴奏/i;
 
 function score(song, item) {
@@ -72,7 +74,7 @@ function score(song, item) {
   return s;
 }
 
-/* ---------- 查詢 ---------- */
+/* ---------- search ---------- */
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 async function search(term, attempt = 1) {
@@ -113,7 +115,7 @@ async function lookup(song) {
   };
 }
 
-/* ---------- 主流程 ---------- */
+/* ---------- main ---------- */
 (async () => {
   const all = (window.SONGS || []).slice();
   const existing = loadExisting();

@@ -11,14 +11,16 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700;900&display=swap">
 <style>
 /* ═══════════════════════════════════════════════════════════
-   排行榜管理台 —— 攤位工作人員用,不是給玩家的頁面。
+   Leaderboard console. Staff tool, not a player-facing page.
 
-   這一頁是公開的(GitHub Pages 上誰都能打開),但打開沒有用:
-   刪改的權限綁在 Supabase Auth 的登入狀態上,由資料庫的 RLS 認人。
-   頁面裡只有那把本來就公開的 anon key,沒有任何祕密。
+   The page is public — anyone can open it on GitHub Pages — and opening it
+   achieves nothing: edit rights hang off a Supabase Auth session and are
+   enforced by row-level security in the database. The only key in here is
+   the anon key, which is public by design.
 
-   「下架」是預設動作,「永久刪除」要多按一次。
-   活動當下按錯的成本遠大於留一筆髒資料的成本 —— 下架救得回來,刪掉救不回來。
+   "Hide" is the default action; "delete permanently" needs a second press.
+   During an event, the cost of a misclick far exceeds the cost of one dirty
+   row: hidden can be undone, deleted cannot.
    ═══════════════════════════════════════════════════════════ */
 :root{
   color-scheme:dark;
@@ -38,7 +40,7 @@ h1{font-family:var(--face);font-weight:900;font-size:1.35rem;margin:0 0 4px;colo
 .sub{font-size:.8rem;color:var(--dim)}
 .sub b{color:var(--foam);font-weight:600}
 
-/* ── 登入 ── */
+/* ── login ── */
 #login{max-width:340px;margin:12vh auto 0}
 .field{margin-bottom:12px}
 label{display:block;font-size:.75rem;color:var(--dim);margin-bottom:4px}
@@ -57,7 +59,7 @@ button:disabled{opacity:.5;cursor:default}
 .ghost{background:transparent;border-color:var(--line);color:var(--dim);padding:5px 11px;font-size:.78rem}
 .ghost:hover{border-color:var(--line-2);color:var(--foam)}
 
-/* ── 工具列 ── */
+/* ── toolbar ── */
 .bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0 10px}
 .bar input[type=search]{flex:1;min-width:140px}
 .tabs{display:flex;gap:6px}
@@ -68,10 +70,10 @@ select{
 }
 select:focus{outline:none;border-color:var(--line-2)}
 
-/* ── 清單 ── */
-/* 每一格都要指定 grid-column ——
-   只有 .acts 帶 grid-row 的話,它會被 CSS Grid 的自動排版當成「已定位」而先放,
-   結果按鈕跑到最左邊、暱稱被擠到最右邊。四個格子全部寫死就不會有這種事。 */
+/* ── list ── */
+/* Every cell needs an explicit grid-column. With grid-row on .acts alone,
+   CSS Grid treats it as positioned and places it first, which pushes the
+   buttons left and the nickname right. Pinning all four avoids that. */
 .row{
   display:grid;grid-template-columns:2.4em 1fr auto;gap:2px 12px;align-items:center;
   padding:10px 0;border-top:1px solid var(--line);
@@ -89,7 +91,7 @@ select:focus{outline:none;border-color:var(--line-2)}
 .tag.dup{background:rgba(207,202,240,.14);color:var(--dim)}
 .danger{background:transparent;border-color:rgba(224,128,152,.5);color:var(--miss);padding:5px 11px;font-size:.78rem}
 .danger.armed{background:var(--miss);color:var(--night);border-color:transparent;font-weight:700}
-/* 一鍵下架:一次動很多筆,所以不長得像旁邊那些單筆的按鈕 */
+/* bulk hide: acts on many rows at once, so it should not look like the per-row buttons */
 .warn{background:transparent;border-color:rgba(242,200,106,.5);color:var(--bottle);padding:5px 11px;font-size:.78rem}
 .warn.armed{background:var(--bottle);color:var(--night);border-color:transparent;font-weight:700}
 .empty{padding:44px 0;text-align:center;color:var(--dim);font-size:.85rem}
@@ -175,9 +177,10 @@ const esc = s => String(s == null ? '' : s)
 let token = null, rows = [], filter = 'board', query = '', armed = null, sort = 'score';
 let armedBulk = false;
 
-/* ---------- 打 API ----------
-   讀取用 anon key 就夠;刪改一定要帶登入後的 token,
-   沒帶或過期的話資料庫會回 0 列(RLS 濾掉),不是回錯誤 —— 所以要自己檢查。 */
+/* ---------- API ----------
+   Reads only need the anon key; edits need the session token. Without it the
+   database returns zero rows (filtered by RLS) rather than an error, so the
+   caller has to check the response itself. */
 async function api(path, opts = {}){
   const res = await fetch(BASE + '/rest/v1/' + path, {
     ...opts,
@@ -198,7 +201,7 @@ function say(el, text, kind){
   el.className = 'msg' + (kind ? ' ' + kind : '');
 }
 
-/* ---------- 登入 ---------- */
+/* ---------- login ---------- */
 if(!BASE || !CFG.anonKey){
   $('login-note').innerHTML = '<b style="color:var(--miss)">board-config.js 還沒設定</b><br>' +
     '排行榜還沒接上伺服器,這一頁沒有東西可以管。';
@@ -251,15 +254,16 @@ $('logout').addEventListener('click', () => {
   say($('login-msg'), '已登出', 'good');
 });
 
-/* ---------- 讀資料 ----------
+/* ---------- loading ----------
 
-   要整張表,所以得自己翻頁。PostgREST 一次最多回 1000 列(Supabase 的 max-rows),
-   limit 寫 2000 也只會拿到前 1000 筆,而且不會報錯 —— 就是安靜地少一半,
-   上面的人數統計跟著全錯。
+   We want the whole table, which means paging by hand. PostgREST returns at
+   most 1000 rows (Supabase's max-rows); limit=2000 still yields 1000, with no
+   error — it just quietly drops half, and every count above is then wrong.
 
-   翻頁用「created_at 大於上一頁最後一筆」當游標,不用 offset:
-   翻到一半有玩家交成績的話,offset 會讓後面每一頁整個位移、漏掉一列。
-   抓完再照分數排 —— 下面的 view() 是吃「已經照分數排好」的 rows。 */
+   The cursor is "created_at greater than the last row of the previous page",
+   not an offset: a score submitted mid-scan would shift every later offset
+   and skip a row. Sorted by score afterwards, because view() below expects
+   rows already in score order. */
 const PAGE = 1000, MAX_PAGES = 60;
 
 async function fetchAll(onProgress){
@@ -273,7 +277,7 @@ async function fetchAll(onProgress){
     out.push(...page);
     cursor = page[page.length - 1].created_at;
     if(onProgress) onProgress(out.length);
-    if(page.length < PAGE) break;            // 最後一頁沒滿 = 抓完了
+    if(page.length < PAGE) break;            // a short page means we reached the end
   }
   return out.sort((a, b) =>
     b.score - a.score || new Date(a.created_at) - new Date(b.created_at));
@@ -308,12 +312,14 @@ document.querySelectorAll('.tabs button').forEach(b => {
   });
 });
 
-/* 一鍵下架要動的是哪幾筆。
+/* What bulk hide touches.
 
-   「下架」是連人一起 —— 榜上一列只代表那個人的最高分,只拿掉那一筆的話
-   他第二高的成績會遞補上榜,看起來像沒下架成功。所以下架是把清單上這些
-   裝置的每一筆都拿掉。「復原」相反,只動列出來的那幾筆:誰是被單獨下架
-   的、誰是整台下架的,復原時不該由程式替工作人員決定。 */
+   Hiding follows the person, not the row. A board row is only that device's
+   best score; hide just that row and their second-best takes its place,
+   which looks like the hide failed. So hiding removes every row belonging to
+   the listed devices. Restoring is the opposite — only the listed rows:
+   whether someone was hidden individually or as a whole device is not a call
+   the code should make on the staff's behalf. */
 function bulkTargets(list){
   if(filter === 'hidden'){
     return { verb:'復原', hidden:false,
@@ -324,13 +330,13 @@ function bulkTargets(list){
   return { verb:'下架', hidden:true, ids:hit.map(r => r.id), people:devices.size };
 }
 
-/* 榜上看到的是「同一支手機只留最高分」,跟玩家那邊同一套規則。
-   合併掉的其他場次標成「同機較低分」,免得工作人員以為資料重複了。 */
+/* Same rule as the player-facing board: best score per device. The merged-
+   away sessions are tagged so staff do not read them as duplicate data. */
 function view(){
   const live = rows.filter(r => !r.hidden);
   const best = new Set();
   const seen = new Set();
-  for(const r of live){                       // rows 已經照分數排好
+  for(const r of live){                       // rows are already in score order
     if(seen.has(r.device_id)) continue;
     seen.add(r.device_id); best.add(r.id);
   }
@@ -353,11 +359,11 @@ function view(){
   return { list: out, best };
 }
 
-/* 一次最多畫幾列。全部畫出來是兩萬多個列 —— 瀏覽器會卡住好幾秒,
-   而且沒有人會捲到第五千列。要找特定的人就用上面的搜尋。
+/* Row cap. Rendering all twenty-odd thousand freezes the page for seconds,
+   and nobody scrolls to row five thousand. Use the search box instead.
 
-   「一鍵下架」也只吃畫出來的這些 —— 工作人員按下去的時候,
-   動到的必須就是眼睛看得到的那些人,不能偷偷多處理沒列出來的。 */
+   Bulk hide is capped to the same rows: what the staff press must act on
+   exactly the people they can see, never quietly on more. */
 const SHOW_MAX = 300;
 
 function render(){
@@ -368,8 +374,8 @@ function render(){
   $('stat').innerHTML = `榜上 <b>${devices}</b> 位玩家 · 總紀錄 <b>${rows.length}</b> 筆 · 已下架 <b>${rows.filter(r => r.hidden).length}</b> 筆`;
 
   if(!list.length){
-    // 登入了卻整個空的,幾乎都是同一個原因:RLS 的 select 政策只寫了 to anon。
-    // 政策綁角色,登入後身分是 authenticated,於是一列都讀不到 —— 而且不會報錯。
+    // Logged in but completely empty is almost always the same cause: the RLS
+    // select policy names only `anon`. Policies bind to roles, and after login the role is `authenticated`, so nothing is readable — silently.
     $('list').innerHTML = rows.length
       ? '<div class="empty">這個篩選沒有資料</div>'
       : '<div class="empty">一筆都讀不到。<br><br>' +
@@ -389,7 +395,7 @@ function render(){
     ? `確定${bulk.verb}這 ${bulk.people} 人?`
     : `一鍵${bulk.verb} · ${bulk.people} 人 ${bulk.ids.length} 筆`;
 
-  // 同一支手機的所有場次 —— 「整台下架」要動的就是這一群
+  // every session from one device: what whole-device hide acts on
   const byDev = new Map();
   for(const r of rows){
     if(!byDev.has(r.device_id)) byDev.set(r.device_id, []);
@@ -427,11 +433,11 @@ function render(){
   });
 }
 
-/* ---------- 動作 ---------- */
+/* ---------- actions ---------- */
 
-/* 一次改很多筆。id=in.(...) 的網址不能無限長,所以切成小批;
-   跟單筆一樣要看 return=representation 回來的內容 ——
-   被 RLS 擋掉時 PostgREST 回的是空陣列,不是錯誤。 */
+/* Batched edits. The id=in.(...) URL cannot grow without limit, so chunk it.
+   As with single edits, check what return=representation gives back: when RLS
+   blocks the write PostgREST returns an empty array, not an error. */
 async function setHidden(ids, hidden){
   let done = 0;
   for(let i = 0; i < ids.length; i += 60){
@@ -454,7 +460,7 @@ async function setHidden(ids, hidden){
 $('bulk').addEventListener('click', async () => {
   const bulk = bulkTargets(view().list);
   if(!bulk.ids.length) return;
-  if(!armedBulk){ armedBulk = true; armed = null; render(); return; }   // 第一次點只是上膛
+  if(!armedBulk){ armedBulk = true; armed = null; render(); return; }   // first press only arms it
   armedBulk = false;
   $('bulk').disabled = true;
   try{
@@ -475,8 +481,8 @@ async function act(what, id){
   if(what === 'toggle'){
     armed = null; armedBulk = false;
     try{
-      // return=representation:RLS 擋住的話會回空陣列而不是錯誤,
-      // 只看 HTTP 狀態碼會以為成功了。
+      // return=representation: when RLS blocks the write PostgREST returns an empty
+      // array rather than an error, so the status code alone looks like success.
       const back = await api('scores?id=eq.' + id, {
         method: 'PATCH',
         headers: { Prefer: 'return=representation' },
@@ -490,8 +496,8 @@ async function act(what, id){
     return;
   }
 
-  /* 整台下架 —— 同一支手機的每一場次一起動。
-     還有沒下架的就是整台下架,全部都下架了就是整台復原。 */
+  /* Whole-device hide: every session from that phone at once. If anything is
+     still visible it hides; if everything is hidden it restores. */
   if(what === 'dev'){
     armed = null; armedBulk = false;
     const mine = rows.filter(r => r.device_id === row.device_id);
@@ -506,7 +512,7 @@ async function act(what, id){
   }
 
   if(what === 'del'){
-    if(armed !== id){ armed = id; armedBulk = false; render(); return; }   // 第一次點只是上膛
+    if(armed !== id){ armed = id; armedBulk = false; render(); return; }   // first press only arms it
     armed = null;
     try{
       const back = await api('scores?id=eq.' + id, {
@@ -520,7 +526,7 @@ async function act(what, id){
   }
 }
 
-/* 重新整理後如果 session 還在就直接進去 */
+/* skip the login screen if the session survived a reload */
 try{
   const saved = sessionStorage.getItem(TOKEN_KEY);
   if(saved){ token = saved; enter(); }

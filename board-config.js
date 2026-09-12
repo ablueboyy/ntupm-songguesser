@@ -1,17 +1,20 @@
-/* 排行榜的伺服器設定
+/* Leaderboard server settings — legacy.
  *
- * 兩個欄位都留空的話,遊戲照常能玩 —— 排行榜會自動退回「只有這支手機」的模式,
- * 而且畫面上會寫明,不會讓玩家誤以為自己上了全場榜。
+ * The game no longer reads this file; index.html stopped loading it when the
+ * live leaderboard was replaced by the static crew board in crew.js. Only
+ * staff.html still uses it, to browse the historical scores.
  *
- * 要開啟全場共用的即時榜:
- *   1. 到 supabase.com 開一個免費專案(這步要用你自己的帳號)
- *   2. 左邊 SQL Editor → 貼上 sql/leaderboard.sql 整份 → Run
- *   3. Project Settings → API Keys,把 Project URL 和 anon public key 填到下面
- *   4. commit + push,GitHub Pages 更新後就生效
+ * Leave both fields empty and nothing breaks.
  *
- * anon key 是設計成可以公開的 —— 它本來就會出現在網頁原始碼裡,藏不住也不用藏。
- * 真正把關的是 SQL 裡的 RLS 政策:只開 insert 和 select,不開 update / delete。
- * 也就是說,金鑰就算外流,別人頂多灌一些假分數進來,改不掉也刪不掉任何既有成績。
+ * To bring a live shared leaderboard back:
+ *   1. Create a free project at supabase.com
+ *   2. SQL Editor -> paste all of sql/leaderboard.sql -> Run
+ *   3. Project Settings -> API Keys, fill in the project URL and anon key below
+ *   4. Commit and push
+ *
+ * The anon key is meant to be public — it ships in the page source either way.
+ * The actual gate is the RLS policy in the SQL: insert and select only, no
+ * update or delete, so a leaked key cannot alter or remove existing scores.
  */
 window.BOARD_CONFIG = {
   url:     'https://onixomvicywcbrqpdvgv.supabase.co',   // 例:https://abcdefghijk.supabase.co

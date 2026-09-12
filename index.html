@@ -11,23 +11,25 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600;700;900&display=swap">
 <style>
 /* ═══════════════════════════════════════════════════════════
-   金曲猜歌王 — 視覺系統「深夜混音帶」
+   Visual system
 
-   顏色全部取樣自 assets/theme.png,只有 5 個色相。
-   黃色 (--bottle) 只出現在兩種地方:主標題,以及得分 / 正解 / 達標。
-   字體只有 Noto Serif TC 一個家族,層次靠字重不靠字級硬撐。
-   明體橫畫細,深色底上小字會消失 —— 內文一律 500 起跳,九宮格 600。
+   Five hues, all sampled from assets/theme.png.
+   Yellow (--bottle) is reserved for two things: the wordmark, and
+   anything that means "you scored" — points, correct answer, threshold met.
+   One typeface (Noto Serif TC); hierarchy comes from weight, not size.
+   Serif horizontals are thin and vanish on dark ground, so body text
+   starts at 500 and grid cells are 600.
    ═══════════════════════════════════════════════════════════ */
 
 :root{
   color-scheme:dark;
 
-  --night:#0B0C18;    /* 夜空:頁面底 */
-  --deep:#171A33;     /* 海面下:表面 */
-  --tide:#252C55;     /* 海面:可按的東西(九宮格) */
-  --foam:#CFCAF0;     /* 前景文字 */
-  --bottle:#F2C86A;   /* 漂流瓶的光 —— 得分 / 正解 / 達標 */
-  --miss:#E08098;     /* 答錯 */
+  --night:#0B0C18;    /* page ground */
+  --deep:#171A33;     /* surfaces */
+  --tide:#252C55;     /* tappable (grid cells) */
+  --foam:#CFCAF0;     /* foreground text */
+  --bottle:#F2C86A;   /* score / correct / threshold met */
+  --miss:#E08098;     /* wrong answer */
 
   --line:rgba(207,202,240,.16);
   --line-2:rgba(207,202,240,.32);
@@ -61,15 +63,15 @@ body{
   text-wrap:pretty;
 }
 
-/* ── 主視覺 ──
-   用 webp:同一張圖 1038KB → 82KB(quality 90,平均誤差不到 1%,
-   而且還被下面那層遮罩壓掉)。這張圖是每個新訪客一定會下載的最大一筆,
-   佔開頁流量的八成 —— 原始的 theme.png 留在 assets/ 當母檔,頁面不引用它。
+/* Hero image.
+   webp, not png: same picture, 1038KB -> 82KB (quality 90). It is the
+   largest single download for a first-time visitor — about 80% of the page
+   weight. theme.png stays in assets/ as the master; nothing links to it.
 
-   直式手機 cover 之後只看得到原圖中間 20% 的直條,而那正是圖裡
-   「NTUPM 18TH」社名字的位置 —— 會跟頁面標題疊在一起。
-   所以水平位移到 90%,改看留聲機與沙灘那側(那裡沒有字)。
-   遮罩在 32% 就近乎實色:文字從 37% 開始,壓在亮處對比只有 1.0。 */
+   On a portrait phone, `cover` crops to the middle 20% of the image, which
+   is exactly where the "NTUPM 18TH" wordmark sits — it would collide with
+   the page title. Shifted to 90% so we see the gramophone side instead.
+   The scrim is near-opaque by 32%; text starts at 37%. */
 body::before{
   content:"";position:fixed;inset:0;z-index:-2;
   background:url("assets/theme.webp") 90% center/cover no-repeat;
@@ -85,7 +87,7 @@ body::after{
     rgba(11,12,24,.98) 100%);
   transition:background .4s ease;
 }
-/* 遊戲中:專心猜歌 */
+/* in-game: darker, fewer distractions */
 body.dim::after{
   background:linear-gradient(180deg,rgba(11,12,24,.965),rgba(11,12,24,.985));
 }
@@ -106,7 +108,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{
   outline:2px solid var(--foam);outline-offset:3px;border-radius:var(--r-input);
 }
 
-/* 唯一的實心按鈕 */
+/* the only solid button */
 .btn{
   display:block;width:100%;padding:var(--s4);
   background:var(--foam);color:var(--night);
@@ -122,7 +124,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{
 }
 .btn.ghost:active{border-color:var(--foam);background:none}
 
-/* ═══════════ 開始 ═══════════ */
+/* ═══════════ START ═══════════ */
 #screen-start{justify-content:flex-end;gap:var(--s5)}
 .eyebrow{font-weight:var(--w-quiet);font-size:var(--t-small);color:var(--dim);letter-spacing:.1em}
 .brand h1{
@@ -132,7 +134,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{
 }
 .slogan{font-weight:var(--w-quiet);font-size:var(--t-small);line-height:2.2;color:var(--dim)}
 
-/* 底線輸入 —— 像卡帶標籤上的手寫欄位,不是方框 */
+/* underline input, like a handwritten cassette label */
 .field{display:flex;align-items:center;gap:var(--s4)}
 .label{flex:none;width:3rem;font-size:var(--t-small);color:var(--dim);font-weight:var(--w-quiet)}
 input[type=text]{
@@ -156,7 +158,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   font-size:var(--t-small);
 }
 .sound.ok .txt b{color:var(--bottle)}
-/* 只差測聲音的時候,把這一區點亮 —— 按鈕說「請先測試聲音」,要看得出來是哪裡 */
+/* highlight the sound block when it is the only thing left to do */
 .sound.want{
   box-shadow:inset 2px 0 0 var(--bottle);
   padding-left:var(--s3);margin-left:calc(var(--s3) * -1);
@@ -191,21 +193,21 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   width:16px;height:16px;flex:none;
   fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
 }
-/* 底線只畫在帳號底下,連圖示一起畫會變成穿過圖示的橫槓 */
+/* underline the handle only — underlining the icon too draws a bar through it */
 .startfoot a .handle{border-bottom:1px solid var(--line-2);padding-bottom:2px}
 .startfoot a:active{color:var(--foam)}
 .startfoot button{padding:var(--s2) 0;color:var(--dim)}
 
-/* 出處。刻意做得比所有東西都小、都暗 —— 它不是給玩家看的資訊,
-   是標明這 30 秒片段來自哪裡。標出處對合理使用的判斷是加分的,
-   而且遊戲本來就沒有散布任何音檔:瀏覽器是直接去 Apple 的伺服器拿。 */
+/* Attribution. Deliberately smaller and dimmer than anything else — it is
+   not information for the player, it just says where the 30s clip comes from.
+   The game never distributes audio; the browser streams it from Apple. */
 .credit{
   margin-top:var(--s2);
   font-size:.6875rem;line-height:1.6;letter-spacing:.02em;
   color:rgba(207,202,240,.38);font-weight:var(--w-quiet);
 }
 
-/* ═══════════ 載入 ═══════════ */
+/* ═══════════ LOADING ═══════════ */
 #screen-load{align-items:center;justify-content:center;text-align:center;gap:var(--s5)}
 .spin{
   width:40px;height:40px;border-radius:50%;
@@ -216,17 +218,17 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 #load-txt{max-width:20rem;font-size:var(--t-small);line-height:2.1;color:var(--dim)}
 .load-retry{max-width:12rem}
 
-/* ═══════════ 遊戲 ═══════════ */
+/* ═══════════ PLAY ═══════════ */
 #screen-play{height:100vh;height:100dvh;min-height:0;gap:var(--s4)}
-/* position:relative 是音量面板的定位基準,拿掉的話面板會掉到頁面最底部 */
+/* position:relative anchors the volume panel; without it the panel drops to the page bottom */
 .hud{flex:none;display:flex;flex-direction:column;gap:var(--s4);position:relative}
 .hud-top{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s4)}
 .hud-top .q{font-size:var(--t-small);color:var(--dim);padding-bottom:var(--s2)}
-/* 計時器是搶答遊戲的主角:靠字級與字重,不靠光暈 */
+/* the clock is the main character here: size and weight, no glow */
 .hud-top .clock{
   font-weight:var(--w-title);font-size:var(--t-h1);line-height:1;
   font-variant-numeric:tabular-nums;
-  min-width:4.2ch;text-align:right;   /* 固定寬,數字跳動不推版面 */
+  min-width:4.2ch;text-align:right;   /* fixed width so ticking digits do not shift the layout */
 }
 .hud-top .clock.hurry{color:var(--miss)}
 .volbtn{
@@ -247,8 +249,8 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 .bar i{display:block;height:100%;width:100%;background:var(--foam);transform-origin:left center}
 .bar i.hurry{background:var(--miss)}
 
-/* 高螢幕上格子會被拉成細長條 —— 限高,並把多出來的空間留在上面。
-   九宮格靠下,單手拿手機時拇指才構得到。 */
+/* On tall screens the cells stretch into slivers, so cap the height and put
+   the slack above the grid — thumb reach matters more than centring. */
 .grid{
   flex:1;min-height:0;margin-top:auto;
   max-height:calc(min(100vw, 30rem) * 1.5);
@@ -267,14 +269,14 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 .opt.xs{font-size:.875rem;line-height:1.35}
 .opt.xxs{font-size:.8125rem;line-height:1.3}
 .opt:active{transform:scale(.96)}
-/* 正解:整格反白填實 —— 不靠光暈,也不只靠顏色 */
+/* correct answer: filled, not glowing — never colour alone */
 .opt.right{background:var(--bottle);color:var(--night)}
 .opt.wrong{background:none;box-shadow:inset 0 0 0 1px var(--miss);color:var(--miss)}
 .opt.fade{opacity:.22}
 
-/* 唯一一段編排好的動態:開場九宮格依序落下。
-   fill-mode 必須是 backwards 不能是 both —— both 會在動畫結束後
-   鎖住 opacity:1,蓋掉 JS 揭曉答案時加的 .fade。 */
+/* The only choreographed motion: cells drop in on reveal.
+   fill-mode must be backwards, not both — both locks opacity:1 after the
+   animation and overrides the .fade class JS adds when showing the answer. */
 @keyframes drop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .grid .opt{animation:drop 260ms var(--ease) backwards}
 .grid .opt:nth-child(1){animation-delay:0ms}   .grid .opt:nth-child(2){animation-delay:40ms}
@@ -289,7 +291,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 }
 .hud-bot b{font-weight:var(--w-strong);font-size:var(--t-h3);color:var(--bottle);font-variant-numeric:tabular-nums}
 
-/* 舊版 white-space:nowrap 遇到長歌名會溢出畫面,改成可折行 */
+/* wraps: long song titles used to overflow with nowrap */
 .toast{
   position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + var(--s5));
   width:min(calc(30rem - var(--s6)), calc(100vw - var(--s6)));
@@ -303,7 +305,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 .toast.bad{color:var(--miss)}
 @keyframes rise{from{opacity:0;transform:translate(-50%,6px)}to{opacity:1;transform:translate(-50%,0)}}
 
-/* ═══════════ 結算 ═══════════ */
+/* ═══════════ RESULT ═══════════ */
 #screen-result{justify-content:flex-end;gap:var(--s5)}
 .scorecard .title{font-weight:var(--w-title);font-size:var(--t-h2);line-height:1.2;color:var(--foam)}
 .scorecard .line{font-weight:var(--w-quiet);font-size:var(--t-small);line-height:1.9;color:var(--dim);margin-top:var(--s2)}
@@ -314,14 +316,14 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 }
 .scorecard .meta{font-size:var(--t-small);color:var(--dim);font-weight:var(--w-quiet)}
 
-/* 差幾分就能超過下一個人 —— 這是最好的「再玩一次」理由,所以給它亮色 */
+/* points to the next crew member — the best reason to replay, so give it colour */
 .scorecard .next{
   margin-top:var(--s3);font-size:var(--t-small);line-height:1.8;
   color:var(--dim);font-weight:var(--w-quiet);
 }
 .scorecard .next b{color:var(--bottle);font-weight:var(--w-item)}
 
-/* 結算的 IG:這一頁玩家看最久,也最可能順手追蹤 —— 比開始畫面放大一級並置中 */
+/* IG on the result screen: longest dwell time of any screen, so bump it a size and centre it */
 #screen-result .startfoot{justify-content:center}
 #screen-result .startfoot a{
   font-size:var(--t-body);font-weight:var(--w-item);color:var(--foam);gap:var(--s3);
@@ -329,10 +331,11 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 #screen-result .startfoot a .ig{width:22px;height:22px;stroke-width:1.6}
 #screen-result .startfoot a .handle{padding-bottom:3px}
 
-/* ── 迎新社課 ──
-   玩家在結算畫面停留最久,剛玩完心情也最好 —— 這是唯一該推社課的地方。
-   但它不能跟分數搶:黃色(--bottle)只給標籤和日期,標題用前景色,
-   其餘一律 --dim。整張卡靠一條 1px 的內框浮起來,不加陰影、不加圓角以外的裝飾。 */
+/* Welcome-session card.
+   The result screen is where players linger and where they feel best, so it
+   is the only place worth pitching the club. It must not compete with the
+   score: yellow goes to the label and dates only, the heading takes the
+   foreground colour, everything else is --dim. One 1px inset border, no shadow. */
 .promo{
   padding:var(--s4);border-radius:var(--r-touch);
   background:rgba(23,26,51,.62);
@@ -344,7 +347,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   font-size:var(--t-body);font-weight:var(--w-strong);
   color:var(--bottle);letter-spacing:.12em;
 }
-/* 標籤右邊那道漸淡的線 —— 把視線帶到日期上 */
+/* fading rule to the right of the label, pulling the eye onto the dates */
 .promo .tag::after{
   content:"";flex:1;height:1px;
   background:linear-gradient(90deg,rgba(242,200,106,.5),rgba(242,200,106,0));
@@ -359,9 +362,9 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   font-variant-numeric:tabular-nums;letter-spacing:.01em;
 }
 .promo li .t{font-weight:var(--w-item);color:var(--foam);font-variant-numeric:tabular-nums}
-/* 星期是配角:知道是哪一天靠日期,星期只是讓人對得上自己的課表 */
+/* weekday is secondary — the date identifies the session, the weekday just helps people check their timetable */
 .promo li .t i{font-style:normal;font-weight:var(--w-quiet);color:var(--dim);margin-right:.4em}
-/* 地點跟時間一樣重要 —— 人要走到那裡去,不能比時間暗 */
+/* the venue matters as much as the time: people have to walk there */
 .promo li .p{font-weight:var(--w-item);color:var(--foam);text-align:right;white-space:nowrap}
 .promo .note{
   margin:var(--s3) 0 0;font-size:var(--t-small);font-weight:var(--w-quiet);
@@ -381,9 +384,8 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 
 .row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
 
-/* 分享鍵。不跟「再玩一次」搶 —— 它是空心的,而且在下面一排。
-   有圖示是因為這顆按鈕的動作跟其他兩顆不同類(它會離開這個 app),
-   一個往上的箭頭就講完了。 */
+/* Share button. It does not compete with "play again": ghost style, own row.
+   The icon is there because this action leaves the app, unlike the other two. */
 .btn.share{
   display:flex;align-items:center;justify-content:center;gap:var(--s2);
   font-size:var(--t-body);letter-spacing:.08em;padding:var(--s3);
@@ -393,9 +395,10 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
 }
 
-/* ═══════════ 兩個模式 ═══════════
-   按鈕裡塞第二行小字:上面是模式名,下面是「你目前最好到哪」——
-   開始畫面要回答的問題是「我要玩哪一個」,那一行就是答案的依據。 */
+/* ═══════════ MODE BUTTONS ═══════════
+   Second line inside each button is the player's own record. The question
+   this screen has to answer is "which one do I play", and that line is the
+   evidence. */
 .modes{display:flex;flex-direction:column;gap:var(--s3)}
 .modes .btn{padding:var(--s3) var(--s4);line-height:1.35}
 .modes .btn .t{display:block}
@@ -406,9 +409,10 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 }
 .modes .btn .sub:empty{display:none}
 
-/* ═══════════ 闖關:遊戲中的關卡列 ═══════════
-   曲庫變大是這個模式唯一的獎勵,但它看不見 —— 不寫在螢幕上,
-   玩家只會覺得「怎麼突然一堆沒聽過的歌」。所以整局都掛著。 */
+/* ═══════════ STAGE MODE: in-game header ═══════════
+   A growing song pool is the only reward this mode gives, and it is
+   invisible. Unless it is on screen, players just feel the questions got
+   harder. So it stays up for the whole stage. */
 .hud-stage{
   display:flex;align-items:baseline;justify-content:space-between;gap:var(--s3);
   font-size:var(--t-small);line-height:1.4;
@@ -422,10 +426,10 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 }
 .hud-bot em{font-style:normal;color:var(--dim);font-weight:var(--w-quiet)}
 
-/* ═══════════ 闖關:過關的彈框 ═══════════
-   蓋在九宮格上面而不是切換到另一屏 —— 遊戲才像「暫停了一下」。
-   動畫分兩段:底幕先暗下來,卡片再浮上來,解鎖那一行最後才到位。
-   全部加起來不到半秒 —— 這是獎勵,不是過場,不能讓人等。 */
+/* ═══════════ STAGE MODE: clear popup ═══════════
+   Sits over the grid instead of switching screens, so the game feels paused
+   rather than left. Three beats: scrim dims, card rises, unlock line lands
+   last. Under half a second total — this is a reward, not a transition. */
 .pop{
   position:fixed;inset:0;z-index:40;
   display:flex;align-items:center;justify-content:center;padding:var(--s5);
@@ -473,14 +477,15 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 .pop-card .facts .v.hot{color:var(--bottle)}
 .pop-card .btn + .btn{margin-top:var(--s3)}
 
-/* 六關全破:整張卡鑲一圈金邊,而且只有這一次會看到 */
+/* all six cleared: gold border, and you only ever see it once */
 .pop.clear .pop-card{box-shadow:inset 0 0 0 1px var(--bottle), 0 18px 48px rgba(0,0,0,.5)}
 .pop.clear .pop-card .big{font-size:var(--t-h1)}
 
-/* ═══════════ 排行榜 ═══════════ */
-/* 幹部榜有 56 列,一定比一屏長。把這一屏鎖成視窗高度,
-   標題、「你擊敗幾位」和「返回」就固定在原位,只有名單自己捲 ——
-   不然整頁跟著捲,玩家滑到一半會找不到返回鍵。 */
+/* ═══════════ CREW BOARD ═══════════ */
+/* The crew board is 56 rows, always taller than one screen. Pin this screen
+   to the viewport so the heading, the summary and the back button stay put
+   and only the list scrolls — otherwise the whole page scrolls and the back
+   button disappears mid-swipe. */
 #screen-board{gap:var(--s4);height:100vh;height:100dvh}
 .board-head{padding:var(--s2) 0 var(--s3)}
 .board-head h2{margin:var(--s1) 0 0;font-weight:var(--w-title);font-size:var(--t-h2);color:var(--foam)}
@@ -497,8 +502,8 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 .rowitem.me .sc{color:var(--bottle)}
 .board-note{margin-top:var(--s2);font-size:var(--t-small);color:var(--dim);line-height:1.7}
 .board-note b{color:var(--bottle);font-weight:var(--w-item)}
-/* 自己不在前 20 名時,把自己那一列單獨釘在底下 —— 玩家最想知道的就是自己第幾 */
-/* 已經被超過的幹部:整列壓暗,讓還沒打敗的那些自己跳出來 */
+/* pinned row for yourself when you are outside the visible range */
+/* already beaten: dim the whole row so the ones left stand out */
 .rowitem.beaten{opacity:.45}
 .rowitem .nm .tag{
   margin-left:var(--s2);font-size:var(--t-small);font-weight:var(--w-quiet);
@@ -521,7 +526,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 </head>
 <body>
 
-<!-- ═══════════ 開始 ═══════════ -->
+<!-- ═══════════ START ═══════════ -->
 <div class="screen" id="screen-start">
   <div class="brand">
     <div class="eyebrow">台大流唱社</div>
@@ -586,14 +591,14 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   <div class="credit">音源:Apple Music 官方試聽</div>
 </div>
 
-<!-- ═══════════ 載入 ═══════════ -->
+<!-- ═══════════ LOADING ═══════════ -->
 <div class="screen" id="screen-load" hidden>
   <div class="spin" id="load-spin"></div>
   <div id="load-txt">正在準備第一首⋯</div>
   <button class="btn ghost load-retry" id="btn-retry" hidden>重試</button>
 </div>
 
-<!-- ═══════════ 遊戲 ═══════════ -->
+<!-- ═══════════ PLAY ═══════════ -->
 <div class="screen" id="screen-play" hidden>
   <div class="hud">
     <div class="hud-stage" id="hud-stage" hidden>
@@ -629,7 +634,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   </div>
 </div>
 
-<!-- ═══════════ 結算 ═══════════ -->
+<!-- ═══════════ RESULT ═══════════ -->
 <div class="screen" id="screen-result" hidden>
   <div class="scorecard">
     <div class="title" id="res-title">金曲猜歌王</div>
@@ -650,9 +655,9 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
     </svg>
     <span>分享成績</span>
   </button>
-  <!-- 這個遊戲真正想達成的事:讓人來社課。
-       放在按鈕和 IG 中間 —— 上面是他自己的成績,下面是追蹤入口,
-       「更多資訊請追蹤 IG」那行剛好指著下面那個帳號。 -->
+  <!-- What the game is actually for: getting people to the welcome session.
+       Sits between the buttons and the IG link — their score above, the
+       follow link below, and the card's last line points at that handle. -->
   <section class="promo" aria-label="台大流唱迎新社課">
     <h3 class="tag">台大流唱迎新社課</h3>
     <ul>
@@ -673,9 +678,9 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   </div>
 </div>
 
-<!-- ═══════════ 闖關:過關的彈框 ═══════════
-     刻意不做成一整屏 —— 蓋在九宮格上面,遊戲才像「暫停了一下」,
-     而不是「跳到另一個畫面」。 -->
+<!-- ═══════════ STAGE MODE: clear popup ═══════════
+     Deliberately not a full screen — sitting over the grid makes the game
+     feel paused rather than left. -->
 <div class="pop" id="pop" hidden>
   <div class="pop-card" role="dialog" aria-modal="true" aria-labelledby="st-big">
     <div class="tag" id="st-tag"></div>
@@ -687,7 +692,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   </div>
 </div>
 
-<!-- ═══════════ 幹部榜 ═══════════ -->
+<!-- ═══════════ CREW BOARD ═══════════ -->
 <div class="screen" id="screen-board" hidden>
   <div class="board-head">
     <h2>流唱社幹部榜</h2>
@@ -702,39 +707,42 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 <script src="crew.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════
-   金曲猜歌王
-   完全不連線:題庫、干擾項、試聽網址、幹部榜、分數分布全都是
-   靜態檔,成績只存在玩家自己的手機裡。
+   Fully offline: song bank, decoys, preview URLs, crew board and the score
+   distribution are all static files. Scores live only on the player's phone.
    ═══════════════════════════════════════════════════════ */
 
 const CONFIG = {
-  questionCount: 10,      // 每局題數
-  // 保底配額:這幾個曲風每局至少抽這麼多首,配額之內隨機
+  questionCount: 10,      // questions per round
+  // per-genre floor: at least this many of each per round, random within the quota
   quota: { mando: 5, classic: 1, tw: 1 },
-  // 非中文(kpop/west/jp)保底題數 —— 三種語言混在一起抽,不指定是哪一種。
-  // 保底之外剩下的名額從全部歌曲隨機補,所以非中文有機會不只這一題。
+  // non-Chinese floor (kpop/west/jp drawn as one pool, no language guaranteed).
+  // The rest is filled from the whole bank, so there may well be more than one.
   foreignMin: 1,
   optionCount: 9,
-  timeLimit: 12,          // 每題秒數
-  baseScore: 300,         // 答對底分
-  speedScore: 700,        // 速度分上限(300+700=1000,10 題滿分 10000)
-  revealMs: 2200,         // 顯示答案的停頓
-  clipSeconds: 15,        // 音檔片段長度
-  maxSameArtist: 2        // 同一歌手在九格中最多出現幾次
+  timeLimit: 12,          // seconds per question
+  baseScore: 300,         // points for a correct answer
+  speedScore: 700,        // speed bonus cap (300+700=1000, so 10 questions max at 10000)
+  revealMs: 2200,         // answer-reveal pause
+  clipSeconds: 15,        // clip length
+  maxSameArtist: 2        // max cells one artist may occupy
 };
 const FOREIGN_GENRES = ['kpop', 'west', 'jp'];
 
 const $ = id => document.getElementById(id);
-/* ---------- 闖關模式的關卡表 ----------
+/* ---------- Stage table ----------
 
-   難度靠兩件事疊上去:曲庫變大(而且越後面越冷門),門檻變高。
-   秒數跟競速模式一樣是 12 秒,每一關都一樣 —— 兩個模式的分數才能互相對照,
-   而且玩家感覺得到「是題目變難了」,不是「我被偷偷加速了」。
+   Difficulty comes from two things stacking: a bigger pool (and a more
+   obscure one further in), and a higher threshold. The clock stays at 12s,
+   same as speed mode — that keeps the two modes' scores comparable, and it
+   means players feel the questions getting harder rather than suspecting
+   they were quietly sped up.
 
-   每關 10 題、滿分 10,000,分數每關獨立算。沒過就從第 1 關重來。
+   Ten questions per stage, 10,000 max, scored per stage. Fail and you
+   restart from stage 1.
 
-   unlocked 是「進到這一關才開放的東西」,會在上一關的過關畫面上公布 ——
-   解鎖的當下要看得到自己解鎖了什麼,不然曲庫變大玩家只會覺得變難而已。 */
+   `unlocked` is what opens up on entering that stage; it is announced on the
+   previous stage's clear popup. Players have to see what they unlocked, or a
+   bigger pool just reads as "harder". */
 const STAGE_SECONDS = 12;
 const STAGE_QUESTIONS = 10;
 const STAGES = [
@@ -746,11 +754,11 @@ const STAGES = [
   { need: 9000, genres: ['mando','classic','tw','west','kpop','jp'] }
 ];
 
-/* 遊戲進行中一直掛在最上面的那一列:你在第幾關、目前為止解鎖了什麼。
-   曲庫變大是這個模式唯一的獎勵,但它是看不見的 —— 不寫出來,
-   玩家只會覺得「怎麼突然一堆沒聽過的歌」。 */
+/* The line pinned at the top during play: which stage, what is unlocked so
+   far. A growing pool is the only reward this mode gives and it is
+   invisible — unwritten, it just reads as "suddenly songs I don't know". */
 function stageHudLabel(n){
-  // 全開之後就不要再一項一項唸了 —— 那一列只有一行,唸完會被切掉
+  // once everything is open, stop listing genres — the line is one row and would be clipped
   if(stagePool(n).length >= (window.SONGS || []).length) return '全曲庫開放';
   const got = STAGES.slice(0, n).map(st => st.unlocked).filter(Boolean);
   return got.length ? '已解鎖 ' + got.join(' · ') : '華語現代 · 經典';
@@ -761,7 +769,7 @@ function stagePool(n){
   return (window.SONGS || []).filter(s => g.includes(s.genre));
 }
 
-// 這一局實際跑的規則。開局時依模式填,遊戲迴圈只看這個,不看 CONFIG。
+// Rules for the current round, filled in per mode. The game loop reads this, not CONFIG.
 const R = { questionCount: CONFIG.questionCount, timeLimit: CONFIG.timeLimit };
 
 const SCREENS = ['screen-start','screen-load','screen-play','screen-result','screen-board'];
@@ -771,7 +779,7 @@ function show(id){
   window.scrollTo(0,0);
 }
 
-/* ---------- 小工具 ---------- */
+/* ---------- helpers ---------- */
 const shuffle = arr => {
   const a = arr.slice();
   for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
@@ -781,7 +789,7 @@ const hashCode = str => { let h=0; for(const ch of str) h=(h*31+ch.charCodeAt(0)
 const seeded = seed => { let s=seed>>>0; return () => { s=(s*1664525+1013904223)>>>0; return s/4294967296; }; };
 const midiToFreq = m => 440 * Math.pow(2,(m-69)/12);
 
-/* ---------- 音訊 ---------- */
+/* ---------- audio ---------- */
 let audioCtx = null;
 function ensureCtx(){
   if(!audioCtx){
@@ -793,9 +801,9 @@ function ensureCtx(){
   return audioCtx;
 }
 
-/* ---------- 音量 ---------- */
-// 記在 localStorage,同一支手機再玩不用重調。
-// 攤位共用耳機時每個人適合的音量不同,這是現場最常被按的東西。
+/* ---------- volume ---------- */
+// Persisted: the same phone should not have to set it again.
+// It was the most-touched control at the fair, where people shared headphones.
 const VOL_KEY = 'pmsg_volume_v1';
 let volume = 0.8;
 try{
@@ -807,7 +815,7 @@ function setVolume(v){
   volume = Math.min(1, Math.max(0, v));
   try{ localStorage.setItem(VOL_KEY, String(volume)); }catch(e){}
 
-  // 已經備好的音源、正在播的合成音都要即時跟著變
+  // applies live to prepared clips and to the synth fallback
   (G.questions || []).forEach(q => { if(q.audio && q.audio.el) q.audio.el.volume = volume; });
   if(G.clip && G.clip.setVolume) G.clip.setVolume(volume);
 
@@ -819,16 +827,16 @@ function setVolume(v){
   });
 }
 
-// 試著載入一個音訊來源,載不動就回 null。
+// Try one audio source; null if it will not load.
 //
-// 判定用 canplay / loadeddata,不用 canplaythrough ——
-// canplaythrough 要整段緩衝到「保證不會斷」才觸發,八首歌同時下載
-// (每首約 1MB)在校園網路下常常超過逾時,結果整局退回示範音。
-// 只要 metadata 到手就代表這個來源有效,剩下的邊播邊緩衝。
+// Resolves on canplay/loadeddata, not canplaythrough: the latter waits until
+// the whole clip is buffered, which with several ~1MB downloads in flight
+// routinely blew the timeout and dropped the whole round to the synth
+// fallback. Metadata is enough to know the source works.
 function probeAudio(src, timeoutMs){
   return new Promise(resolve => {
     const a = new Audio(src);
-    a.preload = 'metadata';   // 只探測,不整首抓下來;選定之後才改成 auto 預先緩衝
+    a.preload = 'metadata';   // probe only; switched to auto once this source is chosen
     let settled = false;
     const ok = () => { if(!settled){ settled = true; resolve(a); } };
     const no = () => { if(!settled){ settled = true; resolve(null); } };
@@ -841,15 +849,15 @@ function probeAudio(src, timeoutMs){
   });
 }
 
-// 音源優先順序:本地音檔 → Apple 官方試聽(串流,不落地)→ 合成示範音
+// Source order: local file -> Apple preview (streamed, never stored) -> synth
 //
-// 一次只準備一首。不要開場就把十題全部探測 ——
-// 同時建立十幾個 audio 元素會讓 Chrome 的媒體載入全部卡在 stalled,
-// 結果整局默默退回示範音。單獨一個載入只要 70 毫秒,十六個一起就死。
-let hasLocalAudio = null;   // null = 還沒試過,false = audio/ 是空的,之後不再浪費請求
+// One at a time. Probing all ten up front makes Chrome stall every media
+// load at once and the round silently falls back to the synth. One load takes
+// ~70ms; sixteen together never finish.
+let hasLocalAudio = null;   // null = untried, false = audio/ is empty, stop asking
 
 async function prepareClip(q, remoteTimeout = 12000){
-  if(q.audio !== undefined) return q.audio;   // 已經備好或已確定沒有
+  if(q.audio !== undefined) return q.audio;   // already prepared, or known to have none
   const song = q.song;
 
   let el = null, source = null, offset = 0;
@@ -857,7 +865,7 @@ async function prepareClip(q, remoteTimeout = 12000){
   if(hasLocalAudio !== false){
     el = await probeAudio(`audio/${song.id}.m4a`, 2500);
     if(el){ hasLocalAudio = true; source = 'local'; }
-    else if(hasLocalAudio === null) hasLocalAudio = false;   // 第一首就沒有,整個資料夾當作空的
+    else if(hasLocalAudio === null) hasLocalAudio = false;   // nothing for the first song: treat the folder as empty
   }
 
   if(!el){
@@ -868,7 +876,7 @@ async function prepareClip(q, remoteTimeout = 12000){
     }
   }
 
-  if(el){ el.volume = volume; el.preload = 'auto'; try{ el.load(); }catch(e){} }   // 選定後才預先緩衝
+  if(el){ el.volume = volume; el.preload = 'auto'; try{ el.load(); }catch(e){} }   // buffer ahead only once chosen
   q.audio = el ? { el, source, offset } : null;
   return q.audio;
 }
@@ -885,7 +893,7 @@ function note(ctx, dest, freq, at, dur, type, peak){
   return osc;
 }
 
-// 依歌曲 id 產生固定的示範旋律(同一首歌每次都一樣)
+// deterministic placeholder melody per song id
 function synthClip(song, seconds){
   const ctx = ensureCtx();
   if(!ctx) return { stop(){} };
@@ -919,13 +927,13 @@ function synthClip(song, seconds){
       }catch(e){}
       oscs.forEach(o => { try{ o.stop(now + 0.1); }catch(e){} });
     },
-    // 停掉之後就別再理音量,不然滑桿會把已經收掉的聲音拉回來
+    // ignore volume once stopped, or the slider revives a silenced clip
     setVolume(v){ if(stopped) return; try{ master.gain.setTargetAtTime(v, ctx.currentTime, 0.02); }catch(e){} }
   };
 }
 
-// 瀏覽器擋掉播放時(iOS 側邊靜音鍵、頁面失去使用者互動狀態)不要默默無聲。
-// 倒數照跑、畫面不報錯、玩家安靜地猜完一題,是最糟的失敗方式。
+// When the browser blocks playback (iOS mute switch, lost user gesture), say so.
+// A running clock with no sound and no error is the worst way to fail.
 function onPlayBlocked(q){
   $('playmeta').textContent = '沒有聲音?點一下畫面';
   const retry = () => {
@@ -949,25 +957,27 @@ function playClip(q){
   return synthClip(q.song, CONFIG.clipSeconds);
 }
 
-/* ---------- 成績與幹部榜 ----------
+/* ---------- Scores and crew board ----------
 
-   以前這裡是一整套 Supabase 的排行榜。遊戲在網路上散開之後那個做法垮了 ——
-   免費方案一個月 5GB 的流量,三天就用完;而且真正燒掉的是「讀」,
-   一萬多個人同時刷同一張榜。
+   This used to be a live Supabase leaderboard. It fell over once the game
+   spread online: the free tier gives 5GB of egress a month and we were
+   burning 1.5GB a day, nearly all of it reads — thousands of people
+   refreshing the same board.
 
-   現在換成完全不連線的兩張靜態表(在 crew.js 裡):
+   It is now two static tables (crew.js):
 
-     CREW        聯展前兩天社團的人自己玩出來的 55 個成績,真名真分數
-     SCORE_DIST  13,191 位玩家的分數分布,用來算「你贏過了多少%的玩家」
+     CREW        the 46 scores the club set on the two days before the fair
+     SCORE_DIST  score distribution of 13,191 players, 250-point buckets
 
-   換掉之後玩家其實沒有失去什麼。八千人的榜上排第 1,240 名沒有感覺;
-   「你擊敗了 23 位流唱社幹部,再 89 分就能贏過兮兮」才有感 ——
-   而且後者一個請求都不用發。 */
+   Players lost very little. Rank 1,240 out of eight thousand means nothing;
+   "you beat 23 of the club, 89 points short of 兮兮" means something — and
+   it costs zero requests. */
 
 const CREW = (window.CREW || []).slice().sort((a, b) => b.score - a.score);
 
-/* 你的分數贏過多少玩家。SCORE_DIST 是每 250 分一階的累計人數,
-   中間用內插 —— 玩家要的是「我大概贏過幾成的人」,不是精確到個位數。 */
+/* How many players you beat. SCORE_DIST is a cumulative count in 250-point
+   buckets, interpolated in between — the answer wanted is "roughly what
+   fraction", not an exact headcount. */
 function beatCount(score){
   const d = window.SCORE_DIST || [];
   if(!d.length) return 0;
@@ -984,17 +994,17 @@ function beatPercent(score){
   return window.CREW_TOTAL ? Math.round(beatCount(score) / window.CREW_TOTAL * 100) : 0;
 }
 
-// 擊敗 = 分數嚴格高於對方。同分不算贏 —— 同分還敢說贏過人家很怪
+// beaten = strictly higher. A tie is not a win.
 function crewBeaten(score){ return CREW.filter(c => score > c.score).length; }
 
-// 下一個目標:還沒被你超過的人裡面,分數最低的那一個
+// next target: the lowest scorer you have not passed
 function crewNext(score){
   for(let i = CREW.length - 1; i >= 0; i--) if(CREW[i].score >= score) return CREW[i];
   return null;
 }
 
-/* 成績只存在這支手機裡。留著是為了「你的最佳成績」和幹部榜上那一列 ——
-   沒有伺服器了,這是玩家唯一的紀錄。 */
+/* Scores live on this phone only. Kept for "your best" and for your row on
+   the crew board — with no server, this is the player's only record. */
 const Store = {
   KEY: 'pmsg_scores_v1',
 
@@ -1006,20 +1016,21 @@ const Store = {
   save(entry){
     const list = this.all();
     list.push(entry);
-    // 只留最近 50 局 —— 再多也沒人看,而且 localStorage 有大小上限
+    // keep the last 50; nobody reads further back and localStorage has a cap
     try{ localStorage.setItem(this.KEY, JSON.stringify(list.slice(-50))); }catch(e){}
   },
 
-  /* 「你的最佳」和幹部榜上那一列,只認競速模式的分數。
-     闖關某一關的分數不能拿來比 —— 第 1 關只有華語 226 首,比全庫好猜太多,
-     拿那個去站幹部榜等於作弊。舊紀錄沒有 mode 欄位,那是還沒有闖關模式以前
-     存的,一律算競速。 */
+  /* "Your best" and your row on the crew board only count speed mode. A stage
+     score is not comparable — stage 1 draws from 260 Mandarin songs, far
+     easier than the full bank, so putting it on the crew board would be
+     cheating. Old entries have no `mode` field (saved before stage mode
+     existed) and count as speed. */
   best(){
     return this.all().reduce((m, r) => r.mode === 'stage' ? m : Math.max(m, r.score || 0), 0);
   },
   plays(){ return this.all().length; },
 
-  // 闖關模式的最高紀錄。只會往上,不會因為這次玩爛而掉下來
+  // stage-mode record: only ever goes up
   STAGE_KEY: 'pmsg_stage_v1',
   bestStage(){
     try{ return Number(localStorage.getItem(this.STAGE_KEY)) || 0; }catch(e){ return 0; }
@@ -1029,24 +1040,24 @@ const Store = {
   }
 };
 
-/* ---------- 出題 ---------- */
+/* ---------- question building ---------- */
 
-// 顯示用的歌名:去掉「(電影《⋯》主題曲)」這類副標。
-// 答案的歌名是手寫的、本來就乾淨,干擾項來自 Apple 商店常帶副標 ——
-// 兩邊不統一的話,玩家會發現「沒有括號的那格就是答案」。
+// Display title, with subtitles stripped.
+// Answers are hand-written and already clean; decoys come from the Apple
+// store and often carry one. Unstripped, the cell without brackets is the answer.
 function cleanTitle(t){
   const s = String(t || '')
-    .replace(/\s*[（(【\[].*$/, '')   // 「(電影《⋯》主題曲)」「(movie ver.)」
+    .replace(/\s*[（(【\[].*$/, '')   // drops (theme from ...) and (movie ver.)
     .replace(/\s+[-–—]\s+.*$/, '')    // 「 - A Rock Can Be A Star」「 - Single Version」
-    .trim();                          // 破折號前後都要有空白,才不會誤砍 DDU-DU DDU-DU
+    .trim();                          // the dash needs spaces around it, or DDU-DU DDU-DU loses half its name
   return s || String(t || '');
 }
 
-// 九宮格去重用的鍵。要壓成小寫 —— 「HAPPY / DAY6」和「Happy / Pharrell Williams」
-// 是兩首不同的歌,但同時出現在一題裡,螢幕上長得一模一樣,玩家只會覺得出題出錯。
+// Dedupe key for the grid, lowercased. HAPPY by DAY6 and Happy by Pharrell
+// Williams are different songs that look identical in a cell.
 function titleKey(t){ return cleanTitle(t).toLowerCase(); }
 
-// 依歌名長度決定字級,九格必須一屏看完、不能捲動
+// size by title length: all nine cells must fit one screen without scrolling
 function sizeClass(label){
   const cjk = /[㐀-鿿぀-ヿ]/.test(label);
   const n = label.length;
@@ -1056,18 +1067,19 @@ function sizeClass(label){
   return '';
 }
 
-// 選項池 = 題庫裡的歌 + 純干擾歌名
+// option pool = song bank + decoy titles
 function optionPool(){
   return (window.SONGS || []).concat(window.DECOYS || []);
 }
 
-/* songs  這一局可以出的歌(闖關模式只給該關解鎖的曲庫)
-   quota  要不要套曲風配額。競速模式要(每局都要有台語、經典、非中文);
-          闖關模式不要 —— 那一關的曲庫就是它的難度,再塞配額會打亂設計 */
+/* songs  pool for this round (stage mode passes only the unlocked genres)
+   quota  whether to apply the per-genre floor. Speed mode does — every round
+          should contain Taiwanese, a classic and something non-Chinese.
+          Stage mode does not: the stage's pool *is* its difficulty. */
 function buildQuestions(songs, quota){
   songs = songs || window.SONGS || [];
 
-  // 抽題分三步:固定配額 → 非中文保底 → 剩下的名額自由補
+  // three passes: genre quota -> non-Chinese floor -> free fill
   const picked = [];
   const take = (list, n) => {
     if(n <= 0) return;
@@ -1075,17 +1087,17 @@ function buildQuestions(songs, quota){
   };
 
   if(quota){
-    // 1. 各曲風的保底配額
+    // 1. per-genre floor
     for(const [genre, n] of Object.entries(CONFIG.quota)){
       take(songs.filter(s => s.genre === genre), n);
     }
-    // 2. 非中文保底:韓/西洋/日文混在一起抽,不保證是哪一種語言
+    // 2. non-Chinese floor, drawn as one pool
     take(songs.filter(s => FOREIGN_GENRES.includes(s.genre)), CONFIG.foreignMin);
   }
-  // 3. 剩下的名額從全部歌曲隨機補 —— 非中文也在池子裡,所以可能不只保底那一題。
-  //    某個曲風的歌不夠湊到配額時,也是靠這一步補滿題數。
+  // 3. free fill from the whole pool. Also how a short genre gets topped up.
+  //    
   take(songs, R.questionCount - picked.length);
-  const answers = shuffle(picked);   // 出題順序也打亂,不然每局都是同樣的曲風順序
+  const answers = shuffle(picked);   // shuffle the order too, or every round runs through genres the same way
 
   const pool = optionPool();
   let lastIndex = -1;
@@ -1095,8 +1107,8 @@ function buildQuestions(songs, quota){
     const usedTitle = new Set([titleKey(answer.title)]);
     const byArtist = { [answer.artist]: 1 };
 
-    // 干擾項先挑同 genre 的 —— 華語歌就配華語選項。
-    // 混進一堆英文歌名的話,玩家用刪去法就猜到了,九選一的難度會垮。
+    // Prefer same-genre decoys. A Mandarin answer among English titles is
+    // solvable by elimination, which collapses the nine-way choice.
     const passes = [
       { list: pool.filter(o => o.genre === answer.genre), max: CONFIG.maxSameArtist },
       { list: pool, max: CONFIG.maxSameArtist },
@@ -1116,7 +1128,7 @@ function buildQuestions(songs, quota){
     }
 
     const grid = shuffle(options);
-    // 正確答案不連續兩題落在同一格
+    // never put the answer in the same cell twice running
     let idx = grid.indexOf(answer);
     if(idx === lastIndex && grid.length > 1){
       const swap = (idx + 1 + Math.floor(Math.random()*(grid.length-1))) % grid.length;
@@ -1124,13 +1136,13 @@ function buildQuestions(songs, quota){
       idx = swap;
     }
     lastIndex = idx;
-    // audio 刻意不設值:prepareClip 用 undefined 判斷「還沒準備過」,
-    // 這裡若寫成 null 會被當成「已確定沒有音源」而直接跳過探測
+    // audio is deliberately left unset: prepareClip reads undefined as not-yet-tried,
+    // whereas null would mean known-to-have-no-source and skip probing
     return { song: answer, options: grid };
   });
 }
 
-/* ---------- 遊戲狀態 ---------- */
+/* ---------- game state ---------- */
 const G = {
   nickname: '',
   questions: [], index: 0, total: 0, log: [],
@@ -1138,7 +1150,7 @@ const G = {
   soundOk: false, timer: null, clip: null, deadline: 0, locked: false
 };
 
-/* ---------- 開始畫面 ---------- */
+/* ---------- start screen ---------- */
 
 
 const BANNED = ['幹','靠北','白痴','智障','媽的','雞掰','三小','fuck','shit','bitch'];
@@ -1151,9 +1163,9 @@ function nickError(v){
   return null;
 }
 
-// 按鈕變灰卻不說原因,是這個畫面最容易卡住玩家的地方 ——
-// 攤位上沒人會停下來研究,他們只會覺得壞掉了然後走掉。
-// 所以按鈕上永遠寫著「還差什麼」,細節寫在暱稱欄底下。
+// A greyed-out button with no reason is where this screen loses people; at the
+// fair nobody investigated, they just assumed it was broken and left. So the
+// button always says what is missing, with detail under the nickname field.
 function refreshStartBtn(){
   const raw = $('nick').value;
   const err = nickError(raw);
@@ -1174,13 +1186,13 @@ function refreshStartBtn(){
   $('speed-best').textContent = why ? ''
     : (Store.best() ? `你的最佳 ${Store.best().toLocaleString()} 分` : '十題,比分數');
 
-  // 還沒開始打字就跳錯誤訊息太兇,等他真的輸入了再說
+  // no error until they have actually typed something
   showNickError(typed ? err : '');
-  // 暱稱過關但還沒測聲音時,把視線引到聲音那一區
+  // nickname done but sound untested: pull the eye to the sound block
   $('sound').classList.toggle('want', !err && typed && !G.soundOk);
 }
 
-$('nick').addEventListener('input', refreshStartBtn);   // 訊息由 refreshStartBtn 統一決定
+$('nick').addEventListener('input', refreshStartBtn);   // refreshStartBtn owns the messaging
 
 $('btn-test').addEventListener('click', () => {
   const ctx = ensureCtx();
@@ -1188,10 +1200,10 @@ $('btn-test').addEventListener('click', () => {
     alert('這支瀏覽器不支援音訊播放,請換一個瀏覽器開啟。');
     return;
   }
-  // 音量被拉到 0 還按試聽,會以為壞掉 —— 先拉回一半
+  // testing at volume 0 reads as broken, so nudge it up first
   if(volume === 0) setVolume(0.5);
 
-  // 一段短暫的上行琶音,同時解開手機的音訊播放限制
+  // short rising arpeggio; also unlocks audio playback on mobile
   const t = ctx.currentTime + 0.05;
   [0,4,7,12].forEach((semi,i) =>
     note(ctx, ctx.destination, midiToFreq(69+semi), t + i*0.13, 0.3, 'triangle', 0.2 * volume));
@@ -1202,7 +1214,7 @@ $('btn-test').addEventListener('click', () => {
   refreshStartBtn();
 });
 
-/* ---------- 音量控制 ---------- */
+/* ---------- volume control ---------- */
 document.querySelectorAll('.volslider').forEach(el =>
   el.addEventListener('input', e => setVolume(e.target.value / 100)));
 
@@ -1222,14 +1234,14 @@ $('btn-board-2').addEventListener('click', () =>
   G.mode === 'stage' ? show('screen-start') : renderBoard(true));
 $('btn-back').addEventListener('click', () => show('screen-start'));
 
-/* ---------- 開局 ---------- */
+/* ---------- starting a round ---------- */
 
-// 載入第一首。網路慢就等 —— 但要讓人看到在等什麼。
-// 默默改播示範音是最糟的選項:畫面不報錯,玩家整局猜不出來,
-// 關主也只會覺得「這些人怎麼都不會」。
+// Load the first clip. Waiting is fine, as long as the player can see why.
+// Silently downgrading to the synth is the worst option: no error on screen,
+// a round nobody can answer, and no clue anything went wrong.
 async function loadFirst(){
   const q = G.questions[0];
-  q.audio = undefined;                 // 重試時要重新探測
+  q.audio = undefined;                 // re-probe on retry
   $('load-spin').hidden = false;
   $('btn-retry').hidden = true;
   $('load-txt').textContent = '正在準備第一首⋯';
@@ -1241,7 +1253,7 @@ async function loadFirst(){
     else if(s >= 4) $('load-txt').textContent = '網路好像有點慢,再等一下⋯';
   }, 1000);
 
-  const clip = await prepareClip(q, 25000);   // 開場給到 25 秒,慢總比默默降級好
+  const clip = await prepareClip(q, 25000);   // 25s for the first one: slow beats a silent downgrade
   clearInterval(ticker);
   if(clip) return true;
 
@@ -1266,15 +1278,15 @@ async function startGame(mode){
   if(err){ showNickError(err); return; }
   showNickError('');
 
-  // 沒有共用的榜了,所以也沒有撞名問題 —— 暱稱只出現在這支手機上
+  // no shared board, so no name clashes; the nickname stays on this phone
   G.nickname = $('nick').value.trim();
   G.mode = mode;
   G.stage = 1;
   await playRound();
 }
 
-/* 一局(競速模式的十題,或闖關模式的一關)。兩個模式差在規則和曲庫,
-   之後的流程 —— 載入、出題、計時、計分 —— 完全共用。 */
+/* One round: ten questions in speed mode, one stage in stage mode. The modes
+   differ only in rules and song pool; loading, timing and scoring are shared. */
 async function playRound(){
   if(G.mode === 'stage'){
     Object.assign(R, { questionCount: STAGE_QUESTIONS, timeLimit: STAGE_SECONDS });
@@ -1291,7 +1303,7 @@ async function playRound(){
   G.index = 0; G.total = 0; G.log = [];
 
   show('screen-load');
-  if(!await loadFirst()) return;   // 載不到就停在載入畫面讓玩家重試,不要硬開局
+  if(!await loadFirst()) return;   // stay on the loading screen to retry rather than starting anyway
 
   show('screen-play');
   nextQuestion();
@@ -1299,9 +1311,9 @@ async function playRound(){
 
 async function nextQuestion(){
   const q = G.questions[G.index];
-  G.locked = true;                       // 音源還沒備好之前不接受作答
+  G.locked = true;                       // no answers accepted until the clip is ready
 
-  // 音量面板蓋在九宮格上方,換題時收起來,免得擋住選項
+  // the volume panel overlaps the grid, so close it between questions
   $('volpanel').hidden = true;
   $('btn-vol').setAttribute('aria-expanded', 'false');
 
@@ -1324,7 +1336,7 @@ async function nextQuestion(){
     grid.appendChild(b);
   });
 
-  if(q.audio === undefined) $('playmeta').textContent = '載入中⋯';   // 預抓還沒完成才會看到
+  if(q.audio === undefined) $('playmeta').textContent = '載入中⋯';   // only visible when the prefetch has not finished
   await prepareClip(q);
   $('playmeta').textContent = q.audio ? '' : '示範音 · 這首找不到音源';
 
@@ -1335,7 +1347,7 @@ async function nextQuestion(){
   G.deadline = performance.now() + R.timeLimit * 1000;
   tick();
 
-  // 這一題在播的時候,把下一題的音源先抓好,換題才不會停頓
+  // prefetch the next clip while this one plays, so questions do not stall
   const nx = G.questions[G.index + 1];
   if(nx) prepareClip(nx);
 }
@@ -1368,7 +1380,7 @@ function answer(opt, index){
   G.total += gained;
   G.log.push({ song: q.song, correct, gained, seconds: +(R.timeLimit - left).toFixed(1) });
 
-  // 標出正解,淡掉其他選項
+  // mark the answer, fade the rest
   const rightIndex = q.options.indexOf(q.song);
   [...$('grid').children].forEach((el, i) => {
     if(i === rightIndex) el.classList.add('right');
@@ -1391,21 +1403,19 @@ function answer(opt, index){
   }, CONFIG.revealMs);
 }
 
-/* ---------- 結算 ---------- */
+/* ---------- result ---------- */
 
 /* ╔══════════════════════════════════════════════════════════════╗
-   ║  稱號與結語 —— 要改文字改這張表就好,底下的程式不用動         ║
+   ║  Titles. Edit this table to change the copy; nothing below cares. ║
    ╚══════════════════════════════════════════════════════════════╝
 
-   min   門檻分數。由上往下比,第一個「分數 >= min」的就是他的稱號。
-         滿分 10000(10 題 × 1000)。
-   title 稱號。玩家會截圖傳出去的就是這行,所以短一點、好唸一點。
-   line  稱號底下那句話。想留白就寫成空字串 ''。
+   min    score threshold, checked top-down; first `score >= min` wins.
+          Maximum is 10000 (10 questions x 1000).
+   title  what the player screenshots and sends to friends — keep it short.
+   line   the line under the title. Use '' for none.
 
-   想多一個或少一個級距,直接加減這張表的列,程式會自己跟上。
-   最後一列的 min 一定要是 0 —— 那是所有人都符合的保底。
-
-   聯展的領獎規則從來沒寫在畫面上(現場用講的),所以這張表就是玩家看到的全部。 */
+   Add or remove rows freely; the code follows. The last row must have
+   min: 0 — that is the catch-all. */
 
 const TITLES = [
   { min: 8000, title: '流唱社之光',   line: '拜託你來我們流唱社當教學啦！' },
@@ -1439,9 +1449,9 @@ function finish(){
   $('res-line').textContent  = rank.line;
   $('res-score').textContent = G.total.toLocaleString();
 
-  /* 兩個數字都在這支手機上算完,不連線:
-       擊敗幾位幹部 —— 有名有姓的對手,比抽象的名次好懂
-       贏過多少玩家 —— 每個人都有數字,不會出現「擊敗 0 位」的挫折 */
+  /* Both numbers computed on the phone:
+       crew beaten    — named opponents read better than an abstract rank
+       percent beaten — everyone gets a number, so nobody sees a bare zero */
   const beaten = crewBeaten(G.total);
   G.shareText = `我在台大流唱社的金曲猜歌王挑戰中獲得了 ${G.total.toLocaleString()} 分，得到「${rank.title}」的稱號。
 ` +
@@ -1451,7 +1461,7 @@ function finish(){
     ` · 擊敗 ${beaten}/${CREW.length} 位幹部` +
     ` · 贏過 ${beatPercent(G.total)}% 的玩家`;
 
-  // 差一點點就能超過某個人 —— 這是最好的「再玩一次」理由
+  // one more push to pass someone: the best reason to replay
   const next = crewNext(G.total);
   const nextEl = $('res-next');
   if(next){
@@ -1466,7 +1476,7 @@ function finish(){
     nextEl.innerHTML += `<br>這支手機的新紀錄(上次最好 ${prevBest.toLocaleString()} 分)`;
   }
 
-  // 答錯的歌
+  // the ones they missed
   const missed = G.log.filter(r => !r.correct);
   $('res-misses').innerHTML = missed.length
     ? `<h4>沒答出來的</h4><ul>${missed.map(r =>
@@ -1476,7 +1486,7 @@ function finish(){
   show('screen-result');
 }
 
-/* ---------- 闖關模式的結算 ---------- */
+/* ---------- stage mode result ---------- */
 
 function stageFacts(st, passed){
   const rows = [
@@ -1499,7 +1509,7 @@ function stageFacts(st, passed){
 function finishStage(){
   const st = STAGES[G.stage - 1];
   const passed = G.total >= st.need;
-  const cleared = passed ? G.stage : G.stage - 1;   // 真正過掉的關數
+  const cleared = passed ? G.stage : G.stage - 1;   // stages actually cleared
   Store.noteStage(cleared);
   Store.save({ nickname: G.nickname, mode: 'stage', stage: cleared, score: G.total, at: Date.now() });
 
@@ -1511,11 +1521,11 @@ function finishStage(){
   $('st-tag').textContent  = last ? '全部破關' : `第 ${G.stage} 關 通過`;
   $('st-big').textContent  = last ? '六關全破'
     : (STAGES[G.stage].unlocked ? `解鎖 ${STAGES[G.stage].unlocked}` : `前往第 ${G.stage + 1} 關`);
-  // 題數寫死會過期 —— 每次加歌都要記得改,不如直接數
+  // a hard-coded count goes stale every time songs are added
   $('st-line').textContent = last
     ? `整個題庫 ${(window.SONGS || []).length} 首、六道門檻,你一關都沒有掉。` : '';
   $('st-facts').innerHTML  = stageFacts(st, true);
-  // 破關那一刻是整個遊戲最值得分享的瞬間,所以「進入下一關」的位置換成分享
+  // clearing all six is the moment worth sharing, so that slot becomes share
   G.shareText = last
     ? `我在台大流唱社的金曲猜歌王挑戰中六關全破囉。你也來試試看吧！`
     : G.shareText;
@@ -1523,7 +1533,7 @@ function finishStage(){
   $('btn-stage-go').textContent = last ? '分享這個成績' : `進入第 ${G.stage + 1} 關`;
   $('btn-stage-quit').textContent = last ? '回到首頁' : '先不玩了';
 
-  // 重新觸發動畫:先拿掉再強制 reflow,不然連過兩關第二次不會動
+  // restart the animation: remove, force reflow, re-add, or back-to-back clears do not animate
   pop.hidden = false;
   pop.classList.remove('in');
   void pop.offsetWidth;
@@ -1537,13 +1547,14 @@ function closePop(){
   pop.hidden = true;
 }
 
-/* 沒過門檻 —— 用結算畫面,但講的是「闖到第幾關」,不是分數。
-   分享出去的那句話是「我闖到第 3 關」,所以那句要在最上面。 */
+/* Failed the threshold. Reuses the result screen, but leads with how far you
+   got rather than the score — "I reached stage 3" is the line people share. */
 function failStage(st){
   closePop();
-  /* 這一頁的兩顆按鈕在兩個模式下是不同的東西:
-     幹部榜比的是競速模式那十題的分數,拿闖關某一關的分數去比沒有意義,
-     所以闖關的結算不給幹部榜,換成回首頁,而「再玩一次」直接從第 1 關重開。 */
+  /* The two buttons mean different things per mode. The crew board compares
+     speed-mode scores, so a single stage's score has nothing to compare
+     against — stage mode gets "home" instead, and "play again" restarts
+     from stage 1. */
   $('btn-board-2').textContent = '回首頁';
   $('btn-again').textContent   = '再闖一次';
   const cleared = G.stage - 1;
@@ -1577,21 +1588,22 @@ function failStage(st){
 }
 
 $('btn-stage-go').addEventListener('click', () => {
-  if(G.stage >= STAGES.length) return doShare();      // 破關時這顆是分享,彈框不關
+  if(G.stage >= STAGES.length) return doShare();      // on the final clear this button shares and leaves the popup open
   closePop(); G.stage++; playRound();
 });
 $('btn-stage-quit').addEventListener('click', () => { closePop(); show('screen-start'); });
 
-/* ---------- 分享 ----------
+/* ---------- share ----------
 
-   沒有伺服器,所以沒有「分享頁面」可以做 —— 分享出去的是一段文字加遊戲網址。
-   手機上走系統的分享面板(Web Share API),那是 IG 限動、LINE、Threads
-   都吃得到的同一個入口;桌機沒有那個面板,就退回複製到剪貼簿。
+   No server, so there is no share page — what goes out is a line of text
+   plus the game URL. On phones that means the system share sheet (Web Share
+   API), the same entry point IG stories, LINE and Threads all read. Desktop
+   has no sheet, so it falls back to the clipboard.
 
-   文字要能單獨看懂:別人收到的時候還沒玩過,所以「第 3 關」「17/46」
-   這種數字都要帶上它的單位和總數。 */
+   The text has to stand alone: whoever receives it has not played, so
+   numbers like "stage 3" or "17/46" carry their unit and their total. */
 function shareLine(){
-  // 砍掉結尾的 index.html —— 分享出去的網址要是乾淨的那一個
+  // drop a trailing index.html so the shared link is the clean one
   const url = (location.origin + location.pathname).replace(/index\.html$/, '');
   return { text: G.shareText || '金曲猜歌王', url };
 }
@@ -1609,13 +1621,14 @@ async function doShare(){
   if(navigator.share){
     try{
       await navigator.share({ title: '金曲猜歌王', text, url });
-      return;                                   // 分享面板開過就結束,不要再複製一次
+      return;                                   // the sheet opened; do not also copy
     }catch(e){
-      if(e && e.name === 'AbortError') return;  // 使用者自己關掉面板,不是失敗
+      if(e && e.name === 'AbortError') return;  // the user dismissed the sheet; not a failure
     }
   }
-  /* clipboard.writeText 在文件沒有焦點的時候會一直等下去(不是拒絕,是不回來)。
-     按鈕按下去沒有任何反應是最糟的狀態,所以給它 1.5 秒,逾時就當失敗處理。 */
+  /* clipboard.writeText hangs indefinitely when the document is not focused —
+     it does not reject, it just never returns. A button that does nothing is
+     the worst outcome, so cap it at 1.5s and treat a timeout as failure. */
   const write = navigator.clipboard
     ? navigator.clipboard.writeText(text + '\n' + url).then(() => true, () => false)
     : Promise.resolve(false);
@@ -1631,13 +1644,13 @@ async function doShare(){
 
 $('btn-share').addEventListener('click', doShare);
 
-/* ---------- 幹部榜 ---------- */
+/* ---------- crew board ---------- */
 
 function crewRowHtml(r){
   const cls = ['rowitem'];
   if(r.me) cls.push('me');
   if(r.beaten) cls.push('beaten');
-  if(typeof r.rank === 'number' && r.rank <= 3) cls.push('top' + r.rank);   // 前三名的名次鍍金
+  if(typeof r.rank === 'number' && r.rank <= 3) cls.push('top' + r.rank);   // gild the top three
   return `<div class="${cls.join(' ')}">
       <div class="rk">${r.rank}</div>
       <div class="nm">${escapeHtml(r.name)}${r.tag ? `<span class="tag">${r.tag}</span>` : ''}</div>
@@ -1645,9 +1658,9 @@ function crewRowHtml(r){
     </div>`;
 }
 
-/* 整張榜一次畫完(55 列,不會卡),你自己那一列插在該在的位置。
-   打開的時候捲到自己那裡 —— 玩家第一眼要看到的是「我在哪」,
-   不是第一名是誰。 */
+/* Whole board at once — 46 rows will not choke anything — with your own row
+   spliced in at its position, scrolled into view on open. The first thing a
+   player looks for is where they are, not who is first. */
 function renderBoard(){
   show('screen-board');
   const list = $('board-list'), note = $('board-note');
@@ -1675,7 +1688,7 @@ function renderBoard(){
       `在所有玩家裡,你贏過了 <b>${beatPercent(best)}%</b> 的玩家。`
     : `社團的 ${CREW.length} 個幹部自己先玩了一輪。來挑戰流唱社看你能擊敗幾個人吧！`;
 
-  // 只捲列表自己,不要用 scrollIntoView —— 那會連整頁一起捲,把標題推出畫面
+  // scroll the list itself; scrollIntoView would scroll the page and push the heading off
   const meRow = list.querySelector('.rowitem.me');
   if(meRow) list.scrollTop = meRow.offsetTop - list.clientHeight / 2 + meRow.offsetHeight / 2;
 }
@@ -1685,7 +1698,7 @@ function escapeHtml(s){
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-/* ---------- 電腦測試用:按 1–9 作答 ---------- */
+/* ---------- desktop testing: keys 1-9 answer ---------- */
 document.addEventListener('keydown', e => {
   if($('screen-play').hidden || G.locked) return;
   const n = parseInt(e.key, 10);
@@ -1695,8 +1708,8 @@ document.addEventListener('keydown', e => {
   }
 });
 
-/* ---------- 啟動 ---------- */
-setVolume(volume);   // 把記住的音量套到滑桿與圖示上
+/* ---------- boot ---------- */
+setVolume(volume);   // apply the remembered volume to the slider and icon
 refreshStartBtn();
 </script>
 </body>

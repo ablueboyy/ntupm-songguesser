@@ -1,22 +1,22 @@
-/* 金曲猜歌王 — 題庫
+/* Song bank.
  *
- * 這裡的每一首都是「會被當成題目」的歌,所以每一首都需要音源
- * (audio/<id>.m4a 本地檔,或 previews.js 裡的官方試聽網址)。
+ * Everything here can be drawn as a question, so everything here needs audio:
+ * either audio/<id>.m4a locally, or a preview URL in previews.js.
  *
- * 每一局固定抽 10 題,抽法寫在 index.html 的 CONFIG:
- *   保底配額 華語現代 5 · 華語經典 1 · 台語 1,再保底 1 題非中文(韓/西洋/日文),
- *   剩下 2 題從全部歌曲隨機補 —— 所以非中文至少 1 題,但可能更多。
- * 配額之內隨機抽,出題順序也是隨機的。
+ * Ten questions per round; the draw is configured in CONFIG in index.html.
+ * A per-genre floor guarantees a spread (5 modern Mandarin, 1 classic, 1
+ * Taiwanese, 1 non-Chinese), and the remaining slots are filled at random
+ * from the whole bank — so there is often more than one non-Chinese track.
  *
- * genre 有兩個用途,但玩家在畫面上完全看不到它:
- *   1. 決定上面那個配額
- *   2. 挑干擾選項 —— 華語歌的九宮格要配華語的干擾項,
- *      不然一堆英文選項混進來,用刪去法就猜到了
+ * `genre` never appears on screen. It does two jobs:
+ *   1. the floor above
+ *   2. picking decoys — a Mandarin answer needs Mandarin decoys, or the grid
+ *      becomes solvable by elimination
  *
- * 純干擾用的歌名(不需要音源)放在 decoys.js。
+ * Titles that exist only as decoys (no audio needed) live in decoys.js.
  */
 window.SONGS = [
-  /* ---------- 華語現代 ---------- */
+  /* ---------- Mandarin — modern (mando) ---------- */
   { id: "daoxiang",           title: "稻香",                          artist: "周杰倫",         genre: "mando" },
   { id: "qingtian",           title: "晴天",                          artist: "周杰倫",         genre: "mando" },
   { id: "gaobaiqiqiu",        title: "告白氣球",                      artist: "周杰倫",         genre: "mando" },
@@ -217,7 +217,7 @@ window.SONGS = [
   { id: "xiaobuwuqu",             title: "小步舞曲",       artist: "陳綺貞",           genre: "mando" },
   { id: "yishidemeihao",          title: "遺失的美好",      artist: "張韶涵",           genre: "mando" },
   { id: "kuailechongbai",         title: "快樂崇拜",       artist: "潘瑋柏",           genre: "mando" },
-  /* ---------- 華語經典 ---------- */
+  /* ---------- Mandarin — classics (classic) ---------- */
   { id: "tianmimi",        title: "甜蜜蜜",         artist: "鄧麗君",   genre: "classic" },
   { id: "zhishaohaiyouni", title: "至少還有你",     artist: "林憶蓮",   genre: "classic" },
   { id: "wenbie",          title: "吻別",           artist: "張學友",   genre: "classic" },
@@ -278,7 +278,7 @@ window.SONGS = [
   { id: "diyici",            title: "第一次",          artist: "光良",            genre: "classic" },
   { id: "shaonian",          title: "少年",           artist: "光良",            genre: "classic" },
   { id: "quekou",            title: "缺口",           artist: "庾澄慶",           genre: "classic" },
-  /* ---------- 台語 ---------- */
+  /* ---------- Taiwanese (tw) ---------- */
   { id: "chiqingnanzihan", title: "癡情男子漢",             artist: "玖壹壹",     genre: "tw" },
   { id: "nishiwodehuaduo", title: "妳是我的花朵",           artist: "伍佰",       genre: "tw" },
   { id: "daoyutianguang",  title: "島嶼天光",               artist: "滅火器",     genre: "tw" },
@@ -309,7 +309,7 @@ window.SONGS = [
   { id: "luoyusheng",      title: "落雨聲",        artist: "江蕙",            genre: "tw" },
   { id: "aipincaihuiying", title: "愛拼才會贏",      artist: "葉啟田",           genre: "tw" },
   { id: "yijibang",        title: "一級棒",        artist: "謝金燕",           genre: "tw" },
-  /* ---------- 韓語 ---------- */
+  /* ---------- Korean (kpop) ---------- */
   { id: "dynamite",       title: "Dynamite",             artist: "BTS",          genre: "kpop" },
   { id: "gangnamstyle",   title: "Gangnam Style",        artist: "PSY",          genre: "kpop" },
   { id: "howyoulikethat", title: "How You Like That",    artist: "BLACKPINK",    genre: "kpop" },
@@ -352,7 +352,7 @@ window.SONGS = [
   { id: "heavyserenade", title: "Heavy Serenade", artist: "NMIXX",         genre: "kpop" },
   { id: "lemonade",      title: "LEMONADE",       artist: "aespa",         genre: "kpop" },
   { id: "thatsanono",    title: "THAT'S A NO NO", artist: "ITZY",          genre: "kpop" },
-  /* ---------- 西洋 ---------- */
+  /* ---------- Western (west) ---------- */
   { id: "shapeofyou",     title: "Shape of You",                    artist: "Ed Sheeran",        genre: "west" },
   { id: "blindinglights", title: "Blinding Lights",                 artist: "The Weeknd",        genre: "west" },
   { id: "someonelikeyou", title: "Someone Like You",                artist: "Adele",             genre: "west" },
@@ -393,7 +393,7 @@ window.SONGS = [
   { id: "seeyouagain",    title: "See You Again",                   artist: "Wiz Khalifa",       genre: "west" },
   { id: "easyonme",      title: "Easy On Me",       artist: "Adele",         genre: "west" },
   { id: "diewithasmile", title: "Die With A Smile", artist: "Lady Gaga",     genre: "west" },
-  /* ---------- 日文 / 動漫 ---------- */
+  /* ---------- Japanese / anime (jp) ---------- */
   { id: "lemon",         title: "Lemon",                artist: "米津玄師",         genre: "jp" },
   { id: "idol",          title: "Idol",                 artist: "YOASOBI",          genre: "jp" },
   { id: "gurenge",       title: "紅蓮華",               artist: "LiSA",             genre: "jp" },

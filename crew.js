@@ -1,20 +1,21 @@
-/* 金曲猜歌王 — 流唱社幹部榜 + 全場分數分布
+/* Crew board and score distribution.
  *
- * 這兩份都是「凍結的真實資料」,不是編出來的:
+ * Both are frozen real data, not invented:
  *
- *   CREW  聯展前兩天(9/10–9/11)玩過的每一台裝置,每台留最高分 ——
- *         那時候攤位還沒開給外面的人,玩的就是社團的人。
- *         暱稱是他們自己取的,原封不動。
+ *   CREW        every device that played on the two days before the fair
+ *               opened to the public, best score per device. Those were the
+ *               club members; the nicknames are their own.
+ *   SCORE_DIST  distribution of best scores across 13,191 players, in
+ *               250-point buckets: [score, players below that score].
  *
- *   DIST  全場 13191 位玩家的最高分分布,每 250 分一階,
- *         [分數, 低於這個分數的人數]。用來回答「你贏過了多少%的玩家」。
+ * Exported from the database on 2026-09-12 and static ever since. The live
+ * leaderboard could not survive the traffic once the game spread (5GB/month
+ * of free egress, gone in three days), but the thing players actually wanted
+ * — where do I stand — is computable from these two tables on the phone,
+ * with zero requests.
  *
- * 兩份都是 2026-09-12 從資料庫匯出來的靜態快照。
- * 之所以做成靜態的:遊戲在網路上散開之後,即時排行榜的流量
- * (一個月 5GB 的免費額度,三天就用完)撐不住 —— 但玩家真正想要的
- * 「我贏過誰」用這兩張表在手機上就算得出來,一個請求都不用發。
+ * Forking this? Replace CREW with your own people.
  */
-
 window.CREW_TOTAL = 13191;      // 分布的母體人數
 
 window.CREW = [
@@ -66,7 +67,7 @@ window.CREW = [
   { name: "ㄆㄧ",       score: 3131 },
 ];
 
-// [分數, 最高分低於這個分數的人數] —— 中間用內插
+// [score, players whose best is below it] — interpolated in between
 window.SCORE_DIST = [
   [    0,      0],
   [  250,      2],
