@@ -14,7 +14,9 @@ The interface is Traditional Chinese; the code and comments are English.
   players you are ahead of.
 - **闖關 (stage)** — six stages, ten questions each. Clearing one is about
   score (4,000 up to 9,000) and the song pool grows as you go: Mandarin →
-  Taiwanese → Western → Korean and Japanese. Fail and you restart at stage 1.
+  Taiwanese → Western → Korean and Japanese. Whatever a stage unlocks is
+  guaranteed to appear from then on, and the last three stages always hold at
+  least two non-Chinese songs. Fail and you restart at stage 1.
 
 ## No server
 
