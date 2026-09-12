@@ -1441,9 +1441,9 @@ function finish(){
        擊敗幾位幹部 —— 有名有姓的對手,比抽象的名次好懂
        贏過多少玩家 —— 每個人都有數字,不會出現「擊敗 0 位」的挫折 */
   const beaten = crewBeaten(G.total);
-  G.shareText = `金曲猜歌王 · ${G.total.toLocaleString()} 分「${rank.title}」
+  G.shareText = `我在台大流唱社的金曲猜歌王挑戰中獲得了 ${G.total.toLocaleString()} 分，得到「${rank.title}」的稱號。
 ` +
-    `我擊敗了 ${beaten}/${CREW.length} 位流唱社幹部,贏過了 ${beatPercent(G.total)}% 的玩家。`;
+    `我擊敗了 ${beaten}/${CREW.length} 位流唱社幹部，贏過了 ${beatPercent(G.total)}% 的玩家。你也來挑戰看看吧！`;
   $('res-meta').textContent =
     `答對 ${entry.correct} 題,共 ${R.questionCount} 題` +
     ` · 擊敗 ${beaten}/${CREW.length} 位幹部` +
@@ -1525,8 +1525,7 @@ function finishStage(){
   $('st-facts').innerHTML  = stageFacts(st, true);
   // 破關那一刻是整個遊戲最值得分享的瞬間,所以「進入下一關」的位置換成分享
   G.shareText = last
-    ? `金曲猜歌王 · 闖關模式 —— 六關全破。
-340 首歌、六道門檻,我一關都沒有掉。`
+    ? `我在台大流唱社的金曲猜歌王挑戰中六關全破囉。你也來試試看吧！`
     : G.shareText;
   $('btn-stage-go').hidden = false;
   $('btn-stage-go').textContent = last ? '分享這個成績' : `進入第 ${G.stage + 1} 關`;
@@ -1567,10 +1566,10 @@ function failStage(st){
     ` · 最佳紀錄 第 ${Store.bestStage()} 關`;
 
   G.shareText = cleared > 0
-    ? `金曲猜歌王 · 闖關模式 —— 我闖到第 ${cleared} 關(共 ${STAGES.length} 關)
+    ? `我在台大流唱社的金曲猜歌王挑戰中闖到第 ${cleared} 關(共 ${STAGES.length} 關)
 ` +
-      `倒在第 ${G.stage} 關的 ${st.need.toLocaleString()} 分門檻前,差 ${gap.toLocaleString()} 分。`
-    : `金曲猜歌王 · 闖關模式 —— 我連第 1 關都沒過,你來試試看。`;
+      `倒在第 ${G.stage} 關的 ${st.need.toLocaleString()} 分門檻前。你也來挑戰看看吧！`
+    : `我在台大流唱社的金曲猜歌王挑戰中連第 1 關都沒過，不然你來玩玩看吧！`;
 
   const nextEl = $('res-next');
   nextEl.innerHTML = `再玩一次會<b>從第 1 關重新開始</b>`;
@@ -1684,7 +1683,7 @@ function renderBoard(){
   note.innerHTML = best > 0
     ? `你的最佳 <b>${best.toLocaleString()}</b> 分 —— 擊敗 <b>${beaten}</b> / ${CREW.length} 位幹部;` +
       `在所有玩家裡,你贏過了 <b>${beatPercent(best)}%</b> 的玩家。`
-    : `聯展前兩天,社團的人自己先玩了一輪 —— 這 ${CREW.length} 個成績都是真的。玩一局,看你能擊敗幾個。`;
+    : `社團的 ${CREW.length} 個幹部自己先玩了一輪。來挑戰流唱社看你能擊敗幾個人吧！`;
 
   // 只捲列表自己,不要用 scrollIntoView —— 那會連整頁一起捲,把標題推出畫面
   const meRow = list.querySelector('.rowitem.me');
