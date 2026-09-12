@@ -549,11 +549,11 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   <div class="rule"></div>
 
   <div class="modes">
-    <button class="btn" id="btn-speed" disabled>
-      <span class="t">競速模式</span><span class="sub" id="speed-best"></span>
-    </button>
-    <button class="btn ghost" id="btn-stage" disabled>
+    <button class="btn" id="btn-stage" disabled>
       <span class="t">闖關模式</span><span class="sub" id="stage-best"></span>
+    </button>
+    <button class="btn ghost" id="btn-speed" disabled>
+      <span class="t">競速模式</span><span class="sub" id="speed-best"></span>
     </button>
   </div>
 
@@ -1187,9 +1187,11 @@ $('btn-vol').addEventListener('click', () => {
 
 $('btn-speed').addEventListener('click', () => startGame('speed'));
 $('btn-stage').addEventListener('click', () => startGame('stage'));
-$('btn-again').addEventListener('click', () => show('screen-start'));
+$('btn-again').addEventListener('click', () =>
+  G.mode === 'stage' ? startGame('stage') : show('screen-start'));
 $('btn-board-1').addEventListener('click', () => renderBoard(true));
-$('btn-board-2').addEventListener('click', () => renderBoard(true));
+$('btn-board-2').addEventListener('click', () =>
+  G.mode === 'stage' ? show('screen-start') : renderBoard(true));
 $('btn-back').addEventListener('click', () => show('screen-start'));
 
 /* ---------- 開局 ---------- */
@@ -1403,6 +1405,9 @@ function finish(){
   };
   const prevBest = Store.best();
   Store.save(entry);
+  $('btn-board-2').textContent = '幹部榜';
+  $('btn-again').textContent   = '再玩一次';
+
   const rank = titleFor(G.total);
   $('res-title').textContent = rank.title;
   $('res-line').textContent  = rank.line;
@@ -1513,6 +1518,11 @@ function closePop(){
    分享出去的那句話是「我闖到第 3 關」,所以那句要在最上面。 */
 function failStage(st){
   closePop();
+  /* 這一頁的兩顆按鈕在兩個模式下是不同的東西:
+     幹部榜比的是競速模式那十題的分數,拿闖關某一關的分數去比沒有意義,
+     所以闖關的結算不給幹部榜,換成回首頁,而「再玩一次」直接從第 1 關重開。 */
+  $('btn-board-2').textContent = '回首頁';
+  $('btn-again').textContent   = '再闖一次';
   const cleared = G.stage - 1;
   const gap = st.need - G.total;
   $('res-title').textContent = cleared > 0 ? `闖到第 ${cleared} 關` : '第 1 關就卡住了';
