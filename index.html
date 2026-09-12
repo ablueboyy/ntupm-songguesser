@@ -1511,7 +1511,9 @@ function finishStage(){
   $('st-tag').textContent  = last ? '全部破關' : `第 ${G.stage} 關 通過`;
   $('st-big').textContent  = last ? '六關全破'
     : (STAGES[G.stage].unlocked ? `解鎖 ${STAGES[G.stage].unlocked}` : `前往第 ${G.stage + 1} 關`);
-  $('st-line').textContent = last ? '整個題庫 340 首、六道門檻,你一關都沒有掉。' : '';
+  // 題數寫死會過期 —— 每次加歌都要記得改,不如直接數
+  $('st-line').textContent = last
+    ? `整個題庫 ${(window.SONGS || []).length} 首、六道門檻,你一關都沒有掉。` : '';
   $('st-facts').innerHTML  = stageFacts(st, true);
   // 破關那一刻是整個遊戲最值得分享的瞬間,所以「進入下一關」的位置換成分享
   G.shareText = last

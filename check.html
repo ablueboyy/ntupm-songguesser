@@ -217,28 +217,24 @@ const PREV  = window.SONG_PREVIEWS || {};
 const KEY   = 'pm-songguesser-audio-check';
 
 /* ---------- 這次新增的歌 ----------
-   2026-09-11 這批往題庫加了 65 首(275 → 340)。
+   2026-09-13 這批往題庫加了 50 首(340 → 390),歌是從 decoys.js 挑出來的。
    新歌只有商店寫法對不上的那幾首會落進「重點抽聽」,其餘照樣要親耳聽過,
    所以獨立開一個篩選,而且清單非空時預設就停在這裡。
    這批審完就可以把整個 NEW_IDS 清空,篩選會自動消失、預設回到「重點抽聽」。 */
 const NEW_IDS = new Set([
-  "qilixiang", "ganbei", "caocao", "nizaifannao",
-  "pixingdaiyue", "nijiubuyao", "baobei", "xunrenqishi",
-  "daoshu", "mote", "taikongren", "dianqijiaojianai",
-  "taotai", "weiyi", "yanbuyouzhong", "shui",
-  "kaishidongle", "daiwozou", "luguorenjian", "shanqiu",
-  "huaxin", "waimiandeshijie", "dujiaoxi", "qiasiwenrou",
-  "xiangjianhenwan", "zhongxiaodonglu", "jide", "mengxingshifen",
-  "aiqingweida", "jiuhouxinsheng", "wowentian", "changtuyeche",
-  "jiejie", "mobanche", "butter", "boywithluv",
-  "hypeboy", "wannabe", "iamthebest", "fakelove",
-  "asifyourlast", "supershy", "loveshot", "rollindeep",
-  "perfect", "chandelier", "pokerface", "faded",
-  "closer", "hello", "lovestory", "grenade",
-  "payphone", "firework", "badromance", "diamonds",
-  "sorry", "loveyourself", "wewillrockyou", "birdsfeather",
-  "seeyouagain", "shinjidai", "shinunogaiiwa", "kaibutsu",
-  "kaikaikitan"
+  "gejian", "houlaidewomen", "aizheaizhejiuyongyuan", "douquan",
+  "rangwoliuzainishenbian", "jifenzhiji", "dangwomenyiqizouguo", "gesongzhe",
+  "wobunanguo", "madelibusiyi", "tianwailaiwu", "shiluoshazhou",
+  "yuai", "redaiyulin", "aidezhudage", "aicuo",
+  "aiwohaishita", "lettinggo", "yuandian", "xiaobuwuqu",
+  "yishidemeihao", "kuailechongbai", "wozhizaihuni", "kafei",
+  "ruyuan", "yinweiaiqing", "ruguoniyetingshuo", "bugai",
+  "youmeiyouyishouge", "kuailetiantang", "manleng", "diyici",
+  "shaonian", "quekou", "geainiyibai", "xiabeizi",
+  "leiqiao", "langrenqingge", "aiqingxianshipi", "nijiangdehua",
+  "lastdance", "luoyusheng", "aipincaihuiying", "yijibang",
+  "thisisfor", "heavyserenade", "lemonade", "thatsanono",
+  "easyonme", "diewithasmile"
 ]);
 
 /* ---------- 風險評估 ----------

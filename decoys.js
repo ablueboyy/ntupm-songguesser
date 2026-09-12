@@ -6,11 +6,6 @@
  */
 window.DECOYS = [
  {
-  "title": "擱淺",
-  "artist": "周杰倫",
-  "genre": "mando"
- },
- {
   "title": "那天下雨了",
   "artist": "周杰倫",
   "genre": "mando"
@@ -38,11 +33,6 @@ window.DECOYS = [
  {
   "title": "明明就",
   "artist": "周杰倫",
-  "genre": "mando"
- },
- {
-  "title": "後來的我們",
-  "artist": "五月天",
   "genre": "mando"
  },
  {
@@ -96,21 +86,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "愛著愛著就永遠",
-  "artist": "田馥甄",
-  "genre": "mando"
- },
- {
-  "title": "魔鬼中的天使 (Angel devil)",
-  "artist": "田馥甄",
-  "genre": "mando"
- },
- {
-  "title": "小幸運 (電影《我的少女時代》主題曲)",
-  "artist": "田馥甄",
-  "genre": "mando"
- },
- {
   "title": "還是要幸福 (Still in happiness)",
   "artist": "田馥甄",
   "genre": "mando"
@@ -118,11 +93,6 @@ window.DECOYS = [
  {
   "title": "花花世界 (Flower)",
   "artist": "田馥甄",
-  "genre": "mando"
- },
- {
-  "title": "兜圈",
-  "artist": "林宥嘉",
   "genre": "mando"
  },
  {
@@ -151,11 +121,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "讓我留在你身邊",
-  "artist": "陳奕迅",
-  "genre": "mando"
- },
- {
   "title": "孤勇者 (《英雄聯盟:雙城之戰》動畫劇集中文主題曲)",
   "artist": "陳奕迅",
   "genre": "mando"
@@ -168,11 +133,6 @@ window.DECOYS = [
  {
   "title": "不如這樣",
   "artist": "陳奕迅",
-  "genre": "mando"
- },
- {
-  "title": "光年之外 (電影《Passengers》中國區主題曲)",
-  "artist": "鄧紫棋",
   "genre": "mando"
  },
  {
@@ -196,11 +156,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "好不容易 (《華燈初上》片尾曲)",
-  "artist": "告五人",
-  "genre": "mando"
- },
- {
   "title": "我想要佔據你",
   "artist": "告五人",
   "genre": "mando"
@@ -211,23 +166,8 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "唯一 (三立/台視戲劇《戀愛是科學》插曲)",
-  "artist": "告五人",
-  "genre": "mando"
- },
- {
   "title": "給你一瓶魔法藥水",
   "artist": "告五人",
-  "genre": "mando"
- },
- {
-  "title": "幾分之幾 (電影《花甲大人轉男孩》主題曲)",
-  "artist": "盧廣仲",
-  "genre": "mando"
- },
- {
-  "title": "刻在我心底的名字 (電影《刻在你心底的名字》主題曲)",
-  "artist": "盧廣仲",
   "genre": "mando"
  },
  {
@@ -251,18 +191,8 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "當我們一起走過",
-  "artist": "蘇打綠",
-  "genre": "mando"
- },
- {
   "title": "無眠",
   "artist": "蘇打綠",
-  "genre": "mando"
- },
- {
-  "title": "歌頌者",
-  "artist": "吳青峰",
   "genre": "mando"
  },
  {
@@ -278,11 +208,6 @@ window.DECOYS = [
  {
   "title": "再遇見",
   "artist": "蘇打綠",
-  "genre": "mando"
- },
- {
-  "title": "我不難過",
-  "artist": "孫燕姿",
   "genre": "mando"
  },
  {
@@ -303,11 +228,6 @@ window.DECOYS = [
  {
   "title": "愛情證書",
   "artist": "孫燕姿",
-  "genre": "mando"
- },
- {
-  "title": "馬德里不思議",
-  "artist": "JOLIN蔡依林",
   "genre": "mando"
  },
  {
@@ -346,11 +266,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "你,好不好?(TVBS連續劇【遺憾拼圖】片尾曲)",
-  "artist": "周興哲",
-  "genre": "mando"
- },
- {
   "title": "你不屬於我 (《比悲傷更悲傷的故事》影集版片尾曲)",
   "artist": "周興哲",
   "genre": "mando"
@@ -363,11 +278,6 @@ window.DECOYS = [
  {
   "title": "在你耳邊說",
   "artist": "周興哲",
-  "genre": "mando"
- },
- {
-  "title": "天外來物",
-  "artist": "薛之謙",
   "genre": "mando"
  },
  {
@@ -431,11 +341,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "想見你想見你想見你 (電視劇《想見你》片尾曲)",
-  "artist": "八三夭",
-  "genre": "mando"
- },
- {
   "title": "致青春",
   "artist": "八三夭",
   "genre": "mando"
@@ -468,11 +373,6 @@ window.DECOYS = [
  {
   "title": "我不需要每一個人都愛我 - A Rock Can Be A Star",
   "artist": "八三夭",
-  "genre": "mando"
- },
- {
-  "title": "如果可以 (電影\"月老\"主題曲)",
-  "artist": "韋禮安",
   "genre": "mando"
  },
  {
@@ -511,11 +411,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "失落沙洲",
-  "artist": "徐佳瑩",
-  "genre": "mando"
- },
- {
   "title": "你敢不敢",
   "artist": "徐佳瑩",
   "genre": "mando"
@@ -538,11 +433,6 @@ window.DECOYS = [
  {
   "title": "迪斯可",
   "artist": "徐佳瑩",
-  "genre": "mando"
- },
- {
-  "title": "雨愛",
-  "artist": "楊丞琳",
   "genre": "mando"
  },
  {
@@ -573,11 +463,6 @@ window.DECOYS = [
  {
   "title": "左邊",
   "artist": "楊丞琳",
-  "genre": "mando"
- },
- {
-  "title": "熱帶雨林",
-  "artist": "S.H.E",
   "genre": "mando"
  },
  {
@@ -616,11 +501,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "愛的主打歌",
-  "artist": "蕭亞軒",
-  "genre": "mando"
- },
- {
   "title": "突然想起你",
   "artist": "蕭亞軒",
   "genre": "mando"
@@ -656,11 +536,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "愛錯",
-  "artist": "王力宏",
-  "genre": "mando"
- },
- {
   "title": "Forever Love",
   "artist": "王力宏",
   "genre": "mando"
@@ -688,11 +563,6 @@ window.DECOYS = [
  {
   "title": "我們的歌",
   "artist": "王力宏",
-  "genre": "mando"
- },
- {
-  "title": "愛我還是他",
-  "artist": "陶喆",
   "genre": "mando"
  },
  {
@@ -756,11 +626,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "Letting Go",
-  "artist": "蔡健雅",
-  "genre": "mando"
- },
- {
   "title": "BEAUTIFUL LOVE",
   "artist": "蔡健雅",
   "genre": "mando"
@@ -776,18 +641,8 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "原點",
-  "artist": "孫燕姿 & 蔡健雅",
-  "genre": "mando"
- },
- {
   "title": "芬蘭距離",
   "artist": "蔡健雅",
-  "genre": "mando"
- },
- {
-  "title": "小步舞曲",
-  "artist": "陳綺貞",
   "genre": "mando"
  },
  {
@@ -811,11 +666,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "遺失的美好",
-  "artist": "張韶涵",
-  "genre": "mando"
- },
- {
   "title": "親愛的那不是愛情",
   "artist": "張韶涵",
   "genre": "mando"
@@ -828,11 +678,6 @@ window.DECOYS = [
  {
   "title": "暮色迴響 (電影《默殺》推廣曲)",
   "artist": "張韶涵",
-  "genre": "mando"
- },
- {
-  "title": "快樂崇拜",
-  "artist": "潘瑋柏 & 張韶涵",
   "genre": "mando"
  },
  {
@@ -911,11 +756,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "起風了 (電視劇《加油, 你是最棒的》主題曲)",
-  "artist": "吳青峰",
-  "genre": "mando"
- },
- {
   "title": "Autumn Pagoda Whisper",
   "artist": "Qing Feng吳青峰",
   "genre": "mando"
@@ -951,11 +791,6 @@ window.DECOYS = [
   "genre": "mando"
  },
  {
-  "title": "我只在乎你",
-  "artist": "鄧麗君",
-  "genre": "classic"
- },
- {
   "title": "但願人長久",
   "artist": "鄧麗君",
   "genre": "classic"
@@ -988,11 +823,6 @@ window.DECOYS = [
  {
   "title": "你怎麼說",
   "artist": "鄧麗君",
-  "genre": "classic"
- },
- {
-  "title": "咖啡",
-  "artist": "張學友",
   "genre": "classic"
  },
  {
@@ -1036,11 +866,6 @@ window.DECOYS = [
   "genre": "classic"
  },
  {
-  "title": "因為愛情",
-  "artist": "陳奕迅 & 王菲",
-  "genre": "classic"
- },
- {
   "title": "匆匆那年",
   "artist": "王菲",
   "genre": "classic"
@@ -1071,11 +896,6 @@ window.DECOYS = [
   "genre": "classic"
  },
  {
-  "title": "如果你也聽說",
-  "artist": "張惠妹",
-  "genre": "classic"
- },
- {
   "title": "連名帶姓",
   "artist": "張惠妹",
   "genre": "classic"
@@ -1083,11 +903,6 @@ window.DECOYS = [
  {
   "title": "人質",
   "artist": "張惠妹",
-  "genre": "classic"
- },
- {
-  "title": "不該 (with 張惠妹)",
-  "artist": "周杰倫",
   "genre": "classic"
  },
  {
@@ -1108,11 +923,6 @@ window.DECOYS = [
  {
   "title": "跳進來",
   "artist": "張惠妹",
-  "genre": "classic"
- },
- {
-  "title": "有沒有一首歌會讓你想起我",
-  "artist": "周華健",
   "genre": "classic"
  },
  {
@@ -1138,16 +948,6 @@ window.DECOYS = [
  {
   "title": "我是真的付出我的愛",
   "artist": "周華健",
-  "genre": "classic"
- },
- {
-  "title": "快樂天堂",
-  "artist": "張艾嘉, 王新蓮, 黃韻玲, 陳淑樺, 齊豫, 周華健, 文章, 潘越雲, 紀宏仁, 鄭華娟, 李宗盛, 唐曉詩, 許景淳 & 錢懷琪",
-  "genre": "classic"
- },
- {
-  "title": "慢冷",
-  "artist": "梁靜茹",
   "genre": "classic"
  },
  {
@@ -1186,18 +986,8 @@ window.DECOYS = [
   "genre": "classic"
  },
  {
-  "title": "第一次",
-  "artist": "光良",
-  "genre": "classic"
- },
- {
   "title": "約定",
   "artist": "光良",
-  "genre": "classic"
- },
- {
-  "title": "少年",
-  "artist": "光良 & 曹格",
   "genre": "classic"
  },
  {
@@ -1258,11 +1048,6 @@ window.DECOYS = [
  {
   "title": "天亮以後說分手",
   "artist": "信樂團",
-  "genre": "classic"
- },
- {
-  "title": "缺口",
-  "artist": "庾澄慶",
   "genre": "classic"
  },
  {
@@ -1551,16 +1336,6 @@ window.DECOYS = [
   "genre": "classic"
  },
  {
-  "title": "閣愛妳一擺",
-  "artist": "茄子蛋",
-  "genre": "tw"
- },
- {
-  "title": "愛情你比我想的閣較偉大 (《當男人戀愛時》電影主題曲)",
-  "artist": "茄子蛋",
-  "genre": "tw"
- },
- {
   "title": "這款自作多情",
   "artist": "茄子蛋",
   "genre": "tw"
@@ -1578,11 +1353,6 @@ window.DECOYS = [
  {
   "title": "日常",
   "artist": "茄子蛋",
-  "genre": "tw"
- },
- {
-  "title": "下輩子",
-  "artist": "玖壹壹",
   "genre": "tw"
  },
  {
@@ -1621,28 +1391,8 @@ window.DECOYS = [
   "genre": "tw"
  },
  {
-  "title": "淚橋",
-  "artist": "伍佰 & China Blue",
-  "genre": "tw"
- },
- {
-  "title": "浪人情歌",
-  "artist": "伍佰",
-  "genre": "tw"
- },
- {
   "title": "心愛的再會啦",
   "artist": "伍佰",
-  "genre": "tw"
- },
- {
-  "title": "Last Dance",
-  "artist": "伍佰 & China Blue",
-  "genre": "tw"
- },
- {
-  "title": "愛情限時批",
-  "artist": "萬芳 & 伍佰",
   "genre": "tw"
  },
  {
@@ -1686,16 +1436,6 @@ window.DECOYS = [
   "genre": "tw"
  },
  {
-  "title": "你講的話",
-  "artist": "江蕙",
-  "genre": "tw"
- },
- {
-  "title": "落雨聲",
-  "artist": "江蕙",
-  "genre": "tw"
- },
- {
   "title": "夢中的情話",
   "artist": "江蕙 & 阿杜",
   "genre": "tw"
@@ -1727,11 +1467,6 @@ window.DECOYS = [
  },
  {
   "title": "浪子的心情",
-  "artist": "葉啟田",
-  "genre": "tw"
- },
- {
-  "title": "愛拼才會贏",
   "artist": "葉啟田",
   "genre": "tw"
  },
@@ -1802,11 +1537,6 @@ window.DECOYS = [
  },
  {
   "title": "含淚跳恰恰",
-  "artist": "謝金燕",
-  "genre": "tw"
- },
- {
-  "title": "一級棒",
   "artist": "謝金燕",
   "genre": "tw"
  },
@@ -1931,11 +1661,6 @@ window.DECOYS = [
   "genre": "kpop"
  },
  {
-  "title": "THIS IS FOR",
-  "artist": "TWICE",
-  "genre": "kpop"
- },
- {
   "title": "ONE SPARK",
   "artist": "TWICE",
   "genre": "kpop"
@@ -2036,11 +1761,6 @@ window.DECOYS = [
   "genre": "kpop"
  },
  {
-  "title": "Heavy Serenade",
-  "artist": "NMIXX",
-  "genre": "kpop"
- },
- {
   "title": "DASH",
   "artist": "NMIXX",
   "genre": "kpop"
@@ -2116,11 +1836,6 @@ window.DECOYS = [
   "genre": "kpop"
  },
  {
-  "title": "LEMONADE",
-  "artist": "aespa",
-  "genre": "kpop"
- },
- {
   "title": "KISS N TELL",
   "artist": "aespa",
   "genre": "kpop"
@@ -2143,11 +1858,6 @@ window.DECOYS = [
  {
   "title": "Rich Man",
   "artist": "aespa",
-  "genre": "kpop"
- },
- {
-  "title": "THAT'S A NO NO",
-  "artist": "ITZY",
   "genre": "kpop"
  },
  {
@@ -2481,11 +2191,6 @@ window.DECOYS = [
   "genre": "west"
  },
  {
-  "title": "Easy On Me",
-  "artist": "Adele",
-  "genre": "west"
- },
- {
   "title": "Set Fire to the Rain",
   "artist": "Adele",
   "genre": "west"
@@ -2583,11 +2288,6 @@ window.DECOYS = [
  {
   "title": "Earned It",
   "artist": "Abel Tesfaye",
-  "genre": "west"
- },
- {
-  "title": "Die With A Smile",
-  "artist": "Lady Gaga & Bruno Mars",
   "genre": "west"
  },
  {
@@ -2777,11 +2477,6 @@ window.DECOYS = [
  },
  {
   "title": "I Ain't Worried",
-  "artist": "OneRepublic",
-  "genre": "west"
- },
- {
-  "title": "Nobody (from Kaiju No. 8)",
   "artist": "OneRepublic",
   "genre": "west"
  },
@@ -2986,11 +2681,6 @@ window.DECOYS = [
   "genre": "jp"
  },
  {
-  "title": "Uchiagehanabi",
-  "artist": "DAOKO×米津玄師",
-  "genre": "jp"
- },
- {
   "title": "灰色と青 ( + 菅田将暉 )",
   "artist": "米津玄師 & 菅田將暉",
   "genre": "jp"
@@ -3033,11 +2723,6 @@ window.DECOYS = [
  {
   "title": "優しい彗星",
   "artist": "YOASOBI",
-  "genre": "jp"
- },
- {
-  "title": "Gurenge",
-  "artist": "LiSA",
   "genre": "jp"
  },
  {
@@ -3127,11 +2812,6 @@ window.DECOYS = [
  },
  {
   "title": "なんでもないや (movie ver.)",
-  "artist": "RADWIMPS",
-  "genre": "jp"
- },
- {
-  "title": "前前前世 (movie ver.)",
   "artist": "RADWIMPS",
   "genre": "jp"
  },
