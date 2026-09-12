@@ -16,8 +16,11 @@ create table if not exists public.scores (
 -- 榜上就看不到了,但資料還在 —— 誤按可以救回來,活動當下這比「刪掉」重要。
 alter table public.scores add column if not exists hidden boolean not null default false;
 
-create index if not exists scores_score_idx  on public.scores (score desc, created_at asc);
-create index if not exists scores_device_idx on public.scores (device_id, created_at desc);
+-- 這兩條以前有,現在沒人用了(排序搬進 leaderboard view,走的是 scores_best_idx;
+-- 速率限制那個查詢也走得到 best_idx 的第一欄)。索引佔每列成本的三分之二,
+-- 留著沒用的等於白付空間 —— sql/prune.sql 會把它們刪掉,這裡不要再建回來。
+--   scores_score_idx  (score desc, created_at asc)
+--   scores_device_idx (device_id, created_at desc)
 
 -- 排行榜和工作人員頁都是照 created_at 由舊到新分頁把整張表抓回來的
 -- (PostgREST 一次最多只回 1000 列,人一多就一定要翻頁)。這條索引就是給那個翻頁用的。
