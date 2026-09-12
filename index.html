@@ -378,6 +378,18 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 
 .row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
 
+/* 分享鍵。不跟「再玩一次」搶 —— 它是空心的,而且在下面一排。
+   有圖示是因為這顆按鈕的動作跟其他兩顆不同類(它會離開這個 app),
+   一個往上的箭頭就講完了。 */
+.btn.share{
+  display:flex;align-items:center;justify-content:center;gap:var(--s2);
+  font-size:var(--t-body);letter-spacing:.08em;padding:var(--s3);
+}
+.btn.share svg{
+  width:20px;height:20px;flex:none;
+  fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+}
+
 /* ═══════════ 兩個模式 ═══════════
    按鈕裡塞第二行小字:上面是模式名,下面是「你目前最好到哪」——
    開始畫面要回答的問題是「我要玩哪一個」,那一行就是答案的依據。 */
@@ -628,6 +640,13 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
     <button class="btn ghost" id="btn-board-2">幹部榜</button>
     <button class="btn" id="btn-again">再玩一次</button>
   </div>
+  <button class="btn ghost share" id="btn-share">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 15V4"/><path d="M8.5 7.5 12 4l3.5 3.5"/>
+      <path d="M5 13v5.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V13"/>
+    </svg>
+    <span>分享成績</span>
+  </button>
   <!-- 這個遊戲真正想達成的事:讓人來社課。
        放在按鈕和 IG 中間 —— 上面是他自己的成績,下面是追蹤入口,
        「更多資訊請追蹤 IG」那行剛好指著下面那個帳號。 -->
@@ -1355,13 +1374,11 @@ function answer(opt, index){
   });
   $('running').textContent = G.total.toLocaleString();
 
-  const t = document.createElement('div');
-  t.className = 'toast ' + (correct ? 'good' : 'bad');
-  t.textContent = correct
+  const t = toast(correct
     ? `答對了,${q.song.title} +${gained} 分`
     : (opt ? `答錯了。這首是${q.song.artist}的〈${q.song.title}〉`
-           : `時間到。這首是${q.song.artist}的〈${q.song.title}〉`);
-  document.body.appendChild(t);
+           : `時間到。這首是${q.song.artist}的〈${q.song.title}〉`),
+    correct ? 'good' : 'bad');
 
   setTimeout(() => {
     t.remove();
@@ -1424,6 +1441,9 @@ function finish(){
        擊敗幾位幹部 —— 有名有姓的對手,比抽象的名次好懂
        贏過多少玩家 —— 每個人都有數字,不會出現「擊敗 0 位」的挫折 */
   const beaten = crewBeaten(G.total);
+  G.shareText = `金曲猜歌王 · ${G.total.toLocaleString()} 分「${rank.title}」
+` +
+    `我擊敗了 ${beaten}/${CREW.length} 位流唱社幹部,贏過了 ${beatPercent(G.total)}% 的玩家。`;
   $('res-meta').textContent =
     `答對 ${entry.correct} 題,共 ${R.questionCount} 題` +
     ` · 擊敗 ${beaten}/${CREW.length} 位幹部` +
@@ -1503,8 +1523,13 @@ function finishStage(){
     : (STAGES[G.stage].unlocked ? `解鎖 ${STAGES[G.stage].unlocked}` : `前往第 ${G.stage + 1} 關`);
   $('st-line').textContent = last ? '整個題庫 340 首、六道門檻,你一關都沒有掉。' : '';
   $('st-facts').innerHTML  = stageFacts(st, true);
-  $('btn-stage-go').hidden = last;
-  $('btn-stage-go').textContent = last ? '' : `進入第 ${G.stage + 1} 關`;
+  // 破關那一刻是整個遊戲最值得分享的瞬間,所以「進入下一關」的位置換成分享
+  G.shareText = last
+    ? `金曲猜歌王 · 闖關模式 —— 六關全破。
+340 首歌、六道門檻,我一關都沒有掉。`
+    : G.shareText;
+  $('btn-stage-go').hidden = false;
+  $('btn-stage-go').textContent = last ? '分享這個成績' : `進入第 ${G.stage + 1} 關`;
   $('btn-stage-quit').textContent = last ? '回到首頁' : '先不玩了';
 
   // 重新觸發動畫:先拿掉再強制 reflow,不然連過兩關第二次不會動
@@ -1541,6 +1566,12 @@ function failStage(st){
     `第 ${G.stage} 關要 ${st.need.toLocaleString()} 分 · 差 ${gap.toLocaleString()} 分` +
     ` · 最佳紀錄 第 ${Store.bestStage()} 關`;
 
+  G.shareText = cleared > 0
+    ? `金曲猜歌王 · 闖關模式 —— 我闖到第 ${cleared} 關(共 ${STAGES.length} 關)
+` +
+      `倒在第 ${G.stage} 關的 ${st.need.toLocaleString()} 分門檻前,差 ${gap.toLocaleString()} 分。`
+    : `金曲猜歌王 · 闖關模式 —— 我連第 1 關都沒過,你來試試看。`;
+
   const nextEl = $('res-next');
   nextEl.innerHTML = `再玩一次會<b>從第 1 關重新開始</b>`;
   nextEl.hidden = false;
@@ -1556,8 +1587,60 @@ function failStage(st){
   show('screen-result');
 }
 
-$('btn-stage-go').addEventListener('click', () => { closePop(); G.stage++; playRound(); });
+$('btn-stage-go').addEventListener('click', () => {
+  if(G.stage >= STAGES.length) return doShare();      // 破關時這顆是分享,彈框不關
+  closePop(); G.stage++; playRound();
+});
 $('btn-stage-quit').addEventListener('click', () => { closePop(); show('screen-start'); });
+
+/* ---------- 分享 ----------
+
+   沒有伺服器,所以沒有「分享頁面」可以做 —— 分享出去的是一段文字加遊戲網址。
+   手機上走系統的分享面板(Web Share API),那是 IG 限動、LINE、Threads
+   都吃得到的同一個入口;桌機沒有那個面板,就退回複製到剪貼簿。
+
+   文字要能單獨看懂:別人收到的時候還沒玩過,所以「第 3 關」「17/46」
+   這種數字都要帶上它的單位和總數。 */
+function shareLine(){
+  // 砍掉結尾的 index.html —— 分享出去的網址要是乾淨的那一個
+  const url = (location.origin + location.pathname).replace(/index\.html$/, '');
+  return { text: G.shareText || '金曲猜歌王', url };
+}
+
+function toast(msg, kind){
+  const t = document.createElement('div');
+  t.className = 'toast' + (kind ? ' ' + kind : '');
+  t.textContent = msg;
+  document.body.appendChild(t);
+  return t;
+}
+
+async function doShare(){
+  const { text, url } = shareLine();
+  if(navigator.share){
+    try{
+      await navigator.share({ title: '金曲猜歌王', text, url });
+      return;                                   // 分享面板開過就結束,不要再複製一次
+    }catch(e){
+      if(e && e.name === 'AbortError') return;  // 使用者自己關掉面板,不是失敗
+    }
+  }
+  /* clipboard.writeText 在文件沒有焦點的時候會一直等下去(不是拒絕,是不回來)。
+     按鈕按下去沒有任何反應是最糟的狀態,所以給它 1.5 秒,逾時就當失敗處理。 */
+  const write = navigator.clipboard
+    ? navigator.clipboard.writeText(text + '\n' + url).then(() => true, () => false)
+    : Promise.resolve(false);
+  const copied = await Promise.race([
+    write,
+    new Promise(r => setTimeout(() => r(false), 1500))
+  ]);
+  const t = copied
+    ? toast('已複製,貼到哪裡都可以', 'good')
+    : toast('複製不了 —— 直接截圖分享吧', 'bad');
+  setTimeout(() => t.remove(), 2200);
+}
+
+$('btn-share').addEventListener('click', doShare);
 
 /* ---------- 幹部榜 ---------- */
 
