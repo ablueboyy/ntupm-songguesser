@@ -312,12 +312,6 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 }
 .scorecard .next b{color:var(--bottle);font-weight:var(--w-item)}
 
-/* 成績跑出來多久了 —— 秒數一直跳,關主一眼就能分辨現場成績和翻出來的舊截圖 */
-.scorecard .fresh{
-  font-size:var(--t-small);color:var(--dim);font-weight:var(--w-quiet);
-  font-variant-numeric:tabular-nums;margin-top:var(--s2);
-}
-
 /* 結算的 IG:這一頁玩家看最久,也最可能順手追蹤 —— 比開始畫面放大一級並置中 */
 #screen-result .startfoot{justify-content:center}
 #screen-result .startfoot a{
@@ -633,7 +627,6 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
     <div class="big" id="res-score">0</div>
     <div class="meta" id="res-meta">答對 0 題,共 10 題</div>
     <div class="next" id="res-next" hidden></div>
-    <div class="fresh" id="res-fresh"></div>
   </div>
   <div class="misses" id="res-misses"></div>
   <div class="row">
@@ -1416,7 +1409,6 @@ function titleFor(score){
   return TITLES.find(t => score >= t.min) || TITLES[TITLES.length - 1];
 }
 
-let freshTimer = null;
 function finish(){
   if(G.mode === 'stage') return finishStage();
 
@@ -1463,18 +1455,6 @@ function finish(){
   if(prevBest && G.total > prevBest){
     nextEl.innerHTML += `<br>這支手機的新紀錄(上次最好 ${prevBest.toLocaleString()} 分)`;
   }
-
-  // 畫面上不寫任何領獎規則 —— 現場關主用講的。
-  // 這裡只留「幾分鐘前跑出來的」,關主一眼就能分辨現場成績和翻出來的舊截圖。
-  clearInterval(freshTimer);
-  const at = Date.now();
-  $('res-fresh').textContent = '剛剛完成';
-  freshTimer = setInterval(() => {
-    const el = $('res-fresh');
-    if(!el){ clearInterval(freshTimer); return; }
-    const s = Math.round((Date.now() - at) / 1000);
-    el.textContent = s < 60 ? `${s} 秒前完成` : `${Math.floor(s / 60)} 分鐘前完成`;
-  }, 1000);
 
   // 答錯的歌
   const missed = G.log.filter(r => !r.correct);
@@ -1581,8 +1561,6 @@ function failStage(st){
         `<li><b>${r.song.title}</b><span>${r.song.artist}</span></li>`).join('')}</ul>`
     : `<h4>全對</h4><div class="none">十題全中,但門檻是看分數的 —— 再快一點</div>`;
 
-  clearInterval(freshTimer);
-  $('res-fresh').textContent = '';
   show('screen-result');
 }
 
