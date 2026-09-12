@@ -62,13 +62,17 @@ body{
 }
 
 /* ── 主視覺 ──
+   用 webp:同一張圖 1038KB → 82KB(quality 90,平均誤差不到 1%,
+   而且還被下面那層遮罩壓掉)。這張圖是每個新訪客一定會下載的最大一筆,
+   佔開頁流量的八成 —— 原始的 theme.png 留在 assets/ 當母檔,頁面不引用它。
+
    直式手機 cover 之後只看得到原圖中間 20% 的直條,而那正是圖裡
    「NTUPM 18TH」社名字的位置 —— 會跟頁面標題疊在一起。
    所以水平位移到 90%,改看留聲機與沙灘那側(那裡沒有字)。
    遮罩在 32% 就近乎實色:文字從 37% 開始,壓在亮處對比只有 1.0。 */
 body::before{
   content:"";position:fixed;inset:0;z-index:-2;
-  background:url("assets/theme.png") 90% center/cover no-repeat;
+  background:url("assets/theme.webp") 90% center/cover no-repeat;
   filter:brightness(1.10) saturate(1.1);
 }
 body::after{

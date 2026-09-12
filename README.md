@@ -376,7 +376,8 @@ check.html                音源檢查台(抽聽用,不是給玩家的頁面)
 songs.js                  題庫 340 首(手工維護)
 decoys.js                 干擾選項庫(自動產生)
 previews.js               官方試聽網址(自動產生)
-assets/theme.png          社團主視覺,當背景用
+assets/theme.webp         社團主視覺,當背景用(頁面引用的是這張,82KB)
+assets/theme.png          同一張的母檔(1MB),留著備查,頁面不引用
 audio/                    本地音檔放這裡,放了就會蓋過串流
 tools/fetch-previews.js   抓試聽網址
 tools/build-decoys.js     建干擾選項庫
