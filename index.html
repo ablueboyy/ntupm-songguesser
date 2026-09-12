@@ -509,7 +509,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 <!-- ═══════════ 開始 ═══════════ -->
 <div class="screen" id="screen-start">
   <div class="brand">
-    <div class="eyebrow">台大流唱社 社團聯展</div>
+    <div class="eyebrow">台大流唱社</div>
     <h1>金曲猜歌王</h1>
     <div class="slogan">我們不一定最會唱歌<br>但我們一定最會猜歌</div>
   </div>
@@ -628,7 +628,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
     <button class="btn ghost" id="btn-board-2">幹部榜</button>
     <button class="btn" id="btn-again">再玩一次</button>
   </div>
-  <!-- 攤位真正想達成的事:讓人來社課。
+  <!-- 這個遊戲真正想達成的事:讓人來社課。
        放在按鈕和 IG 中間 —— 上面是他自己的成績,下面是追蹤入口,
        「更多資訊請追蹤 IG」那行剛好指著下面那個帳號。 -->
   <section class="promo" aria-label="台大流唱迎新社課">
@@ -988,7 +988,13 @@ const Store = {
     try{ localStorage.setItem(this.KEY, JSON.stringify(list.slice(-50))); }catch(e){}
   },
 
-  best(){ return this.all().reduce((m, r) => Math.max(m, r.score || 0), 0); },
+  /* 「你的最佳」和幹部榜上那一列,只認競速模式的分數。
+     闖關某一關的分數不能拿來比 —— 第 1 關只有華語 226 首,比全庫好猜太多,
+     拿那個去站幹部榜等於作弊。舊紀錄沒有 mode 欄位,那是還沒有闖關模式以前
+     存的,一律算競速。 */
+  best(){
+    return this.all().reduce((m, r) => r.mode === 'stage' ? m : Math.max(m, r.score || 0), 0);
+  },
   plays(){ return this.all().length; },
 
   // 闖關模式的最高紀錄。只會往上,不會因為這次玩爛而掉下來
@@ -1218,7 +1224,7 @@ async function loadFirst(){
   if(clip) return true;
 
   $('load-spin').hidden = true;
-  $('load-txt').innerHTML = '載不到音樂 —— 可能是網路不通。<br>請確認手機有連上網,或跟攤位人員說一聲。';
+  $('load-txt').innerHTML = '載不到音樂 —— 可能是網路不通。<br>確認一下網路,或換個網路再試一次。';
   $('btn-retry').hidden = false;
   return false;
 }
@@ -1379,7 +1385,7 @@ function answer(opt, index){
    想多一個或少一個級距,直接加減這張表的列,程式會自己跟上。
    最後一列的 min 一定要是 0 —— 那是所有人都符合的保底。
 
-   畫面上不寫任何領獎規則(現場用講的),所以這張表就是玩家看到的全部。 */
+   聯展的領獎規則從來沒寫在畫面上(現場用講的),所以這張表就是玩家看到的全部。 */
 
 const TITLES = [
   { min: 8000, title: '流唱社之光',   line: '拜託你來我們流唱社當教學啦！' },
@@ -1399,6 +1405,7 @@ function finish(){
 
   const entry = {
     nickname: G.nickname,
+    mode: 'speed',
     score: G.total,
     correct: G.log.filter(r => r.correct).length,
     at: Date.now()
@@ -1454,7 +1461,7 @@ function finish(){
   $('res-misses').innerHTML = missed.length
     ? `<h4>沒答出來的</h4><ul>${missed.map(r =>
         `<li><b>${r.song.title}</b><span>${r.song.artist}</span></li>`).join('')}</ul>`
-    : `<h4>全對</h4><div class="none">十題全中,去攤位跟社員說一聲吧</div>`;
+    : `<h4>全對</h4><div class="none">十題全中,一首都沒漏</div>`;
 
   show('screen-result');
 }
@@ -1558,6 +1565,7 @@ function crewRowHtml(r){
   const cls = ['rowitem'];
   if(r.me) cls.push('me');
   if(r.beaten) cls.push('beaten');
+  if(typeof r.rank === 'number' && r.rank <= 3) cls.push('top' + r.rank);   // 前三名的名次鍍金
   return `<div class="${cls.join(' ')}">
       <div class="rk">${r.rank}</div>
       <div class="nm">${escapeHtml(r.name)}${r.tag ? `<span class="tag">${r.tag}</span>` : ''}</div>
