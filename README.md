@@ -1,382 +1,139 @@
-# 金曲猜歌王 — NTUPM 18th
+# Song Guesser — NTUPM 18th
 
-台大流行音樂演唱社社團聯展擺攤用的猜歌遊戲,聯展結束後放在網路上繼續玩。兩個模式:
+A music quiz built for the NTU Pop Music Club's booth at the student club fair,
+still online after it. Fifteen seconds of a song, nine titles, pick the right one.
 
-- **闖關模式** —— 六關,每關十題、每題 12 秒。過關看分數(4,000 → 9,000),
-  曲庫一關比一關大(華語 → 台語 → 西洋 → 韓日),沒過就從第一關重來。
-- **競速模式** —— 十題九宮格搶答,每題 12 秒,比分數。結算告訴你擊敗幾位社團幹部、贏過了多少%的玩家。
+**Play: https://ntupm18th.github.io/ntupm-songguesser/**
 
-**整個遊戲不連任何伺服器** —— 題庫、干擾項、試聽網址、幹部榜、分數分布全是靜態檔,
-成績只存在玩家自己的手機裡。
+The interface is Traditional Chinese; the code and comments are English.
 
-**領獎規則不寫在畫面上**,現場關主用講的 —— 所以遊戲裡沒有任何「兌獎 / 門檻 / 換完為止」的字。
+## Two modes
 
-**試玩版:https://ntupm18th.github.io/ntupm-songguesser/**
+- **競速 (speed)** — ten questions, 12 seconds each, 10,000 max. The result
+  screen tells you how many of the club you beat and what percentage of all
+  players you are ahead of.
+- **闖關 (stage)** — six stages, ten questions each. Clearing one is about
+  score (4,000 up to 9,000) and the song pool grows as you go: Mandarin →
+  Taiwanese → Western → Korean and Japanese. Fail and you restart at stage 1.
 
-企劃書:https://claude.ai/code/artifact/f1f27848-a50f-4f9c-bc45-545944605b1a
+## No server
 
----
+Everything is a static file. The song bank, the decoys, the preview URLs, the
+crew board and the score distribution all ship with the page; scores live in
+the player's own browser.
 
-## 怎麼跑起來
+It was not always like this. There used to be a live Supabase leaderboard, and
+it did not survive the game spreading online — the free tier gives 5GB of
+egress a month and we were burning about 1.5GB a day, almost entirely reads.
+The replacement is `crew.js`: the scores the club set before the fair opened,
+frozen, plus the score distribution of 13,191 players. "You beat 23 of the
+club, 89 points short of the next one" turns out to read better than a rank of
+1,240 out of eight thousand, and it costs nothing to serve.
 
-直接用瀏覽器打開 `index.html` 就能玩(不需要架伺服器)。
+`board-config.js`, `staff.html` and `sql/` are what remains of that system. The
+game no longer loads them; they are kept so the historical data stays reachable
+and so the live board can be brought back if anyone wants it.
 
-想在手機上測,或之後要放音檔,建議起一個本機伺服器:
+## Running it
 
-```bash
+Any static server:
+
+```
 python -m http.server 8000
-# 然後開 http://localhost:8000
-# 手機連同一個 Wi-Fi,開 http://<電腦IP>:8000
+# then open http://localhost:8000
+# from a phone on the same Wi-Fi: http://<your-ip>:8000
 ```
 
-**電腦測試小技巧**:遊戲中按數字鍵 `1`–`9` 可以直接選第 N 格,不用滑鼠。
+Deployment is GitHub Pages from `main`. Push and it is live in about a minute.
 
----
+## Audio
 
-## 目前的狀態
+No audio files are stored here. `previews.js` holds Apple's official 30-second
+preview URLs and the browser streams them directly from Apple at play time —
+which is both cheaper and a great deal safer than hosting clips.
 
-| 部分 | 狀態 |
-|---|---|
-| 九宮格搶答、倒數、計分 | 完成 |
-| 暱稱輸入、音量測試 | 完成 |
-| 結算、五級稱號 | 完成 |
-| 音源 | Apple 官方試聽,執行時串流 |
-| 競速模式 | 完成 |
-| 闖關模式 | 完成(六關,見下面「闖關模式」) |
-| 幹部榜 | 完成,靜態(見下面「幹部榜」) |
-| 本地音檔 | **還沒放**,`audio/` 是空的 |
+If a song has no preview the game falls back to a synthesised placeholder
+melody, so a missing source is audible rather than silent.
 
-## 部署
+`audio/` exists for locally supplied clips (`audio/<id>.m4a` wins over the
+stream), and `tools/make-clips.ps1` cuts them. **Leave it empty unless you own
+the recordings** — hosting audio is redistribution in a way that streaming
+Apple's previews is not.
 
-推到 `main` 就會自動更新 GitHub Pages,大約一分鐘後生效。
+## Song bank
 
-```bash
-git add -A && git commit -m "..." && git push
-```
+| file | what | audio needed |
+| --- | --- | --- |
+| `songs.js` | 390 songs that can be asked | yes |
+| `decoys.js` | 605 titles used only to fill the grid | no |
+| `previews.js` | preview URL per song, generated | — |
 
----
+`genre` never appears on screen. It sets the per-round floor (so every speed
+round has a classic, a Taiwanese track and something non-Chinese), it decides
+which stage a song unlocks in, and it picks decoys — a Mandarin answer needs
+Mandarin decoys or the grid is solvable by elimination.
 
-## 放音檔
+### Adding songs
 
-把每首歌的副歌片段剪成 15 秒,存成 `audio/<id>.m4a`,`<id>` 就是 `songs.js` 裡的 `id` 欄位。
+1. Add rows to `songs.js` (`id` unique and lowercase, `title` clean — no
+   "(theme from ...)" subtitles).
+2. `node tools/fetch-previews.js` — fills in what is missing. Review anything
+   it flags as low confidence; a cover version usually matches title and
+   artist perfectly and sounds nothing like the original.
+3. `node tools/build-decoys.js` — rebuilds the decoy pool and drops anything
+   now used as a question.
+4. Open `check.html` and listen. Put the new ids in `NEW_IDS` there and the
+   page defaults to that filter.
 
-```
-audio/daoxiang.m4a      ← 稻香
-audio/qingtian.m4a      ← 晴天
-audio/xiaoxingyun.m4a   ← 小幸運
-```
+Other flags: `--force` refetches everything, `--only id1,id2` targets specific
+songs, `--country JP` switches store, `--delay` slows down (the API allows
+roughly 20 calls a minute).
 
-放進去就會自動改用真的音檔,程式不用改。沒放的歌繼續用示範音,可以一首一首慢慢補。
+Two recurring traps, both from the Apple store: titles come back with
+subtitles attached, and Japanese titles come back romanised. Both defeat naive
+duplicate checks, so a song already in the bank can slip into the decoy pool.
 
-### 批次剪輯工具
+## Tuning
 
-`tools/clips.csv` 已經把題庫裡每一首歌的 id 都列好了,只要填兩欄:
+`CONFIG` at the top of the script in `index.html` holds the round: question
+count, seconds, base and speed points, per-genre floor, reveal pause.
 
-```csv
-id,title,artist,source,start
-daoxiang,稻香,周杰倫,D:\music\稻香.mp3,62
-qingtian,晴天,周杰倫,D:\music\晴天.m4a,1:15
-```
+`STAGES` holds the stage table — threshold, genres, and what each stage
+unlocks. `TITLES` holds the end-of-round titles; edit the table and nothing
+below cares. The last row must have `min: 0`.
 
-- `source` — 來源檔完整路徑
-- `start` — 副歌從第幾秒開始,可填 `62` 或 `1:15` 或 `00:01:15`
+## crew.js
 
-填好之後跑:
+Real data. `CREW` is every device that played on the two days before the fair
+opened to the public — that was the club — best score per device, nicknames
+untouched. `SCORE_DIST` is the distribution of best scores across 13,191
+players in 250-point buckets.
 
-```powershell
-.\tools\make-clips.ps1              # 剪還沒剪過的
-.\tools\make-clips.ps1 -Force       # 全部重剪
-.\tools\make-clips.ps1 -Seconds 12  # 改片段長度
-```
+**Forking this? Replace `CREW` with your own people.** Those are real
+nicknames belonging to real members.
 
-需要先裝 ffmpeg:`winget install Gyan.FFmpeg`(裝完開一個新終端機視窗)。
-
-單首手動剪的話:
-
-```bash
-ffmpeg -y -ss 62 -t 15 -i 原檔.mp3 -vn -c:a aac -b:a 96k audio/daoxiang.m4a
-```
-
-### 音源從哪來
-
-**不要從 YouTube 或串流平台側錄下載。** 三條可行的路,遊戲會自動照這個順序找音源:
-
-| 優先序 | 來源 | 狀態 |
-|---|---|---|
-| 1 | `audio/<id>.m4a` 本地音檔(社員自錄 或 合法擁有的檔案) | 要自己放 |
-| 2 | Apple 官方 30 秒試聽,執行時直接串流 | **已接好** |
-| 3 | 程式合成的示範音 | 自動 fallback |
-
-示範音是依歌曲 id 產生的固定旋律 —— 同一首歌每次聽起來都一樣,但當然猜不出是哪首歌。
-它的用途是讓你**先測試流程與手感**(12 秒夠不夠、九格好不好按、計分爽不爽),不是拿來當題目。
-
-## Apple 官方試聽
-
-`tools/fetch-previews.js` 用 Apple 公開的 iTunes Search API 查出每首歌的試聽網址,寫進 `previews.js`。
-**只存網址,音檔不落地** —— 遊戲執行時直接串流 Apple 的伺服器。
-
-```bash
-node tools/fetch-previews.js                   # 只補還沒有的
-node tools/fetch-previews.js --force           # 全部重抓
-node tools/fetch-previews.js --only daoxiang   # 只抓指定的(逗號分隔)
-node tools/fetch-previews.js --country JP      # 換商店地區(預設 TW)
-node tools/fetch-previews.js --delay 3000      # 放慢(API 約 20 次/分鐘)
-```
-
-### 換歌之後一定要做的事
-
-改了 `songs.js` 就要重跑一次抓取,而且**要看報告**。第一次整批抓(當時 219 首)有 6 首出問題,幾乎都是「台灣 Apple Music 沒有那個版本」造成的:
-
-| 狀況 | 例子 | 怎麼處理 |
-|---|---|---|
-| 商店用字不同 | 「你是我的花朵」商店寫「妳是我的花朵」 | 改 `songs.js` 的字,重抓 |
-| 只有 Remix / 演奏版 | 葉啟田「愛拚才會贏」只有 DJ Remix | 換一首歌 |
-| 只有音樂盒 / 卡拉OK版 | 「残酷な天使のテーゼ」只有音樂盒版 | 換一首歌 |
-| 整首沒上架 | 玖壹壹「癡情玫瑰花」、魏如萱「別問很可怕」 | 換同歌手的其他歌(後者換成「你啊你啊」) |
-| 抓到綜藝 / 演唱會版 | 鄧紫棋「光年之外」抓到《嗨,唱起來 第5期》 | 已在 `score()` 加專輯懲罰,`--force --only <id>` 重抓 |
-
-**會照樣抓下來、照樣播,但玩家根本認不出是哪首歌的**,是音樂盒版、卡拉OK版,以及綜藝節目 / 演唱會的重唱版。
-前兩種腳本會標成 `low`,報告不能不看;最後一種更陰險 —— 歌名和歌手都對得剛剛好,信心度還是 `high`。
-`score()` 現在會對專輯名稱裡有「第 N 期 / 演唱會 / 影音全記錄 / 卡拉」這類字樣的扣分,但**新增歌曲後還是要親耳抽聽幾首**。
-
-抓完**一定要看 `conf` 是 `low` 的那幾首**,很可能配錯歌。配錯的話有兩種修法:
-
-- 直接編輯 `previews.js` 裡那首的 `url`
-- 或把 `songs.js` 的歌名改精確一點,再 `--only <id>` 重抓
-
-每首還有一個 `offset` 欄位(預設 0)。試聽片段如果從不夠好認的地方開始,可以填秒數往後挪。
-
-### 抽聽:check.html
-
-腳本擋得掉的只有「專輯名稱看得出來」的假貨,剩下要靠耳朵。`check.html` 就是拿來做這件事的:
+## Files
 
 ```
-http://localhost:8000/check.html          本機
-https://ntupm18th.github.io/ntupm-songguesser/check.html   手機
+index.html              the game (HTML, CSS and JS in one file)
+crew.js                 crew board and score distribution
+songs.js                song bank, hand-maintained
+decoys.js               decoy titles, generated
+previews.js             preview URLs, generated
+check.html              audio check bench, internal
+staff.html              console for the old leaderboard data
+board-config.js         Supabase settings for that old leaderboard
+assets/theme.webp       background (82KB; theme.png is the 1MB master)
+audio/                  optional local clips, empty by default
+tools/                  generators for previews and decoys
+sql/                    schema and prune script for the old leaderboard
 ```
 
-- 預設只列 **重點抽聽** —— 商店曲名/歌手跟題庫不一樣、信心度不是 high、
-  或專輯名稱可疑的那幾首。大約是整份題庫的五分之一,二十幾分鐘聽得完
-- 商店資料跟題庫不一樣的地方會標成黃字,一眼看得到差在哪
-- 鍵盤:`空白` 播放 · `↑↓` 移動 · `1` 正常 · `2` 有問題
-- 判定存在瀏覽器的 localStorage,**只留在那台裝置**,換手機要重聽
-- 聽完按「匯出有問題的」,會直接產生 `--force --only` 的重抓指令
+`previews.js` and `decoys.js` are generated — single entries can be corrected
+by hand (the scripts do not overwrite existing values), but do not rewrite them
+wholesale.
 
-### 兩個要注意的地方
+## Licence
 
-**條款**:iTunes Search API 是公開的,但條款原意是為了推廣 iTunes 商店的內容。拿來當猜歌題庫屬於灰色地帶,所以這裡刻意做成「執行時串流、不下載存檔」,盡量貼近它原本的用途。這是社團自己承擔的判斷。
-
-**網路**:走串流代表**每一題都要連得上網**。網路不穩會直接卡住遊戲。如果之後還要擺攤,正式開場前務必在現場實測;真的不穩就改用本地音檔(第 1 條路),那才是現場最保險的做法。
-
----
-
-## 題庫架構
-
-題庫分成兩池,**遊戲裡沒有任何分類選單,玩家看不到分類**:
-
-| 檔案 | 內容 | 需要音源? |
-|---|---|---|
-| `songs.js` | 390 首,會被抽成題目 | 要 |
-| `decoys.js` | 605 首,只當九宮格的干擾選項 | 不用 |
-
-九宮格的九個選項從「`songs.js` + `decoys.js`」合起來的池子抽。干擾項不需要音檔,所以可以放很多 —— 這樣重玩很多次也不會一直看到同一批選項。
-
-### songs.js
-
-```js
-{ id: "daoxiang", title: "稻香", artist: "周杰倫", genre: "mando" }
-```
-
-- `id` 是所有東西的鑰匙:音檔檔名 `audio/<id>.m4a`、`previews.js` 的對應都靠它
-- `genre` 玩家完全看不到,但有兩個用途:
-  1. **決定每局的曲風配額**(見下面的 `CONFIG.quota`)
-  2. **挑干擾項** —— 華語歌的九宮格要配華語的干擾項,不然混進一堆英文歌名,用刪去法就猜到了,九選一的難度會垮
-  - `mando` 華語現代 · `classic` 華語經典 · `tw` 台語 · `kpop` 韓語 · `west` 西洋 · `jp` 日文
-- `title` 直接顯示在九宮格上,程式會依長度自動縮字級(中文 6/9/11 字、英文 9/14/20 字三段)
-
-### decoys.js
-
-由 `tools/build-decoys.js` 從 iTunes 商店自動撈,**歌名和歌手都是 Apple 回傳的原值,不靠人工記憶**:
-
-```bash
-node tools/build-decoys.js                  # 重建干擾庫
-node tools/build-decoys.js --per 12         # 每位歌手多撈幾首
-```
-
-歌手名單寫在腳本最上面的 `ARTISTS`,依 genre 分組。要加歌手就加在那裡。已經在 `songs.js` 裡的歌會自動排除,不會同時是答案和干擾項。
-
-顯示時程式會把「(電影《⋯》主題曲)」這類副標去掉 —— 答案的歌名是手寫的、本來就乾淨,干擾項來自商店常帶副標,兩邊不統一的話玩家會發現「沒有括號的那格就是答案」。
-
-## 調難度
-
-`index.html` 最上面的 `CONFIG`:
-
-```js
-questionCount: 10,                          // 每局題數
-quota: { mando: 5, classic: 1, tw: 1 },     // 保底配額
-foreignMin: 1,                              // 非中文保底題數
-timeLimit: 12,        // 每題秒數 ← 實測後最可能改這個
-baseScore: 300,       // 答對底分
-speedScore: 700,      // 速度分上限
-```
-
-**抽題分三步**:先照 `quota` 抽保底配額(7 題)→ 再從韓/西洋/日文混在一起抽 `foreignMin` 題
-→ 剩下的名額從全部 390 首裡隨機補滿 `questionCount`。
-
-第三步的池子包含非中文,所以**非中文保證至少 1 題,但常常不只 1 題**。跑 20,000 局的實際分布:
-
-| 每局非中文題數 | 1 | 2 | 3 |
-|---|---|---|---|
-| 出現機率 | 59% | 36% | 5% |
-
-平均 1.46 題。想讓非中文更常出現就調高 `foreignMin`,或把 `quota` 的華語配額減掉一些
-(第三步的自由名額變多,非中文的機會就跟著變多)。`quota` 加總 + `foreignMin` 不要超過
-`questionCount`,超過的話後面的保底會被擠掉。
-
-得分公式:`300 + 700 × (剩餘秒數 ÷ 12)`,每題滿分 1,000,10 題滿分 **10,000**。
-秒答約 995,用掉 6 秒約 650,拖到最後約 300,答錯 0。
-
-現場是用最高的那個稱號(8,000 分的「流唱社之光」)當領獎標準,而這件事只有關主知道 ——
-畫面上不寫。8,000 分約需「十題全對且平均 3.4 秒內作答」,或「九題全對且平均 1.9 秒內」;
-八題全對就算每題秒答也只有約 8,000 的邊緣 —— 這是刻意設得很嚴的門檻。
-
-| 分數 | 全對時每題要多快 | 答對 9 題要多快 |
-|---|---|---|
-| 8,888 | 1.9 秒 | 不可能 |
-| **8,000** | **3.4 秒** | **1.9 秒** |
-| 7,000 | 5.1 秒 | 3.8 秒 |
-| 6,250 | 6.4 秒 | 5.2 秒 |
-| 5,000 | 8.6 秒 | 7.6 秒 |
-
-覺得達標的人太少,就把 `TITLES` 第一列的 `min` 往下調。
-
-### 稱號
-
-文字寫在 `index.html` 的 `TITLES`,由上往下比,
-第一個「分數 >= min」的就是結果;`line` 是稱號底下那句話,想留白就寫空字串。
-
-| 分數 | 稱號 | 結語 |
-|---|---|---|
-| 8,000+ | 流唱社之光 | 拜託你來我們流唱社當教學啦! |
-| 6,767+ | 金曲點唱機 | 來流唱社你一定會找到很多志同道合喜歡聽歌的朋友! |
-| 5,000+ | 移動 KTV | 就差那麼一點點,要不要來參加流唱社! |
-| 3,000+ | 持續聽歌中 | 來流唱社一定會大大增加你的曲庫~~ |
-| 0+ | 聽歌小萌新 | 沒關係,來流唱社聽一年就會了 |
-
----
-
-## 闖關模式
-
-六關,每關十題、每題 12 秒、滿分 10,000,分數每關獨立算。
-沒過門檻就結束,從第一關重來,手機記「最高到第幾關」。
-
-| 關 | 過關分數 | 曲庫 | 進這一關時解鎖 |
-| --: | --: | --: | --- |
-| 1 | 4,000 | 260(華語現代＋經典) | — |
-| 2 | 5,000 | 290 | 台語 30 首 |
-| 3 | 6,000 | 330 | 西洋 40 首 |
-| 4 | 7,000 | 390(全庫) | 韓文 · 日文 60 首 |
-| 5 | 8,000 | 390 | — |
-| 6 | 9,000 | 390 | — |
-
-難度只靠兩件事疊上去:**曲庫變大**(而且越後面越冷門)和**門檻變高**。
-秒數跟競速模式一樣是 12 秒,每關都一樣 —— 兩個模式的分數才能互相對照,
-玩家也才感覺得到「是題目變難了」,不是「我被偷偷加速了」。
-
-**遊戲進行中最上面一直掛著**「第 3 關 · 已解鎖 台語 · 西洋 · 284 首」,
-右下角的總分後面接著「/ 6,000」的門檻。曲庫變大是這個模式唯一的獎勵,
-但它是看不見的 —— 不寫在螢幕上,玩家只會覺得「怎麼突然一堆沒聽過的歌」。
-
-闖關的結算**不給幹部榜**。幹部榜比的是競速模式那十題的分數,拿闖關某一關的分數去比沒有意義 ——
-那兩顆按鈕換成「回首頁」和「再闖一次」(直接從第 1 關重開)。
-
-過關是**蓋在九宮格上面的彈框**(`#pop`),不是切到另一屏 —— 遊戲才像「暫停了一下」。
-動畫分三段:底幕先暗下來、卡片浮上來、解鎖那一行最後到位,全部加起來不到半秒。
-這是獎勵,不是過場,不能讓人等。六關全破時整張卡會鑲一圈金邊,而且只有那一次看得到。
-
-第 6 關的 9,000 分是刻意留的高牆:13,191 位玩家裡只有 6 個人在 12 秒制下拿到過 9,000,
-10 秒制下大概不會有人破。街機遊戲有個破不了的最後一關是好事。
-
-關卡表在 `index.html` 的 `STAGES`,改門檻或曲風就在那裡改。
-
-### 出處
-
-開始畫面最底下有一行很小很暗的「音源:Apple Music 官方試聽」。
-
-它不是給玩家看的資訊,是**標明這 30 秒片段來自哪裡**。遊戲本身沒有散布任何音檔 ——
-`previews.js` 裡全是 `audio-ssl.itunes.apple.com` 的網址,玩家的瀏覽器是直接去 Apple
-的伺服器拿,音訊一個 byte 都沒有經過 GitHub Pages。標出處對合理使用的判斷是加分的,
-成本只有一行字。
-
-**不要把音檔下載下來自己放**(`audio/` 那條路)—— 那才叫重製和散布,在版權上比現在危險得多。
-`audio/` 空著是對的。
-
-## 分享
-
-結算畫面(兩個模式都有)和破關的彈框上有一顆分享鍵。沒有伺服器,所以沒有「分享頁」可以做 ——
-分享出去的是**一段文字加遊戲網址**:
-
-```
-我在台大流唱社的金曲猜歌王挑戰中獲得了 7,240 分,得到「金曲點唱機」的稱號。
-我擊敗了 17/46 位流唱社幹部,贏過了 77% 的玩家。你也來挑戰看看吧!
-https://ntupm18th.github.io/ntupm-songguesser/
-```
-
-文字要能單獨看懂 —— 收到的人還沒玩過,所以「第 3 關」「17/46」這種數字都帶著單位和總數。
-
-手機上走系統的分享面板(Web Share API),那是 IG 限動、LINE、Threads 共用的同一個入口;
-桌機沒有那個面板就退回複製到剪貼簿。**`clipboard.writeText` 在文件沒有焦點時會一直等下去**
-(不是拒絕,是不回來)—— 按鈕按下去毫無反應是最糟的狀態,所以給它 1.5 秒逾時,逾時就當失敗處理。
-
-## 幹部榜
-
-以前這裡是一整套 Supabase 即時排行榜。**遊戲在網路上散開之後那個做法垮了**:
-免費方案一個月 5GB 流量,實際速率是一天 1.5GB,三天就用完 —— 而且燒掉的全是「讀」,
-一萬多個人刷同一張榜。把榜做小、把自動刷新關掉都只是延後,量本身就超出免費方案了。
-
-現在換成兩張靜態表(`crew.js`,從資料庫匯出的真實快照,不是編的):
-
-| | 內容 |
-| --- | --- |
-| `CREW` | 聯展前兩天(9/10–9/11)社團的人自己玩出來的成績。那時候攤位還沒開給外面的人,玩的就是社團的人,暱稱原封不動 |
-| `SCORE_DIST` | 13,191 位玩家的最高分分布,每 250 分一階 |
-
-玩家其實沒有失去什麼。八千人的榜上排第 1,240 名沒有感覺;
-**「擊敗 22 / 46 位幹部,再 90 分就能贏過兮兮」**才有感 —— 而且一個請求都不用發。
-
-配一個**「在所有玩家裡,你贏過了 77% 的玩家」**,是為了讓打不贏任何幹部的人也有數字。
-只用「擊敗幾位幹部」的話,分數低的玩家會一直看到 0,那比沒有還糟。
-
-要改名單就直接改 `crew.js` —— 拿掉某個人、改暱稱都可以,分數要由高到低排好。
-
-### 舊資料還在
-
-Supabase 的專案沒有刪,`board-config.js` 和 `staff.html` 也還在,
-所以那 13,000 多人的原始紀錄都查得到。但 `index.html` 已經不載 `board-config.js` 了 ——
-**在 staff.html 把誰下架,幹部榜不會有任何變化**(那是靜態檔)。
-
-哪天熱度退了、或決定付費升級,把即時榜開回來的程式在 git 記錄裡(`c9f0ed8` 之前),資料一筆都沒少。
-
-## 檔案
-
-```
-index.html                遊戲本體(HTML + CSS + JS 全在裡面)
-crew.js                   幹部榜 + 全場分數分布(從資料庫匯出的靜態快照)
-board-config.js           舊排行榜的伺服器設定(只剩 staff.html 在用)
-staff.html                舊資料的管理台(改這裡不會影響幹部榜)
-check.html                音源檢查台(抽聽用,不是給玩家的頁面)
-songs.js                  題庫 390 首(手工維護)
-decoys.js                 干擾選項庫(自動產生)
-previews.js               官方試聽網址(自動產生)
-assets/theme.webp         社團主視覺,當背景用(頁面引用的是這張,82KB)
-assets/theme.png          同一張的母檔(1MB),留著備查,頁面不引用
-audio/                    本地音檔放這裡,放了就會蓋過串流
-tools/fetch-previews.js   抓試聽網址
-tools/build-decoys.js     建干擾選項庫
-tools/make-clips.ps1      把自有音樂檔剪成 15 秒片段
-tools/clips.csv           剪輯清單
-sql/leaderboard.sql       舊排行榜的資料表與 RLS 政策
-sql/prune.sql             舊資料的瘦身腳本(現在不寫入了,用不到)
-```
-
-自動產生的三個檔案裡,`previews.js` 和 `decoys.js` 可以手動微調單一項目(腳本預設不會覆蓋既有內容),但別整檔重寫。
+MIT, see `LICENSE`. It covers the source only, not the songs and not the
+nicknames in `crew.js`.
