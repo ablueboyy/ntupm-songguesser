@@ -315,6 +315,45 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 #screen-result .startfoot a .ig{width:22px;height:22px;stroke-width:1.6}
 #screen-result .startfoot a .handle{padding-bottom:3px}
 
+/* ── 迎新社課 ──
+   玩家在結算畫面停留最久,剛玩完心情也最好 —— 這是唯一該推社課的地方。
+   但它不能跟分數搶:黃色(--bottle)只給標籤和日期,標題用前景色,
+   其餘一律 --dim。整張卡靠一條 1px 的內框浮起來,不加陰影、不加圓角以外的裝飾。 */
+.promo{
+  padding:var(--s4);border-radius:var(--r-touch);
+  background:rgba(23,26,51,.62);
+  box-shadow:inset 0 0 0 1px var(--line);
+}
+.promo .tag{
+  display:flex;align-items:center;gap:var(--s3);
+  margin:0 0 var(--s3);
+  font-size:var(--t-body);font-weight:var(--w-strong);
+  color:var(--bottle);letter-spacing:.12em;
+}
+/* 標籤右邊那道漸淡的線 —— 把視線帶到日期上 */
+.promo .tag::after{
+  content:"";flex:1;height:1px;
+  background:linear-gradient(90deg,rgba(242,200,106,.5),rgba(242,200,106,0));
+}
+.promo ul{margin:0;padding:0;list-style:none}
+.promo li{
+  display:grid;grid-template-columns:auto auto 1fr;gap:var(--s3);align-items:baseline;
+  padding:var(--s3) 0;border-top:1px solid var(--line);font-size:var(--t-small);
+}
+.promo li .d{
+  font-weight:var(--w-title);font-size:var(--t-h3);color:var(--bottle);
+  font-variant-numeric:tabular-nums;letter-spacing:.01em;
+}
+.promo li .t{font-weight:var(--w-item);color:var(--foam);font-variant-numeric:tabular-nums}
+/* 星期是配角:知道是哪一天靠日期,星期只是讓人對得上自己的課表 */
+.promo li .t i{font-style:normal;font-weight:var(--w-quiet);color:var(--dim);margin-right:.4em}
+/* 地點跟時間一樣重要 —— 人要走到那裡去,不能比時間暗 */
+.promo li .p{font-weight:var(--w-item);color:var(--foam);text-align:right;white-space:nowrap}
+.promo .note{
+  margin:var(--s3) 0 0;font-size:var(--t-small);font-weight:var(--w-quiet);
+  color:var(--dim);line-height:1.7;
+}
+
 .misses{display:flex;flex-direction:column}
 .misses h4{margin:0 0 var(--s3);font-size:var(--t-small);color:var(--dim);font-weight:var(--w-quiet)}
 .misses ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column}
@@ -472,6 +511,17 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
     <button class="btn ghost" id="btn-board-2">排行榜</button>
     <button class="btn" id="btn-again">再玩一次</button>
   </div>
+  <!-- 攤位真正想達成的事:讓人來社課。
+       放在按鈕和 IG 中間 —— 上面是他自己的成績,下面是追蹤入口,
+       「更多資訊請追蹤 IG」那行剛好指著下面那個帳號。 -->
+  <section class="promo" aria-label="台大流唱迎新社課">
+    <h3 class="tag">台大流唱迎新社課</h3>
+    <ul>
+      <li><b class="d">9/16</b><span class="t"><i>週三</i>19:00</span><span class="p">共同 101</span></li>
+      <li><b class="d">9/17</b><span class="t"><i>週四</i>19:00</span><span class="p">共同 301</span></li>
+    </ul>
+    <p class="note">欲知更多資訊,請追蹤下面的 IG</p>
+  </section>
   <div class="startfoot">
     <a href="https://www.instagram.com/ntupm__18th" target="_blank" rel="noopener" aria-label="Instagram @ntupm__18th">
       <svg class="ig" viewBox="0 0 24 24" aria-hidden="true">
