@@ -391,34 +391,76 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 }
 .modes .btn .sub:empty{display:none}
 
-/* ═══════════ 闖關:過關畫面 ═══════════
-   解鎖是這個模式最爽的一刻,所以它獨佔一屏 ——
-   夾在兩關中間彈個 toast 就過去的話,玩家根本不會發現曲庫變大了。 */
-#screen-stage{justify-content:center;gap:var(--s6)}
-.stagecard .tag{
+/* ═══════════ 闖關:遊戲中的關卡列 ═══════════
+   曲庫變大是這個模式唯一的獎勵,但它看不見 —— 不寫在螢幕上,
+   玩家只會覺得「怎麼突然一堆沒聽過的歌」。所以整局都掛著。 */
+.hud-stage{
+  display:flex;align-items:baseline;justify-content:space-between;gap:var(--s3);
+  font-size:var(--t-small);line-height:1.4;
+}
+.hud-stage .lv{
+  font-weight:var(--w-strong);color:var(--bottle);letter-spacing:.08em;flex:none;
+}
+.hud-stage .un{
+  color:var(--dim);font-weight:var(--w-quiet);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.hud-bot em{font-style:normal;color:var(--dim);font-weight:var(--w-quiet)}
+
+/* ═══════════ 闖關:過關的彈框 ═══════════
+   蓋在九宮格上面而不是切換到另一屏 —— 遊戲才像「暫停了一下」。
+   動畫分兩段:底幕先暗下來,卡片再浮上來,解鎖那一行最後才到位。
+   全部加起來不到半秒 —— 這是獎勵,不是過場,不能讓人等。 */
+.pop{
+  position:fixed;inset:0;z-index:40;
+  display:flex;align-items:center;justify-content:center;padding:var(--s5);
+  background:rgba(11,12,24,.72);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+  opacity:0;transition:opacity .18s var(--ease);
+}
+.pop.in{opacity:1}
+.pop-card{
+  width:min(22rem,100%);
+  padding:var(--s5);border-radius:var(--r-touch);
+  background:var(--deep);box-shadow:inset 0 0 0 1px var(--line-2), 0 18px 48px rgba(0,0,0,.5);
+  transform:translateY(14px) scale(.96);opacity:0;
+}
+.pop.in .pop-card{animation:popcard .34s var(--ease) .06s both}
+@keyframes popcard{to{transform:none;opacity:1}}
+
+.pop-card .tag{
   font-size:var(--t-small);font-weight:var(--w-item);
   color:var(--dim);letter-spacing:.22em;
 }
-.stagecard .big{
-  margin:var(--s3) 0 0;
-  font-weight:var(--w-title);font-size:var(--t-h1);line-height:1.2;color:var(--bottle);
+.pop-card .big{
+  margin:var(--s2) 0 0;
+  font-weight:var(--w-title);font-size:var(--t-h2);line-height:1.25;color:var(--bottle);
 }
-.stagecard .line{
+.pop.in .pop-card .big{animation:poprise .36s var(--ease) .16s both}
+@keyframes poprise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.pop-card .line{
   margin-top:var(--s3);font-size:var(--t-small);line-height:1.9;
   color:var(--dim);font-weight:var(--w-quiet);
 }
-.stagecard .line:empty{display:none}
-.stagecard .facts{
-  margin:var(--s5) 0 0;padding:0;list-style:none;
+.pop-card .line:empty{display:none}
+.pop-card .facts{
+  margin:var(--s4) 0 var(--s5);padding:0;list-style:none;
   display:flex;flex-direction:column;
 }
-.stagecard .facts li{
+.pop.in .pop-card .facts{animation:poprise .36s var(--ease) .24s both}
+.pop-card .facts li{
   display:flex;justify-content:space-between;gap:var(--s4);align-items:baseline;
   padding:var(--s3) 0;border-top:1px solid var(--line);font-size:var(--t-small);
 }
-.stagecard .facts .k{color:var(--dim);font-weight:var(--w-quiet)}
-.stagecard .facts .v{font-weight:var(--w-item);font-variant-numeric:tabular-nums}
-.stagecard .facts .v.hot{color:var(--bottle)}
+.pop-card .facts .k{color:var(--dim);font-weight:var(--w-quiet)}
+.pop-card .facts .v{font-weight:var(--w-item);font-variant-numeric:tabular-nums;text-align:right}
+.pop-card .facts .v.hot{color:var(--bottle)}
+.pop-card .btn + .btn{margin-top:var(--s3)}
+
+/* 六關全破:整張卡鑲一圈金邊,而且只有這一次會看到 */
+.pop.clear .pop-card{box-shadow:inset 0 0 0 1px var(--bottle), 0 18px 48px rgba(0,0,0,.5)}
+.pop.clear .pop-card .big{font-size:var(--t-h1)}
 
 /* ═══════════ 排行榜 ═══════════ */
 /* 幹部榜有 56 列,一定比一屏長。把這一屏鎖成視窗高度,
@@ -538,6 +580,10 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 <!-- ═══════════ 遊戲 ═══════════ -->
 <div class="screen" id="screen-play" hidden>
   <div class="hud">
+    <div class="hud-stage" id="hud-stage" hidden>
+      <span class="lv" id="hud-lv"></span>
+      <span class="un" id="hud-un"></span>
+    </div>
     <div class="hud-top">
       <button type="button" class="volbtn" id="btn-vol" aria-expanded="false" aria-label="調整音量">
         <svg class="volicon" data-level="2" viewBox="0 0 24 24" aria-hidden="true">
@@ -563,7 +609,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   <div class="grid" id="grid"></div>
   <div class="hud-bot">
     <span id="playmeta"></span>
-    <span>目前總分 <b id="running">0</b></span>
+    <span>目前總分 <b id="running">0</b><em id="goal"></em></span>
   </div>
 </div>
 
@@ -605,16 +651,18 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   </div>
 </div>
 
-<!-- ═══════════ 闖關:過關 ═══════════ -->
-<div class="screen" id="screen-stage" hidden>
-  <div class="stagecard">
+<!-- ═══════════ 闖關:過關的彈框 ═══════════
+     刻意不做成一整屏 —— 蓋在九宮格上面,遊戲才像「暫停了一下」,
+     而不是「跳到另一個畫面」。 -->
+<div class="pop" id="pop" hidden>
+  <div class="pop-card" role="dialog" aria-modal="true" aria-labelledby="st-big">
     <div class="tag" id="st-tag"></div>
     <div class="big" id="st-big"></div>
     <div class="line" id="st-line"></div>
     <ul class="facts" id="st-facts"></ul>
+    <button class="btn" id="btn-stage-go"></button>
+    <button class="btn ghost" id="btn-stage-quit">先不玩了</button>
   </div>
-  <button class="btn" id="btn-stage-go"></button>
-  <button class="btn ghost" id="btn-stage-quit">先不玩了</button>
 </div>
 
 <!-- ═══════════ 幹部榜 ═══════════ -->
@@ -658,14 +706,14 @@ const $ = id => document.getElementById(id);
 /* ---------- 闖關模式的關卡表 ----------
 
    難度靠兩件事疊上去:曲庫變大(而且越後面越冷門),門檻變高。
-   秒數固定 10 秒 —— 比競速模式的 12 秒緊,但每一關都一樣,
-   讓玩家感覺得到「是題目變難了」,不是「是我被偷偷加速了」。
+   秒數跟競速模式一樣是 12 秒,每一關都一樣 —— 兩個模式的分數才能互相對照,
+   而且玩家感覺得到「是題目變難了」,不是「我被偷偷加速了」。
 
    每關 10 題、滿分 10,000,分數每關獨立算。沒過就從第 1 關重來。
 
    unlocked 是「進到這一關才開放的東西」,會在上一關的過關畫面上公布 ——
    解鎖的當下要看得到自己解鎖了什麼,不然曲庫變大玩家只會覺得變難而已。 */
-const STAGE_SECONDS = 10;
+const STAGE_SECONDS = 12;
 const STAGE_QUESTIONS = 10;
 const STAGES = [
   { need: 4000, genres: ['mando','classic'] },
@@ -676,6 +724,16 @@ const STAGES = [
   { need: 9000, genres: ['mando','classic','tw','west','kpop','jp'] }
 ];
 
+/* 遊戲進行中一直掛在最上面的那一列:你在第幾關、目前為止解鎖了什麼。
+   曲庫變大是這個模式唯一的獎勵,但它是看不見的 —— 不寫出來,
+   玩家只會覺得「怎麼突然一堆沒聽過的歌」。 */
+function stageHudLabel(n){
+  // 全開之後就不要再一項一項唸了 —— 那一列只有一行,唸完會被切掉
+  if(stagePool(n).length >= (window.SONGS || []).length) return '全曲庫開放';
+  const got = STAGES.slice(0, n).map(st => st.unlocked).filter(Boolean);
+  return got.length ? '已解鎖 ' + got.join(' · ') : '華語現代 · 經典';
+}
+
 function stagePool(n){
   const g = STAGES[n - 1].genres;
   return (window.SONGS || []).filter(s => g.includes(s.genre));
@@ -684,7 +742,7 @@ function stagePool(n){
 // 這一局實際跑的規則。開局時依模式填,遊戲迴圈只看這個,不看 CONFIG。
 const R = { questionCount: CONFIG.questionCount, timeLimit: CONFIG.timeLimit };
 
-const SCREENS = ['screen-start','screen-load','screen-play','screen-stage','screen-result','screen-board'];
+const SCREENS = ['screen-start','screen-load','screen-play','screen-result','screen-board'];
 function show(id){
   SCREENS.forEach(s => $(s).hidden = (s !== id));
   document.body.classList.toggle('dim', id === 'screen-play');
@@ -1191,10 +1249,15 @@ async function playRound(){
   if(G.mode === 'stage'){
     Object.assign(R, { questionCount: STAGE_QUESTIONS, timeLimit: STAGE_SECONDS });
     G.questions = buildQuestions(stagePool(G.stage), false);
+    $('hud-lv').textContent = `第 ${G.stage} 關`;
+    $('hud-un').textContent = `${stageHudLabel(G.stage)} · ${stagePool(G.stage).length} 首`;
+    $('goal').textContent = ` / ${STAGES[G.stage - 1].need.toLocaleString()}`;
   }else{
     Object.assign(R, { questionCount: CONFIG.questionCount, timeLimit: CONFIG.timeLimit });
     G.questions = buildQuestions(window.SONGS, true);
+    $('goal').textContent = '';
   }
+  $('hud-stage').hidden = G.mode !== 'stage';
   G.index = 0; G.total = 0; G.log = [];
 
   show('screen-load');
@@ -1421,21 +1484,35 @@ function finishStage(){
   if(!passed) return failStage(st);
 
   const last = G.stage >= STAGES.length;
+  const pop = $('pop');
+  pop.classList.toggle('clear', last);
   $('st-tag').textContent  = last ? '全部破關' : `第 ${G.stage} 關 通過`;
-  $('st-big').textContent  = last ? '六關全破' : (STAGES[G.stage].unlocked ? `解鎖 ${STAGES[G.stage].unlocked}` : `第 ${G.stage + 1} 關`);
-  $('st-line').textContent = last
-    ? '整個題庫 340 首、六道門檻,你一關都沒有掉。'
-    : '';
+  $('st-big').textContent  = last ? '六關全破'
+    : (STAGES[G.stage].unlocked ? `解鎖 ${STAGES[G.stage].unlocked}` : `前往第 ${G.stage + 1} 關`);
+  $('st-line').textContent = last ? '整個題庫 340 首、六道門檻,你一關都沒有掉。' : '';
   $('st-facts').innerHTML  = stageFacts(st, true);
   $('btn-stage-go').hidden = last;
   $('btn-stage-go').textContent = last ? '' : `進入第 ${G.stage + 1} 關`;
   $('btn-stage-quit').textContent = last ? '回到首頁' : '先不玩了';
-  show('screen-stage');
+
+  // 重新觸發動畫:先拿掉再強制 reflow,不然連過兩關第二次不會動
+  pop.hidden = false;
+  pop.classList.remove('in');
+  void pop.offsetWidth;
+  pop.classList.add('in');
+  (last ? $('btn-stage-quit') : $('btn-stage-go')).focus({ preventScroll: true });
+}
+
+function closePop(){
+  const pop = $('pop');
+  pop.classList.remove('in');
+  pop.hidden = true;
 }
 
 /* 沒過門檻 —— 用結算畫面,但講的是「闖到第幾關」,不是分數。
    分享出去的那句話是「我闖到第 3 關」,所以那句要在最上面。 */
 function failStage(st){
+  closePop();
   const cleared = G.stage - 1;
   const gap = st.need - G.total;
   $('res-title').textContent = cleared > 0 ? `闖到第 ${cleared} 關` : '第 1 關就卡住了';
@@ -1462,8 +1539,8 @@ function failStage(st){
   show('screen-result');
 }
 
-$('btn-stage-go').addEventListener('click', () => { G.stage++; playRound(); });
-$('btn-stage-quit').addEventListener('click', () => show('screen-start'));
+$('btn-stage-go').addEventListener('click', () => { closePop(); G.stage++; playRound(); });
+$('btn-stage-quit').addEventListener('click', () => { closePop(); show('screen-start'); });
 
 /* ---------- 幹部榜 ---------- */
 
