@@ -305,6 +305,13 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 }
 .scorecard .meta{font-size:var(--t-small);color:var(--dim);font-weight:var(--w-quiet)}
 
+/* 差幾分就能超過下一個人 —— 這是最好的「再玩一次」理由,所以給它亮色 */
+.scorecard .next{
+  margin-top:var(--s3);font-size:var(--t-small);line-height:1.8;
+  color:var(--dim);font-weight:var(--w-quiet);
+}
+.scorecard .next b{color:var(--bottle);font-weight:var(--w-item)}
+
 /* 成績跑出來多久了 —— 秒數一直跳,關主一眼就能分辨現場成績和翻出來的舊截圖 */
 .scorecard .fresh{
   font-size:var(--t-small);color:var(--dim);font-weight:var(--w-quiet);
@@ -372,7 +379,10 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
 
 /* ═══════════ 排行榜 ═══════════ */
-#screen-board{gap:var(--s4)}
+/* 幹部榜有 56 列,一定比一屏長。把這一屏鎖成視窗高度,
+   標題、「你擊敗幾位」和「返回」就固定在原位,只有名單自己捲 ——
+   不然整頁跟著捲,玩家滑到一半會找不到返回鍵。 */
+#screen-board{gap:var(--s4);height:100vh;height:100dvh}
 .board-head{padding:var(--s2) 0 var(--s3)}
 .board-head h2{margin:var(--s1) 0 0;font-weight:var(--w-title);font-size:var(--t-h2);color:var(--foam)}
 .board-list{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column}
@@ -389,7 +399,14 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 .board-note{margin-top:var(--s2);font-size:var(--t-small);color:var(--dim);line-height:1.7}
 .board-note b{color:var(--bottle);font-weight:var(--w-item)}
 /* 自己不在前 20 名時,把自己那一列單獨釘在底下 —— 玩家最想知道的就是自己第幾 */
-.rowitem.detached{border-top:1px solid var(--line-2);margin-top:var(--s3)}
+/* 已經被超過的幹部:整列壓暗,讓還沒打敗的那些自己跳出來 */
+.rowitem.beaten{opacity:.45}
+.rowitem .nm .tag{
+  margin-left:var(--s2);font-size:var(--t-small);font-weight:var(--w-quiet);
+  color:var(--dim);letter-spacing:.05em;
+}
+.rowitem.me .nm .tag{color:var(--bottle)}
+.rowitem.me .rk{color:var(--foam);font-size:var(--t-body)}
 .fielderr{margin-top:var(--s2);font-size:var(--t-small);color:var(--miss);font-weight:var(--w-item)}
 .empty{color:var(--dim);font-size:var(--t-small);padding:var(--s7) 0;line-height:2.1}
 .empty b{display:block;color:var(--foam);font-weight:var(--w-title);font-size:var(--t-h3);margin-bottom:var(--s4)}
@@ -458,7 +475,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
       </svg>
       <span class="handle">ntupm__18th</span>
     </a>
-    <button type="button" id="btn-board-1">排行榜</button>
+    <button type="button" id="btn-board-1">幹部榜</button>
   </div>
 </div>
 
@@ -508,11 +525,12 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
     <div class="line" id="res-line"></div>
     <div class="big" id="res-score">0</div>
     <div class="meta" id="res-meta">答對 0 題,共 10 題</div>
+    <div class="next" id="res-next" hidden></div>
     <div class="fresh" id="res-fresh"></div>
   </div>
   <div class="misses" id="res-misses"></div>
   <div class="row">
-    <button class="btn ghost" id="btn-board-2">排行榜</button>
+    <button class="btn ghost" id="btn-board-2">幹部榜</button>
     <button class="btn" id="btn-again">再玩一次</button>
   </div>
   <!-- 攤位真正想達成的事:讓人來社課。
@@ -541,7 +559,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 <!-- ═══════════ 排行榜 ═══════════ -->
 <div class="screen" id="screen-board" hidden>
   <div class="board-head">
-    <h2>排行榜</h2>
+    <h2>流唱社幹部榜</h2>
     <div class="board-note" id="board-note"></div>
   </div>
   <div class="board-list" id="board-list"></div>
@@ -550,12 +568,12 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 <script src="songs.js"></script>
 <script src="decoys.js"></script>
 <script src="previews.js"></script>
-<script src="board-config.js"></script>
+<script src="crew.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════
-   金曲猜歌王 — 攤位版
-   排行榜接的是 Supabase(設定在 board-config.js);兩個欄位留空時
-   會自動退回只有這支手機看得到的本機榜,並在畫面上寫明。
+   金曲猜歌王
+   完全不連線:題庫、干擾項、試聽網址、幹部榜、分數分布全都是
+   靜態檔,成績只存在玩家自己的手機裡。
    ═══════════════════════════════════════════════════════ */
 
 const CONFIG = {
@@ -761,296 +779,69 @@ function playClip(q){
   return synthClip(q.song, CONFIG.clipSeconds);
 }
 
-/* ---------- 排行榜儲存 ----------
-   兩種模式,開場自動決定:
+/* ---------- 成績與幹部榜 ----------
 
-     server  board-config.js 填了 Supabase 的網址與金鑰 —— 全場共用一張榜
-     local   沒填,或伺服器連不上 —— 退回只有這支手機看得到的榜
+   以前這裡是一整套 Supabase 的排行榜。遊戲在網路上散開之後那個做法垮了 ——
+   免費方案一個月 5GB 的流量,三天就用完;而且真正燒掉的是「讀」,
+   一萬多個人同時刷同一張榜。
 
-   退回 local 絕對不是靜默的:排行榜畫面會寫明「現在只有這支手機的分數」。
-   攤位網路掛掉時遊戲要照常能玩,但玩家不能誤以為自己已經上了全場榜。
+   現在換成完全不連線的兩張靜態表(在 crew.js 裡):
 
-   「同一個人」是用 device_id 認的,不是用暱稱 ——
-   兩支手機各自取「小明」是兩個人,同一支手機玩十次才是同一個人。
-   暱稱撞名在進場時就先擋掉(nicknameTaken),免得榜上出現兩個小明。 */
+     CREW        聯展前兩天社團的人自己玩出來的 55 個成績,真名真分數
+     SCORE_DIST  13,191 位玩家的分數分布,用來算「你贏過全場多少%」
 
-const BOARD = (window.BOARD_CONFIG || { url: '', anonKey: '' });
-const BOARD_ON = !!(BOARD.url && BOARD.anonKey);
+   換掉之後玩家其實沒有失去什麼。八千人的榜上排第 1,240 名沒有感覺;
+   「你擊敗了 23 位流唱社幹部,再 89 分就能贏過兮兮」才有感 ——
+   而且後者一個請求都不用發。 */
 
-// 資料庫有沒有 hidden 欄位(工作人員的下架旗標)。
-// 沒跑過最新的 sql/leaderboard.sql 就還沒有 —— 那時候查詢會 400。
-// 這裡不能讓整個排行榜跟著掛掉:第一次撞到就記下來,之後改查不過濾的版本。
-// 榜上已經有真的玩家在跑,「先跑 SQL 再推程式」這種順序依賴太脆弱了。
-let hasHiddenColumn = true;
+const CREW = (window.CREW || []).slice().sort((a, b) => b.score - a.score);
 
-// 資料庫有沒有 leaderboard 這張 view(每台裝置只留最高分)。
-// 沒跑過最新的 sql/leaderboard.sql 就還沒有 —— 那時候查詢會 404。
-// 一樣不能讓排行榜整個掛掉:撞到就記下來,之後改走「整張表抓回來自己合併」的舊路。
-//
-// 認的是「結構性的壞」:4xx(view 不在、沒 grant 給 anon)、
-// 或是數不到 Content-Range(CORS 沒把那個表頭放出來)。這些重試一百次也一樣,
-// 直接換路。逾時、斷線這種不算 —— 那是網路的事,退回本機榜才是對的。
-let hasBoardView = true;
-function noteMissingView(err){
-  const m = String(err && err.message);
-  if(/HTTP 4\d\d/.test(m) || m.includes('Content-Range')){
-    hasBoardView = false;
-    return true;
+/* 你的分數贏過全場多少人。SCORE_DIST 是每 250 分一階的累計人數,
+   中間用內插 —— 玩家要的是「我大概贏過幾成的人」,不是精確到個位數。 */
+function beatCount(score){
+  const d = window.SCORE_DIST || [];
+  if(!d.length) return 0;
+  if(score <= d[0][0]) return d[0][1];
+  if(score >= d[d.length - 1][0]) return d[d.length - 1][1];
+  for(let i = 0; i < d.length - 1; i++){
+    const [s0, n0] = d[i], [s1, n1] = d[i + 1];
+    if(score >= s0 && score <= s1) return n0 + (n1 - n0) * (score - s0) / (s1 - s0);
   }
-  return false;
-}
-const BOARD_TOP = 20;     // 榜上顯示幾名
-const hiddenFilter = () => hasHiddenColumn ? '&hidden=is.false' : '';
-function noteMissingColumn(err){
-  if(String(err && err.message).includes('scores.hidden does not exist')){
-    hasHiddenColumn = false;
-    return true;
-  }
-  return false;
+  return d[d.length - 1][1];
 }
 
-// 打 Supabase 的 REST API。不載入 supabase-js —— 只是幾個 HTTP 請求,
-// 為它多背一個 CDN 相依(在校園網路下多一個會失敗的東西)不划算。
-async function boardFetch(path, opts = {}, timeoutMs = 6000){
-  const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
-  try{
-    const res = await fetch(BOARD.url.replace(/\/+$/, '') + '/rest/v1/' + path, {
-      ...opts,
-      signal: ctrl.signal,
-      headers: {
-        apikey: BOARD.anonKey,
-        Authorization: 'Bearer ' + BOARD.anonKey,
-        'Content-Type': 'application/json',
-        ...(opts.headers || {})
-      }
-    });
-    if(!res.ok) throw new Error('HTTP ' + res.status + ' ' + await res.text().catch(() => ''));
-    return res;
-  } finally { clearTimeout(timer); }
+function beatPercent(score){
+  return window.CREW_TOTAL ? Math.round(beatCount(score) / window.CREW_TOTAL * 100) : 0;
 }
 
-async function boardApi(path, opts, timeoutMs){
-  const text = await (await boardFetch(path, opts, timeoutMs)).text();
-  return text ? JSON.parse(text) : null;
+// 擊敗 = 分數嚴格高於對方。同分不算贏 —— 同分還敢說贏過人家很怪
+function crewBeaten(score){ return CREW.filter(c => score > c.score).length; }
+
+// 下一個目標:還沒被你超過的人裡面,分數最低的那一個
+function crewNext(score){
+  for(let i = CREW.length - 1; i >= 0; i--) if(CREW[i].score >= score) return CREW[i];
+  return null;
 }
 
-// 只要「有幾列」,不要內容。count=exact 會把總數放在 Content-Range 的斜線後面
-// (「0-0/1234」),配 limit=1 就只回一列 —— 我們要的是那個表頭,不是資料。
-// 一張表有幾萬列也一樣是這一個小請求。
-async function boardCount(path, timeoutMs){
-  const res = await boardFetch(path + '&limit=1',
-    { headers: { Prefer: 'count=exact' } }, timeoutMs);
-  await res.text();
-  const m = /\/(\d+)\s*$/.exec(res.headers.get('content-range') || '');
-  if(!m) throw new Error('沒有 Content-Range,數不出總數');
-  return Number(m[1]);
-}
-
+/* 成績只存在這支手機裡。留著是為了「你的最佳成績」和幹部榜上那一列 ——
+   沒有伺服器了,這是玩家唯一的紀錄。 */
 const Store = {
   KEY: 'pmsg_scores_v1',
-  DEV: 'pmsg_device_v1',
-  degraded: false,        // 設定有填,但伺服器連不上 —— 排行榜畫面要說出來
 
-  deviceId(){
-    let d = null;
-    try{ d = localStorage.getItem(this.DEV); }catch(e){}
-    if(!d){
-      d = 'd_' + Math.random().toString(36).slice(2,10);
-      try{ localStorage.setItem(this.DEV, d); }catch(e){}
-    }
-    return d;
-  },
-
-  /* ----- 本機(localStorage)----- */
-  localAll(){
+  all(){
     try{ return JSON.parse(localStorage.getItem(this.KEY)) || []; }
     catch(e){ return []; }
   },
-  localSubmit(entry){
-    const list = this.localAll();
-    const i = list.findIndex(r => r.nickname === entry.nickname);
-    if(i >= 0){ if(entry.score > list[i].score) list[i] = entry; }
-    else list.push(entry);
-    try{ localStorage.setItem(this.KEY, JSON.stringify(list)); }catch(e){}
+
+  save(entry){
+    const list = this.all();
+    list.push(entry);
+    // 只留最近 50 局 —— 再多也沒人看,而且 localStorage 有大小上限
+    try{ localStorage.setItem(this.KEY, JSON.stringify(list.slice(-50))); }catch(e){}
   },
 
-  /* ----- 同一支裝置只留最高分 -----
-     資料庫是 append-only(每一局都存),合併在這裡做。
-     先照分數排好再走一遍,每個 device_id 只留第一次遇到的那筆。 */
-  dedupe(rows){
-    const sorted = rows.slice().sort((a, b) =>
-      b.score - a.score || new Date(a.created_at || a.at) - new Date(b.created_at || b.at));
-    const seen = new Set(), out = [];
-    for(const r of sorted){
-      const key = r.device_id || r.device || r.nickname;
-      if(seen.has(key)) continue;
-      seen.add(key);
-      out.push(r);
-    }
-    return out;
-  },
-
-  /* ----- 寫入 -----
-     回傳 true 代表確定進了全場榜。伺服器失敗時照樣寫進本機,
-     讓玩家至少留得住自己的紀錄,但不會謊稱上榜。 */
-  async submit(entry){
-    this.localSubmit(entry);
-    if(!BOARD_ON) return false;
-    try{
-      await boardApi('scores', {
-        method: 'POST',
-        headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({
-          nickname: entry.nickname, score: entry.score,
-          correct: entry.correct, device_id: entry.device
-        })
-      });
-      this.degraded = false;
-      return true;
-    }catch(e){
-      this.degraded = true;
-      return false;
-    }
-  },
-
-  /* ----- 讀榜 -----
-     畫面上其實只要三件事:前 20 名、自己那一列、總共幾個人。
-     「同一支裝置只留最高分」的合併交給資料庫的 leaderboard view 做,
-     所以這三件事各自都是一個很小的請求 —— 幾 KB,跟榜上有幾千人無關。
-
-     (以前是把整張 scores 搬回手機自己合併的。人一破千,光是下載就要好幾秒,
-      而且每 15 秒還要再來一次 —— 攤位上幾十支手機同時在刷,那個做法撐不住。) */
-  async serverBoard(){
-    const dev = this.deviceId();
-    const cols = 'nickname,score,device_id,created_at';
-    const [top, total, mineRows] = await Promise.all([
-      boardApi('leaderboard?select=' + cols + '&order=score.desc,created_at.asc&limit=' + BOARD_TOP),
-      boardCount('leaderboard?select=device_id'),
-      boardApi('leaderboard?select=' + cols + '&device_id=eq.' + encodeURIComponent(dev))
-    ]);
-    const mine = (mineRows || [])[0] || null;
-    let rank = 0;
-    if(mine){
-      const i = (top || []).findIndex(r => r.device_id === dev);
-      // 排在我前面的有幾個人 = 我的名次 - 1。排序規則要跟榜上看到的一致:
-      // 分數高的在前,同分則早交的在前 —— 所以同分的那些人也要比 created_at。
-      // 已經在前 20 名裡面的話就不用多問這一次了。
-      rank = i >= 0 ? i + 1 : 1 + await boardCount(
-        'leaderboard?select=device_id&or=(score.gt.' + mine.score +
-        ',and(score.eq.' + mine.score +
-        ',created_at.lt.' + encodeURIComponent('"' + mine.created_at + '"') + '))');
-    }
-    return { source: 'server', top: top || [], total, me: mine ? { row: mine, rank } : null };
-  },
-
-  /* 把「合併、排好的一整排人」收成畫面要的那三件事。
-     退回舊路(整張表自己合併)和本機模式都走這裡,好讓呼叫端只認得一種形狀。 */
-  shape(rows){
-    const dev = this.deviceId();
-    const i = rows.findIndex(r => (r.device_id || r.device) === dev);
-    return {
-      top: rows.slice(0, BOARD_TOP),
-      total: rows.length,
-      me: i >= 0 ? { row: rows[i], rank: i + 1 } : null
-    };
-  },
-
-  localBoard(){
-    return { source: 'local', ...this.shape(this.dedupe(this.localAll())) };
-  },
-
-  /* ----- 舊路:整張表抓回來自己合併 -----
-     只有在資料庫還沒有 leaderboard view 的時候才會走到(sql 還沒重跑)。
-     慢,但是對的 —— 名次和總人數是所有人一起比出來的,少抓幾筆就全錯。
-
-     不能只丟一個大 limit:PostgREST 一次最多回 1000 列(Supabase 的 max-rows),
-     limit=2000 也只會拿到前 1000 筆,而且不會報錯 —— 就是安安靜靜地少一半。
-     所以分頁抓完為止,每頁 1000 筆。
-
-     翻頁用「created_at 大於上一頁最後一筆」當游標,不用 offset:
-     資料表只會往後長,抓到一半有人交成績的話,offset 會讓後面每一頁
-     整個位移、漏掉一列;游標式的分頁,新資料永遠落在最後面,
-     翻過的頁不受影響。 */
-  PAGE: 1000,
-  MAX_PAGES: 60,          // 6 萬筆的保險絲,免得哪天游標壞掉就無限翻頁
-
-  async fetchPages(since){
-    const out = [];
-    let cursor = since;
-    for(let i = 0; i < this.MAX_PAGES; i++){
-      const ask = () => boardApi('scores?select=nickname,score,device_id,created_at' +
-        hiddenFilter() +
-        (cursor ? '&created_at=gt.' + encodeURIComponent(cursor) : '') +
-        '&order=created_at.asc&limit=' + this.PAGE, {}, 12000);   // 一頁比以前大,逾時放寬
-      let rows;
-      try{ rows = await ask(); }
-      catch(e){ if(!noteMissingColumn(e)) throw e; rows = await ask(); }
-      if(!rows || !rows.length) break;
-      out.push(...rows);
-      cursor = rows[rows.length - 1].created_at;
-      if(rows.length < this.PAGE) break;      // 最後一頁沒滿 = 抓完了
-    }
-    return out;
-  },
-
-  /* 抓回來的列留在記憶體裡,15 秒的自動重讀只補「比最新那筆還新」的部分。
-     成績只會新增不會改動,所以增量是對的 —— 但工作人員下架動的是既有的列、
-     created_at 不會變,增量看不到。所以呼叫端該重來一次完整的時候會傳 fresh。 */
-  cache: null,            // { rows, lastAt }
-
-  async loadAll(fresh){
-    if(fresh || !this.cache) this.cache = { rows: [], lastAt: null };
-    const c = this.cache;
-    const got = await this.fetchPages(c.lastAt);   // 中途失敗就整批不要,下次重抓
-    if(got.length){
-      c.rows = c.rows.concat(got);
-      c.lastAt = got[got.length - 1].created_at;
-    }
-    return c.rows;
-  },
-
-  async top(fresh){
-    if(BOARD_ON){
-      if(hasBoardView){
-        try{
-          const out = await this.serverBoard();
-          this.degraded = false;
-          return out;
-        }catch(e){
-          // 只有結構性的壞才退到舊路;連不上就是連不上,不用把整張表再拖一次
-          if(!noteMissingView(e)){ this.degraded = true; return this.localBoard(); }
-        }
-      }
-      try{
-        const rows = await this.loadAll(fresh);
-        this.degraded = false;
-        return { source: 'server', ...this.shape(this.dedupe(rows)) };
-      }catch(e){
-        this.degraded = true;
-      }
-    }
-    return this.localBoard();
-  },
-
-  /* ----- 暱稱是不是被「別台裝置」用走了 -----
-     只有伺服器明確回答「有」才擋人。查詢失敗一律放行 ——
-     現場網路不穩的時候,擋住玩家開局比讓兩個小明上榜嚴重得多。 */
-  async nicknameTaken(nick){
-    if(!BOARD_ON) return false;
-    // 逾時要短 —— 網路掛掉時每次開局都卡在這裡等,比撞名難受
-    const ask = () => boardApi('scores?select=device_id' + hiddenFilter() +
-      '&nickname=eq.' + encodeURIComponent(nick) +
-      '&device_id=neq.' + encodeURIComponent(this.deviceId()) + '&limit=1', {}, 1500);
-    try{
-      let rows;
-      try{ rows = await ask(); }
-      catch(e){ if(!noteMissingColumn(e)) throw e; rows = await ask(); }
-      return Array.isArray(rows) && rows.length > 0;
-    }catch(e){
-      return false;
-    }
-  }
+  best(){ return this.all().reduce((m, r) => Math.max(m, r.score || 0), 0); },
+  plays(){ return this.all().length; }
 };
 
 /* ---------- 出題 ---------- */
@@ -1275,20 +1066,7 @@ async function startGame(){
 
   const nick = $('nick').value.trim();
 
-  // 撞名檢查:榜上是靠 device_id 認人的,兩支手機都叫「小明」不會互相蓋掉分數,
-  // 但榜上會並排兩個小明,誰也分不出哪個是自己。所以在進場時就先擋。
-  // 查不到答案(網路慢、伺服器掛)一律放行 —— 擋住玩家開局比兩個小明嚴重得多。
-  const btn = $('btn-start');
-  const label = btn.textContent;
-  btn.disabled = true; btn.textContent = '檢查暱稱⋯';
-  const taken = await Store.nicknameTaken(nick);
-  btn.disabled = false; btn.textContent = label;
-  if(taken){
-    showNickError('這個暱稱已經有人用了,換一個吧');
-    $('nick').focus();
-    return;
-  }
-
+  // 沒有共用的榜了,所以也沒有撞名問題 —— 暱稱只出現在這支手機上
   G.nickname = nick;
   G.questions = buildQuestions();
   G.index = 0; G.total = 0; G.log = [];
@@ -1430,19 +1208,38 @@ function finish(){
     nickname: G.nickname,
     score: G.total,
     correct: G.log.filter(r => r.correct).length,
-    device: Store.deviceId(),
     at: Date.now()
   };
+  const prevBest = Store.best();
+  Store.save(entry);
   const rank = titleFor(G.total);
   $('res-title').textContent = rank.title;
   $('res-line').textContent  = rank.line;
   $('res-score').textContent = G.total.toLocaleString();
 
-  // 名次要等伺服器回話,但結算畫面不能等 —— 這是整局情緒的高點,
-  // 先把稱號和分數放出來,名次晚一秒補上就好。
-  const baseMeta = `答對 ${entry.correct} 題,共 ${CONFIG.questionCount} 題`;
-  $('res-meta').textContent = baseMeta + (BOARD_ON ? ' · 名次計算中⋯' : '');
-  reportRank(entry, baseMeta);
+  /* 兩個數字都在這支手機上算完,不連線:
+       擊敗幾位幹部 —— 有名有姓的對手,比抽象的名次好懂
+       贏過全場多少 —— 每個人都有數字,不會出現「擊敗 0 位」的挫折 */
+  const beaten = crewBeaten(G.total);
+  $('res-meta').textContent =
+    `答對 ${entry.correct} 題,共 ${CONFIG.questionCount} 題` +
+    ` · 擊敗 ${beaten}/${CREW.length} 位幹部` +
+    ` · 贏過全場 ${beatPercent(G.total)}%`;
+
+  // 差一點點就能超過某個人 —— 這是最好的「再玩一次」理由
+  const next = crewNext(G.total);
+  const nextEl = $('res-next');
+  if(next){
+    const gap = next.score - G.total + 1;
+    nextEl.innerHTML = `再 <b>${gap.toLocaleString()}</b> 分就能贏過 <b>${escapeHtml(next.name)}</b>`;
+  }else{
+    nextEl.innerHTML = `<b>五十五位幹部全部擊敗</b> —— 沒有人在你前面了`;
+  }
+  nextEl.hidden = false;
+
+  if(prevBest && G.total > prevBest){
+    nextEl.innerHTML += `<br>這支手機的新紀錄(上次最好 ${prevBest.toLocaleString()} 分)`;
+  }
 
   // 畫面上不寫任何領獎規則 —— 現場關主用講的。
   // 這裡只留「幾分鐘前跑出來的」,關主一眼就能分辨現場成績和翻出來的舊截圖。
@@ -1466,88 +1263,52 @@ function finish(){
   show('screen-result');
 }
 
-/* 上傳成績,然後把名次補到結算畫面上。
-   任何一步失敗都只是少一行字,不會影響玩家看到自己的分數與稱號。 */
-async function reportRank(entry, baseMeta){
-  const uploaded = await Store.submit(entry);
-  const { total, me: mine, source } = await Store.top();
+/* ---------- 幹部榜 ---------- */
 
-  if(source === 'server' && uploaded){
-    $('res-meta').textContent = baseMeta +
-      (mine ? ` · 全場第 ${mine.rank} 名,共 ${total} 人` : '');
-    return;
-  }
-
-  // 沒進全場榜的話講清楚是本機成績,不要含糊帶過
-  const best = mine && mine.row;
-  $('res-meta').textContent = baseMeta +
-    (best && best.score > entry.score
-      ? ` · 這支手機的最佳成績 ${best.score.toLocaleString()} 分` : '') +
-    (BOARD_ON && !uploaded ? ' · 連不上伺服器,成績只存在這支手機' : '');
-}
-
-/* ---------- 排行榜 ---------- */
-
-
-function boardRowHtml(r, rank, mine, detached){
+function crewRowHtml(r){
   const cls = ['rowitem'];
-  if(rank <= 3) cls.push('top' + rank);
-  if(mine) cls.push('me');
-  if(detached) cls.push('detached');
+  if(r.me) cls.push('me');
+  if(r.beaten) cls.push('beaten');
   return `<div class="${cls.join(' ')}">
-      <div class="rk">${rank}</div>
-      <div class="nm">${escapeHtml(r.nickname)}</div>
-      <div class="sc">${Number(r.score).toLocaleString()}</div>
+      <div class="rk">${r.rank}</div>
+      <div class="nm">${escapeHtml(r.name)}${r.tag ? `<span class="tag">${r.tag}</span>` : ''}</div>
+      <div class="sc">${r.score.toLocaleString()}</div>
     </div>`;
 }
 
-async function renderBoard(fresh){
+/* 整張榜一次畫完(55 列,不會卡),你自己那一列插在該在的位置。
+   打開的時候捲到自己那裡 —— 玩家第一眼要看到的是「我在哪」,
+   不是第一名是誰。 */
+function renderBoard(){
   show('screen-board');
   const list = $('board-list'), note = $('board-note');
+  const best = Store.best();
+  const beaten = crewBeaten(best);
 
-  if(!list.children.length) list.innerHTML = '<div class="empty">正在讀取⋯</div>';
+  const rows = CREW.map((c, i) => ({
+    rank: i + 1, name: c.name, score: c.score,
+    beaten: best > c.score,
+    tag: best > c.score ? '已擊敗' : ''
+  }));
 
-  const { top, total, me: mine, source } = await Store.top(fresh);
-  const dev = Store.deviceId();
-
-  if(!top.length){
-    list.innerHTML = `<div class="empty">
-        <b>還沒有人上榜</b>
-        當第一個吧。
-      </div>`;
-  }else{
-    let html = top.map((r, i) =>
-      boardRowHtml(r, i + 1, (r.device_id || r.device) === dev, false)).join('');
-
-    // 自己掉出前 20 名的話,把自己那一列接在後面 —— 不然玩家根本找不到自己
-    if(mine && mine.rank > BOARD_TOP) html += boardRowHtml(mine.row, mine.rank, true, true);
-
-    list.innerHTML = html;
+  if(best > 0){
+    const at = rows.filter(r => r.score >= best).length;
+    rows.splice(at, 0, {
+      rank: '你', name: G.nickname || '你的最佳成績', score: best, me: true,
+      tag: `擊敗 ${beaten} 位`
+    });
   }
 
-  // 現在看到的到底是哪一種榜 —— 這行不能省。
-  // 玩家以為自己上了全場榜、結果只是存在自己手機裡,是最糟的誤解。
-  if(source === 'server'){
-    note.innerHTML = `目前一共 ${total} 位玩家投入流唱社的懷抱，同一支手機只計最高分喔！`;
-  }else if(BOARD_ON){
-    note.innerHTML = `<b>連不上伺服器</b> —— 下面只有這支手機的分數。分數有存下來,網路恢復後再打開就會重新讀取。`;
-  }else{
-    note.innerHTML = `<b>目前只有這支手機的分數</b> —— 全場共用的榜還沒接上伺服器。`;
-  }
+  list.innerHTML = rows.map(crewRowHtml).join('');
 
+  note.innerHTML = best > 0
+    ? `你的最佳 <b>${best.toLocaleString()}</b> 分 —— 擊敗 <b>${beaten}</b> / ${CREW.length} 位幹部,贏過全場 <b>${beatPercent(best)}%</b>。`
+    : `聯展前兩天,社團的人自己先玩了一輪 —— 這 ${CREW.length} 個成績都是真的。玩一局,看你能擊敗幾個。`;
+
+  // 只捲列表自己,不要用 scrollIntoView —— 那會連整頁一起捲,把標題推出畫面
+  const meRow = list.querySelector('.rowitem.me');
+  if(meRow) list.scrollTop = meRow.offsetTop - list.clientHeight / 2 + meRow.offsetHeight / 2;
 }
-
-/* 沒有定時刷新 —— 排行榜只在「被打開的那一下」讀。
-
-   以前是開著就每 15 秒重讀一次。那個設計是給攤位想的:一支手機擺在桌上當公開榜,
-   要自己會動。但放到網路上就變成純粹的浪費 —— 一個人把排行榜擺著不管一小時,
-   就是 240 次沒有人在看的讀取,而且切到背景照樣刷。走紅之後這是最大的一筆流量。
-
-   現在讀的時機只有兩個:按下「排行榜」的那一下,以及切回這個分頁的時候
-   (畫面還停在排行榜的話)。想看新的就退出去再進來 —— 那本來就是一個動作。 */
-document.addEventListener('visibilitychange', () => {
-  if(!document.hidden && !$('screen-board').hidden) renderBoard(true);
-});
 
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c =>
