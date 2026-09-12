@@ -289,18 +289,40 @@ speedScore: 700,      // 速度分上限
 
 ### 資料是怎麼存的
 
-資料庫是 append-only,每一局都存一筆(之後要看遊玩次數、時段分布都還有原始資料);
-「同裝置只留最高分」是讀榜時在前端合併的 —— 所以**整張表都得抓回來**,
-名次和總人數是全部人一起比出來的,少抓幾筆不是少幾列,是每個人的名次都會錯。
+資料庫是 append-only,每一局都存一筆(之後要看遊玩次數、時段分布都還有原始資料)。
+一天下來就是兩萬多筆 —— 所以**合併要在資料庫做**,不能搬回手機:
 
-PostgREST 一次最多只回 **1000 列**(Supabase 的 max-rows),`limit` 開再大也一樣,
-而且不會報錯 —— 就是安靜地少一半。所以讀榜和 `staff.html` 都是**自己翻頁**抓完為止:
-每頁 1000 筆,用「`created_at` 大於上一頁最後一筆」當游標,不用 `offset`
-(資料表只會往後長,翻到一半有人交成績的話 `offset` 會讓後面每頁位移、漏掉一列)。
+```sql
+create view public.leaderboard as
+select distinct on (device_id) device_id, nickname, score, correct, created_at
+from public.scores where not hidden
+order by device_id, score desc, created_at asc;
+```
 
-排行榜畫面開著的時候每 15 秒重讀一次,平常**只補比手上最新那筆還新的成績**,
-不用整張重抓;但工作人員下架動的是既有的列、`created_at` 不會變,增量看不到 ——
-所以每次重新打開排行榜、以及超過兩分鐘,都會整張重抓一次。
+畫面上其實只要三件事,各自都是一個很小的請求,跟榜上有幾千人無關:
+
+| 要什麼 | 怎麼問 |
+| --- | --- |
+| 前 20 名 | `leaderboard?order=score.desc,created_at.asc&limit=20` |
+| 總共幾個人 | `Prefer: count=exact`,答案在 `Content-Range` 的斜線後面(`0-0/1234`) |
+| 我第幾名 | 數「排在我前面的有幾個」:`or=(score.gt.X,and(score.eq.X,created_at.lt.T))`,加一 |
+
+同分的人要比 `created_at`(早交的在前),不然報出來的名次會跟榜上看到的順序對不上。
+已經在前 20 名裡面的話就不用多問那一次。
+
+**沒有那張 view 的時候**(`sql/leaderboard.sql` 還沒重跑)會 404,那就退回舊路:
+整張表分頁抓回來自己合併。慢,但是對的 —— 名次和總人數是全部人一起比出來的,
+少抓幾筆不是少幾列,是每個人的名次都會錯。退回的條件只認**結構性的壞**
+(4xx、CORS 沒放出 `Content-Range`);逾時、斷線不算,那是網路的事,該退回本機榜。
+
+翻頁時要注意:PostgREST 一次最多只回 **1000 列**(Supabase 的 max-rows),`limit` 開再大
+也一樣,而且不會報錯 —— 就是安靜地少一半。所以舊路和 `staff.html` 都是自己翻頁抓完為止,
+用「`created_at` 大於上一頁最後一筆」當游標,不用 `offset`(資料表只會往後長,翻到一半
+有人交成績的話 `offset` 會讓後面每頁位移、漏掉一列)。
+
+`staff.html` 要的是原始資料(誰玩了幾次、整台下架要動哪幾筆),所以還是整張抓。
+列表一次最多畫 300 列 —— 兩萬多列全塞進 DOM 會讓整頁卡住好幾秒,而且沒有人會捲到第五千列。
+「一鍵下架」只吃畫出來的那些:按下去動到的必須就是眼睛看得到的人。
 
 沒有用 supabase-js,直接 `fetch` 打它的 REST API —— 為了兩個 HTTP 請求多背一個 CDN 相依
 (在校園網路下就是多一個會失敗的東西)不划算。

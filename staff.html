@@ -262,7 +262,7 @@ $('logout').addEventListener('click', () => {
    抓完再照分數排 —— 下面的 view() 是吃「已經照分數排好」的 rows。 */
 const PAGE = 1000, MAX_PAGES = 60;
 
-async function fetchAll(){
+async function fetchAll(onProgress){
   const out = [];
   let cursor = null;
   for(let i = 0; i < MAX_PAGES; i++){
@@ -272,6 +272,7 @@ async function fetchAll(){
     if(!page || !page.length) break;
     out.push(...page);
     cursor = page[page.length - 1].created_at;
+    if(onProgress) onProgress(out.length);
     if(page.length < PAGE) break;            // 最後一頁沒滿 = 抓完了
   }
   return out.sort((a, b) =>
@@ -283,7 +284,7 @@ async function load(){
   const btn = $('refresh');
   btn.disabled = true;
   try{
-    rows = await fetchAll();
+    rows = await fetchAll(n => say($('msg'), `讀取中⋯ 已 ${n.toLocaleString()} 筆`));
     say($('msg'), '');
   }catch(err){
     say($('msg'), '讀取失敗:' + err.message, 'bad');
@@ -352,8 +353,16 @@ function view(){
   return { list: out, best };
 }
 
+/* 一次最多畫幾列。全部畫出來是兩萬多個列 —— 瀏覽器會卡住好幾秒,
+   而且沒有人會捲到第五千列。要找特定的人就用上面的搜尋。
+
+   「一鍵下架」也只吃畫出來的這些 —— 工作人員按下去的時候,
+   動到的必須就是眼睛看得到的那些人,不能偷偷多處理沒列出來的。 */
+const SHOW_MAX = 300;
+
 function render(){
-  const { list, best } = view();
+  const { list: all, best } = view();
+  const list = all.slice(0, SHOW_MAX);
   const live = rows.filter(r => !r.hidden);
   const devices = new Set(live.map(r => r.device_id)).size;
   $('stat').innerHTML = `榜上 <b>${devices}</b> 位玩家 · 總紀錄 <b>${rows.length}</b> 筆 · 已下架 <b>${rows.filter(r => r.hidden).length}</b> 筆`;
@@ -370,6 +379,7 @@ function render(){
     return;
   }
 
+  const more = all.length - list.length;
   const bulk = bulkTargets(list);
   const bulkBtn = $('bulk');
   bulkBtn.hidden = !bulk.ids.length;
@@ -404,6 +414,13 @@ function render(){
         <div class="meta">${Number(r.score).toLocaleString()} 分 · 答對 ${r.correct} 題 · ${when} · ${esc(r.device_id)}</div>
       </div>`;
   }).join('');
+
+  if(more > 0){
+    $('list').insertAdjacentHTML('beforeend',
+      `<div class="empty">這個篩選還有 ${more.toLocaleString()} 筆沒列出來(一次最多 ${SHOW_MAX} 列)。` +
+      `<br>最上面的統計算的是全部;「一鍵下架」只會動到這裡列出來的這些人。` +
+      `<br>要找特定的人,用上面的搜尋。</div>`);
+  }
 
   $('list').querySelectorAll('button[data-act]').forEach(b => {
     b.addEventListener('click', () => act(b.dataset.act, b.dataset.id));

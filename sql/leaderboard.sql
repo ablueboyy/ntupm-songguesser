@@ -130,3 +130,37 @@ create policy "staff can delete" on public.scores
 
 -- 也可以完全不用 staff.html,直接到後台 Table Editor 改
 -- (後台走 service role,不受上面任何政策限制)。
+
+-- ══════════════════════════════════════════════════════════════
+-- 排行榜的 view:每台裝置只留最高分的那一列
+--
+-- 以前是把整張 scores 抓回手機、在前端合併的。人一破千,光是把資料
+-- 搬下來就要好幾秒 —— 但畫面上其實只需要「前 20 名 + 自己 + 總人數」。
+-- 合併搬到資料庫做,前端就只要問這三件事,每次都是幾 KB。
+--
+-- 排序規則要跟前端原本那套一模一樣:分數高的在前,同分則早交的在前。
+-- ══════════════════════════════════════════════════════════════
+
+-- distinct on 就是照這條索引的順序走
+create index if not exists scores_best_idx
+  on public.scores (device_id, score desc, created_at asc);
+
+drop view if exists public.leaderboard;
+create view public.leaderboard as
+select distinct on (device_id)
+  device_id, nickname, score, correct, created_at
+from public.scores
+where not hidden
+order by device_id, score desc, created_at asc;
+
+-- view 預設是用建立者的身分去讀底層表。這張 view 底下的 scores 本來就
+-- 開放所有人 select,兩種身分讀到的東西一樣 —— 但還是設成 invoker 比較乾淨
+-- (也免得 Supabase 後台一直跳 security definer view 的警告)。
+-- PostgreSQL 15 以前沒有這個選項,失敗就算了,不影響功能。
+do $$
+begin
+  execute 'alter view public.leaderboard set (security_invoker = true)';
+exception when others then null;
+end $$;
+
+grant select on public.leaderboard to anon, authenticated;
