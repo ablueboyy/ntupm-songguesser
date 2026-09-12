@@ -196,6 +196,15 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 .startfoot a:active{color:var(--foam)}
 .startfoot button{padding:var(--s2) 0;color:var(--dim)}
 
+/* 出處。刻意做得比所有東西都小、都暗 —— 它不是給玩家看的資訊,
+   是標明這 30 秒片段來自哪裡。標出處對合理使用的判斷是加分的,
+   而且遊戲本來就沒有散布任何音檔:瀏覽器是直接去 Apple 的伺服器拿。 */
+.credit{
+  margin-top:var(--s2);
+  font-size:.6875rem;line-height:1.6;letter-spacing:.02em;
+  color:rgba(207,202,240,.38);font-weight:var(--w-quiet);
+}
+
 /* ═══════════ 載入 ═══════════ */
 #screen-load{align-items:center;justify-content:center;text-align:center;gap:var(--s5)}
 .spin{
@@ -574,6 +583,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
     </a>
     <button type="button" id="btn-board-1">幹部榜</button>
   </div>
+  <div class="credit">音源:Apple Music 官方試聽</div>
 </div>
 
 <!-- ═══════════ 載入 ═══════════ -->
