@@ -827,18 +827,61 @@ const Store = {
   },
 
   /* ----- 讀榜 -----
-     一次抓 500 筆再在前端合併。攤位一天的量遠遠不到這個數,
-     真的爆掉的話再改成資料庫的 view 做合併。 */
-  async top(){
+     整張表都要抓回來 —— 名次和總人數是「所有人一起比」算出來的,
+     少抓的那幾筆不是少幾列而已,是每個人的名次都會錯。
+
+     不能只丟一個大 limit:PostgREST 一次最多回 1000 列(Supabase 的 max-rows),
+     limit=2000 也只會拿到前 1000 筆,而且不會報錯 —— 就是安安靜靜地少一半。
+     所以改成分頁抓完為止,每頁 1000 筆。
+
+     翻頁用「created_at 大於上一頁最後一筆」當游標,不用 offset:
+     資料表只會往後長,抓到一半有人交成績的話,offset 會讓後面每一頁
+     整個位移、漏掉一列;游標式的分頁,新資料永遠落在最後面,
+     翻過的頁不受影響。 */
+  PAGE: 1000,
+  MAX_PAGES: 60,          // 6 萬筆的保險絲,免得哪天游標壞掉就無限翻頁
+
+  async fetchPages(since){
+    const out = [];
+    let cursor = since;
+    for(let i = 0; i < this.MAX_PAGES; i++){
+      const ask = () => boardApi('scores?select=nickname,score,device_id,created_at' +
+        hiddenFilter() +
+        (cursor ? '&created_at=gt.' + encodeURIComponent(cursor) : '') +
+        '&order=created_at.asc&limit=' + this.PAGE, {}, 12000);   // 一頁比以前大,逾時放寬
+      let rows;
+      try{ rows = await ask(); }
+      catch(e){ if(!noteMissingColumn(e)) throw e; rows = await ask(); }
+      if(!rows || !rows.length) break;
+      out.push(...rows);
+      cursor = rows[rows.length - 1].created_at;
+      if(rows.length < this.PAGE) break;      // 最後一頁沒滿 = 抓完了
+    }
+    return out;
+  },
+
+  /* 抓回來的列留在記憶體裡,15 秒的自動重讀只補「比最新那筆還新」的部分。
+     成績只會新增不會改動,所以增量是對的 —— 但工作人員下架動的是既有的列、
+     created_at 不會變,增量看不到。所以呼叫端該重來一次完整的時候會傳 fresh。 */
+  cache: null,            // { rows, lastAt }
+
+  async loadAll(fresh){
+    if(fresh || !this.cache) this.cache = { rows: [], lastAt: null };
+    const c = this.cache;
+    const got = await this.fetchPages(c.lastAt);   // 中途失敗就整批不要,下次重抓
+    if(got.length){
+      c.rows = c.rows.concat(got);
+      c.lastAt = got[got.length - 1].created_at;
+    }
+    return c.rows;
+  },
+
+  async top(fresh){
     if(BOARD_ON){
-      const ask = () => boardApi('scores?select=nickname,score,correct,device_id,created_at' +
-        hiddenFilter() + '&order=score.desc,created_at.asc&limit=500');
       try{
-        let rows;
-        try{ rows = await ask(); }
-        catch(e){ if(!noteMissingColumn(e)) throw e; rows = await ask(); }
+        const rows = await this.loadAll(fresh);
         this.degraded = false;
-        return { rows: this.dedupe(rows || []), source: 'server' };
+        return { rows: this.dedupe(rows), source: 'server' };
       }catch(e){
         this.degraded = true;
       }
@@ -1038,8 +1081,8 @@ $('btn-vol').addEventListener('click', () => {
 
 $('btn-start').addEventListener('click', startGame);
 $('btn-again').addEventListener('click', () => show('screen-start'));
-$('btn-board-1').addEventListener('click', () => renderBoard());
-$('btn-board-2').addEventListener('click', () => renderBoard());
+$('btn-board-1').addEventListener('click', () => renderBoard(true));
+$('btn-board-2').addEventListener('click', () => renderBoard(true));
 $('btn-back').addEventListener('click', () => show('screen-start'));
 
 /* ---------- 開局 ---------- */
@@ -1304,6 +1347,7 @@ async function reportRank(entry, baseMeta){
 /* ---------- 排行榜 ---------- */
 
 let boardTimer = null;
+let boardFullAt = 0;      // 上次整張重抓的時間
 
 function boardRowHtml(r, rank, mine, detached){
   const cls = ['rowitem'];
@@ -1317,13 +1361,14 @@ function boardRowHtml(r, rank, mine, detached){
     </div>`;
 }
 
-async function renderBoard(){
+async function renderBoard(fresh){
   show('screen-board');
   const list = $('board-list'), note = $('board-note');
 
   if(!list.children.length) list.innerHTML = '<div class="empty">正在讀取⋯</div>';
 
-  const { rows, source } = await Store.top();
+  if(fresh) boardFullAt = Date.now();
+  const { rows, source } = await Store.top(fresh);
   const me = Store.deviceId();
 
   if(!rows.length){
@@ -1358,7 +1403,9 @@ async function renderBoard(){
   if(source === 'server'){
     boardTimer = setInterval(() => {
       if($('screen-board').hidden){ clearInterval(boardTimer); return; }
-      renderBoard();
+      // 平常只補新進來的成績;超過兩分鐘就整張重抓一次,
+      // 這樣工作人員下架的人才會從榜上消失 —— 下架不會改 created_at,增量抓不到。
+      renderBoard(Date.now() - boardFullAt > 120000);
     }, 15000);
   }
 }

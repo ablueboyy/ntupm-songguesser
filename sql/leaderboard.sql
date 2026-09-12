@@ -19,6 +19,10 @@ alter table public.scores add column if not exists hidden boolean not null defau
 create index if not exists scores_score_idx  on public.scores (score desc, created_at asc);
 create index if not exists scores_device_idx on public.scores (device_id, created_at desc);
 
+-- 排行榜和工作人員頁都是照 created_at 由舊到新分頁把整張表抓回來的
+-- (PostgREST 一次最多只回 1000 列,人一多就一定要翻頁)。這條索引就是給那個翻頁用的。
+create index if not exists scores_created_idx on public.scores (created_at asc);
+
 -- ══════════════════════════════════════════════════════════════
 -- 資料合理性
 --

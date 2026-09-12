@@ -251,16 +251,45 @@ $('logout').addEventListener('click', () => {
   say($('login-msg'), '已登出', 'good');
 });
 
-/* ---------- 讀資料 ---------- */
+/* ---------- 讀資料 ----------
+
+   要整張表,所以得自己翻頁。PostgREST 一次最多回 1000 列(Supabase 的 max-rows),
+   limit 寫 2000 也只會拿到前 1000 筆,而且不會報錯 —— 就是安靜地少一半,
+   上面的人數統計跟著全錯。
+
+   翻頁用「created_at 大於上一頁最後一筆」當游標,不用 offset:
+   翻到一半有玩家交成績的話,offset 會讓後面每一頁整個位移、漏掉一列。
+   抓完再照分數排 —— 下面的 view() 是吃「已經照分數排好」的 rows。 */
+const PAGE = 1000, MAX_PAGES = 60;
+
+async function fetchAll(){
+  const out = [];
+  let cursor = null;
+  for(let i = 0; i < MAX_PAGES; i++){
+    const page = await api('scores?select=id,nickname,score,correct,device_id,created_at,hidden' +
+      (cursor ? '&created_at=gt.' + encodeURIComponent(cursor) : '') +
+      '&order=created_at.asc&limit=' + PAGE);
+    if(!page || !page.length) break;
+    out.push(...page);
+    cursor = page[page.length - 1].created_at;
+    if(page.length < PAGE) break;            // 最後一頁沒滿 = 抓完了
+  }
+  return out.sort((a, b) =>
+    b.score - a.score || new Date(a.created_at) - new Date(b.created_at));
+}
+
 async function load(){
   armed = null; armedBulk = false;
+  const btn = $('refresh');
+  btn.disabled = true;
   try{
-    rows = await api('scores?select=id,nickname,score,correct,device_id,created_at,hidden' +
-                     '&order=score.desc,created_at.asc&limit=2000');
+    rows = await fetchAll();
     say($('msg'), '');
   }catch(err){
     say($('msg'), '讀取失敗:' + err.message, 'bad');
     return;
+  }finally{
+    btn.disabled = false;
   }
   render();
 }
