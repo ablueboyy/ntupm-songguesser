@@ -378,6 +378,48 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 
 .row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
 
+/* ═══════════ 兩個模式 ═══════════
+   按鈕裡塞第二行小字:上面是模式名,下面是「你目前最好到哪」——
+   開始畫面要回答的問題是「我要玩哪一個」,那一行就是答案的依據。 */
+.modes{display:flex;flex-direction:column;gap:var(--s3)}
+.modes .btn{padding:var(--s3) var(--s4);line-height:1.35}
+.modes .btn .t{display:block}
+.modes .btn .sub{
+  display:block;margin-top:2px;
+  font-size:var(--t-small);font-weight:var(--w-quiet);letter-spacing:.02em;
+  opacity:.72;
+}
+.modes .btn .sub:empty{display:none}
+
+/* ═══════════ 闖關:過關畫面 ═══════════
+   解鎖是這個模式最爽的一刻,所以它獨佔一屏 ——
+   夾在兩關中間彈個 toast 就過去的話,玩家根本不會發現曲庫變大了。 */
+#screen-stage{justify-content:center;gap:var(--s6)}
+.stagecard .tag{
+  font-size:var(--t-small);font-weight:var(--w-item);
+  color:var(--dim);letter-spacing:.22em;
+}
+.stagecard .big{
+  margin:var(--s3) 0 0;
+  font-weight:var(--w-title);font-size:var(--t-h1);line-height:1.2;color:var(--bottle);
+}
+.stagecard .line{
+  margin-top:var(--s3);font-size:var(--t-small);line-height:1.9;
+  color:var(--dim);font-weight:var(--w-quiet);
+}
+.stagecard .line:empty{display:none}
+.stagecard .facts{
+  margin:var(--s5) 0 0;padding:0;list-style:none;
+  display:flex;flex-direction:column;
+}
+.stagecard .facts li{
+  display:flex;justify-content:space-between;gap:var(--s4);align-items:baseline;
+  padding:var(--s3) 0;border-top:1px solid var(--line);font-size:var(--t-small);
+}
+.stagecard .facts .k{color:var(--dim);font-weight:var(--w-quiet)}
+.stagecard .facts .v{font-weight:var(--w-item);font-variant-numeric:tabular-nums}
+.stagecard .facts .v.hot{color:var(--bottle)}
+
 /* ═══════════ 排行榜 ═══════════ */
 /* 幹部榜有 56 列,一定比一屏長。把這一屏鎖成視窗高度,
    標題、「你擊敗幾位」和「返回」就固定在原位,只有名單自己捲 ——
@@ -435,7 +477,7 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   <div class="entry">
     <div class="field">
       <label class="label" for="nick">暱稱</label>
-      <input type="text" id="nick" maxlength="8" placeholder="2–8 個字,會顯示在排行榜上的名字" autocomplete="off" enterkeyhint="done">
+      <input type="text" id="nick" maxlength="8" placeholder="2–8 個字,只會出現在這支手機上" autocomplete="off" enterkeyhint="done">
       <div class="fielderr" id="nick-err" hidden></div>
     </div>
 
@@ -464,7 +506,14 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 
   <div class="rule"></div>
 
-  <button class="btn" id="btn-start" disabled>開始遊戲</button>
+  <div class="modes">
+    <button class="btn" id="btn-speed" disabled>
+      <span class="t">競速模式</span><span class="sub" id="speed-best"></span>
+    </button>
+    <button class="btn ghost" id="btn-stage" disabled>
+      <span class="t">闖關模式</span><span class="sub" id="stage-best"></span>
+    </button>
+  </div>
 
   <div class="startfoot">
     <a href="https://www.instagram.com/ntupm__18th" target="_blank" rel="noopener" aria-label="Instagram @ntupm__18th">
@@ -556,7 +605,19 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
   </div>
 </div>
 
-<!-- ═══════════ 排行榜 ═══════════ -->
+<!-- ═══════════ 闖關:過關 ═══════════ -->
+<div class="screen" id="screen-stage" hidden>
+  <div class="stagecard">
+    <div class="tag" id="st-tag"></div>
+    <div class="big" id="st-big"></div>
+    <div class="line" id="st-line"></div>
+    <ul class="facts" id="st-facts"></ul>
+  </div>
+  <button class="btn" id="btn-stage-go"></button>
+  <button class="btn ghost" id="btn-stage-quit">先不玩了</button>
+</div>
+
+<!-- ═══════════ 幹部榜 ═══════════ -->
 <div class="screen" id="screen-board" hidden>
   <div class="board-head">
     <h2>流唱社幹部榜</h2>
@@ -594,7 +655,36 @@ const CONFIG = {
 const FOREIGN_GENRES = ['kpop', 'west', 'jp'];
 
 const $ = id => document.getElementById(id);
-const SCREENS = ['screen-start','screen-load','screen-play','screen-result','screen-board'];
+/* ---------- 闖關模式的關卡表 ----------
+
+   難度靠兩件事疊上去:曲庫變大(而且越後面越冷門),門檻變高。
+   秒數固定 10 秒 —— 比競速模式的 12 秒緊,但每一關都一樣,
+   讓玩家感覺得到「是題目變難了」,不是「是我被偷偷加速了」。
+
+   每關 10 題、滿分 10,000,分數每關獨立算。沒過就從第 1 關重來。
+
+   unlocked 是「進到這一關才開放的東西」,會在上一關的過關畫面上公布 ——
+   解鎖的當下要看得到自己解鎖了什麼,不然曲庫變大玩家只會覺得變難而已。 */
+const STAGE_SECONDS = 10;
+const STAGE_QUESTIONS = 10;
+const STAGES = [
+  { need: 4000, genres: ['mando','classic'] },
+  { need: 5000, genres: ['mando','classic','tw'],                     unlocked: '台語' },
+  { need: 6000, genres: ['mando','classic','tw','west'],              unlocked: '西洋' },
+  { need: 7000, genres: ['mando','classic','tw','west','kpop','jp'],  unlocked: '韓文 · 日文' },
+  { need: 8000, genres: ['mando','classic','tw','west','kpop','jp'] },
+  { need: 9000, genres: ['mando','classic','tw','west','kpop','jp'] }
+];
+
+function stagePool(n){
+  const g = STAGES[n - 1].genres;
+  return (window.SONGS || []).filter(s => g.includes(s.genre));
+}
+
+// 這一局實際跑的規則。開局時依模式填,遊戲迴圈只看這個,不看 CONFIG。
+const R = { questionCount: CONFIG.questionCount, timeLimit: CONFIG.timeLimit };
+
+const SCREENS = ['screen-start','screen-load','screen-play','screen-stage','screen-result','screen-board'];
 function show(id){
   SCREENS.forEach(s => $(s).hidden = (s !== id));
   document.body.classList.toggle('dim', id === 'screen-play');
@@ -841,7 +931,16 @@ const Store = {
   },
 
   best(){ return this.all().reduce((m, r) => Math.max(m, r.score || 0), 0); },
-  plays(){ return this.all().length; }
+  plays(){ return this.all().length; },
+
+  // 闖關模式的最高紀錄。只會往上,不會因為這次玩爛而掉下來
+  STAGE_KEY: 'pmsg_stage_v1',
+  bestStage(){
+    try{ return Number(localStorage.getItem(this.STAGE_KEY)) || 0; }catch(e){ return 0; }
+  },
+  noteStage(n){
+    if(n > this.bestStage()){ try{ localStorage.setItem(this.STAGE_KEY, String(n)); }catch(e){} }
+  }
 };
 
 /* ---------- 出題 ---------- */
@@ -876,8 +975,11 @@ function optionPool(){
   return (window.SONGS || []).concat(window.DECOYS || []);
 }
 
-function buildQuestions(){
-  const songs = window.SONGS || [];
+/* songs  這一局可以出的歌(闖關模式只給該關解鎖的曲庫)
+   quota  要不要套曲風配額。競速模式要(每局都要有台語、經典、非中文);
+          闖關模式不要 —— 那一關的曲庫就是它的難度,再塞配額會打亂設計 */
+function buildQuestions(songs, quota){
+  songs = songs || window.SONGS || [];
 
   // 抽題分三步:固定配額 → 非中文保底 → 剩下的名額自由補
   const picked = [];
@@ -886,15 +988,17 @@ function buildQuestions(){
     picked.push(...shuffle(list.filter(s => !picked.includes(s))).slice(0, n));
   };
 
-  // 1. 各曲風的保底配額
-  for(const [genre, n] of Object.entries(CONFIG.quota)){
-    take(songs.filter(s => s.genre === genre), n);
+  if(quota){
+    // 1. 各曲風的保底配額
+    for(const [genre, n] of Object.entries(CONFIG.quota)){
+      take(songs.filter(s => s.genre === genre), n);
+    }
+    // 2. 非中文保底:韓/西洋/日文混在一起抽,不保證是哪一種語言
+    take(songs.filter(s => FOREIGN_GENRES.includes(s.genre)), CONFIG.foreignMin);
   }
-  // 2. 非中文保底:韓/西洋/日文混在一起抽,不保證是哪一種語言
-  take(songs.filter(s => FOREIGN_GENRES.includes(s.genre)), CONFIG.foreignMin);
   // 3. 剩下的名額從全部歌曲隨機補 —— 非中文也在池子裡,所以可能不只保底那一題。
   //    某個曲風的歌不夠湊到配額時,也是靠這一步補滿題數。
-  take(songs, CONFIG.questionCount - picked.length);
+  take(songs, R.questionCount - picked.length);
   const answers = shuffle(picked);   // 出題順序也打亂,不然每局都是同樣的曲風順序
 
   const pool = optionPool();
@@ -944,6 +1048,7 @@ function buildQuestions(){
 const G = {
   nickname: '',
   questions: [], index: 0, total: 0, log: [],
+  mode: 'speed', stage: 1,
   soundOk: false, timer: null, clip: null, deadline: 0, locked: false
 };
 
@@ -968,12 +1073,20 @@ function refreshStartBtn(){
   const err = nickError(raw);
   const typed = raw.trim().length > 0;
 
-  $('btn-start').disabled = !(!err && G.soundOk);
-  $('btn-start').textContent =
-    !typed        ? '請先輸入暱稱' :
-    err           ? '暱稱不能用'   :
-    !G.soundOk    ? '請先測試聲音' :
-                    '開始遊戲';
+  const why =
+    !typed     ? '請先輸入暱稱' :
+    err        ? '暱稱不能用'   :
+    !G.soundOk ? '請先測試聲音' : null;
+
+  for(const [id, label] of [['btn-speed','競速模式'], ['btn-stage','闖關模式']]){
+    $(id).disabled = !!why;
+    $(id).querySelector('.t').textContent = why || label;
+  }
+  const bestStage = Store.bestStage();
+  $('stage-best').textContent = why ? ''
+    : (bestStage ? `最佳紀錄 第 ${bestStage} 關` : '六關,一關比一關難');
+  $('speed-best').textContent = why ? ''
+    : (Store.best() ? `你的最佳 ${Store.best().toLocaleString()} 分` : '十題,比分數');
 
   // 還沒開始打字就跳錯誤訊息太兇,等他真的輸入了再說
   showNickError(typed ? err : '');
@@ -1014,7 +1127,8 @@ $('btn-vol').addEventListener('click', () => {
   $('btn-vol').setAttribute('aria-expanded', String(opening));
 });
 
-$('btn-start').addEventListener('click', startGame);
+$('btn-speed').addEventListener('click', () => startGame('speed'));
+$('btn-stage').addEventListener('click', () => startGame('stage'));
 $('btn-again').addEventListener('click', () => show('screen-start'));
 $('btn-board-1').addEventListener('click', () => renderBoard(true));
 $('btn-board-2').addEventListener('click', () => renderBoard(true));
@@ -1059,16 +1173,28 @@ function showNickError(msg){
   el.hidden = !msg;
 }
 
-async function startGame(){
+async function startGame(mode){
   const err = nickError($('nick').value);
   if(err){ showNickError(err); return; }
   showNickError('');
 
-  const nick = $('nick').value.trim();
-
   // 沒有共用的榜了,所以也沒有撞名問題 —— 暱稱只出現在這支手機上
-  G.nickname = nick;
-  G.questions = buildQuestions();
+  G.nickname = $('nick').value.trim();
+  G.mode = mode;
+  G.stage = 1;
+  await playRound();
+}
+
+/* 一局(競速模式的十題,或闖關模式的一關)。兩個模式差在規則和曲庫,
+   之後的流程 —— 載入、出題、計時、計分 —— 完全共用。 */
+async function playRound(){
+  if(G.mode === 'stage'){
+    Object.assign(R, { questionCount: STAGE_QUESTIONS, timeLimit: STAGE_SECONDS });
+    G.questions = buildQuestions(stagePool(G.stage), false);
+  }else{
+    Object.assign(R, { questionCount: CONFIG.questionCount, timeLimit: CONFIG.timeLimit });
+    G.questions = buildQuestions(window.SONGS, true);
+  }
   G.index = 0; G.total = 0; G.log = [];
 
   show('screen-load');
@@ -1086,9 +1212,9 @@ async function nextQuestion(){
   $('volpanel').hidden = true;
   $('btn-vol').setAttribute('aria-expanded', 'false');
 
-  $('qnum').textContent = `第 ${G.index+1} 題,共 ${CONFIG.questionCount} 題`;
+  $('qnum').textContent = `第 ${G.index+1} 題,共 ${R.questionCount} 題`;
   $('running').textContent = G.total.toLocaleString();
-  $('clock').textContent = CONFIG.timeLimit.toFixed(1);
+  $('clock').textContent = R.timeLimit.toFixed(1);
   $('clock').classList.remove('hurry');
   $('barfill').style.transform = 'scaleX(1)';
   $('barfill').classList.remove('hurry');
@@ -1113,7 +1239,7 @@ async function nextQuestion(){
   G.clip = playClip(q);
 
   G.locked = false;
-  G.deadline = performance.now() + CONFIG.timeLimit * 1000;
+  G.deadline = performance.now() + R.timeLimit * 1000;
   tick();
 
   // 這一題在播的時候,把下一題的音源先抓好,換題才不會停頓
@@ -1123,7 +1249,7 @@ async function nextQuestion(){
 
 function tick(){
   const left = Math.max(0, (G.deadline - performance.now()) / 1000);
-  const ratio = left / CONFIG.timeLimit;
+  const ratio = left / R.timeLimit;
   $('clock').textContent = left.toFixed(1);
   $('clock').classList.toggle('hurry', left <= 4);
   $('barfill').style.transform = `scaleX(${ratio})`;
@@ -1143,11 +1269,11 @@ function answer(opt, index){
   const left = Math.max(0, (G.deadline - performance.now()) / 1000);
   const correct = opt === q.song;
   const gained = correct
-    ? Math.round(CONFIG.baseScore + CONFIG.speedScore * (left / CONFIG.timeLimit))
+    ? Math.round(CONFIG.baseScore + CONFIG.speedScore * (left / R.timeLimit))
     : 0;
 
   G.total += gained;
-  G.log.push({ song: q.song, correct, gained, seconds: +(CONFIG.timeLimit - left).toFixed(1) });
+  G.log.push({ song: q.song, correct, gained, seconds: +(R.timeLimit - left).toFixed(1) });
 
   // 標出正解,淡掉其他選項
   const rightIndex = q.options.indexOf(q.song);
@@ -1169,7 +1295,7 @@ function answer(opt, index){
   setTimeout(() => {
     t.remove();
     G.index++;
-    if(G.index >= CONFIG.questionCount) finish();
+    if(G.index >= R.questionCount) finish();
     else nextQuestion();
   }, CONFIG.revealMs);
 }
@@ -1204,6 +1330,8 @@ function titleFor(score){
 
 let freshTimer = null;
 function finish(){
+  if(G.mode === 'stage') return finishStage();
+
   const entry = {
     nickname: G.nickname,
     score: G.total,
@@ -1222,7 +1350,7 @@ function finish(){
        贏過全場多少 —— 每個人都有數字,不會出現「擊敗 0 位」的挫折 */
   const beaten = crewBeaten(G.total);
   $('res-meta').textContent =
-    `答對 ${entry.correct} 題,共 ${CONFIG.questionCount} 題` +
+    `答對 ${entry.correct} 題,共 ${R.questionCount} 題` +
     ` · 擊敗 ${beaten}/${CREW.length} 位幹部` +
     ` · 贏過全場 ${beatPercent(G.total)}%`;
 
@@ -1262,6 +1390,80 @@ function finish(){
 
   show('screen-result');
 }
+
+/* ---------- 闖關模式的結算 ---------- */
+
+function stageFacts(st, passed){
+  const rows = [
+    [`這一關`, `${G.total.toLocaleString()} / ${st.need.toLocaleString()} 分`, passed]
+  ];
+  const next = STAGES[G.stage];
+  if(passed && next){
+    if(next.unlocked){
+      const before = stagePool(G.stage).length, after = stagePool(G.stage + 1).length;
+      rows.push([`解鎖`, `${next.unlocked} ${after - before} 首 · 曲庫 ${before} → ${after}`, true]);
+    }else{
+      rows.push([`曲庫`, `${stagePool(G.stage + 1).length} 首,已經全開`, true]);
+    }
+    rows.push([`第 ${G.stage + 1} 關`, `要 ${next.need.toLocaleString()} 分`, false]);
+  }
+  return rows.map(([k, v, hot]) =>
+    `<li><span class="k">${k}</span><span class="v${hot ? ' hot' : ''}">${v}</span></li>`).join('');
+}
+
+function finishStage(){
+  const st = STAGES[G.stage - 1];
+  const passed = G.total >= st.need;
+  const cleared = passed ? G.stage : G.stage - 1;   // 真正過掉的關數
+  Store.noteStage(cleared);
+  Store.save({ nickname: G.nickname, mode: 'stage', stage: cleared, score: G.total, at: Date.now() });
+
+  if(!passed) return failStage(st);
+
+  const last = G.stage >= STAGES.length;
+  $('st-tag').textContent  = last ? '全部破關' : `第 ${G.stage} 關 通過`;
+  $('st-big').textContent  = last ? '六關全破' : (STAGES[G.stage].unlocked ? `解鎖 ${STAGES[G.stage].unlocked}` : `第 ${G.stage + 1} 關`);
+  $('st-line').textContent = last
+    ? '整個題庫 340 首、六道門檻,你一關都沒有掉。'
+    : '';
+  $('st-facts').innerHTML  = stageFacts(st, true);
+  $('btn-stage-go').hidden = last;
+  $('btn-stage-go').textContent = last ? '' : `進入第 ${G.stage + 1} 關`;
+  $('btn-stage-quit').textContent = last ? '回到首頁' : '先不玩了';
+  show('screen-stage');
+}
+
+/* 沒過門檻 —— 用結算畫面,但講的是「闖到第幾關」,不是分數。
+   分享出去的那句話是「我闖到第 3 關」,所以那句要在最上面。 */
+function failStage(st){
+  const cleared = G.stage - 1;
+  const gap = st.need - G.total;
+  $('res-title').textContent = cleared > 0 ? `闖到第 ${cleared} 關` : '第 1 關就卡住了';
+  $('res-line').textContent  = cleared > 0
+    ? `倒在第 ${G.stage} 關的 ${st.need.toLocaleString()} 分門檻前`
+    : '第一關只考華語,再來一次一定過得了';
+  $('res-score').textContent = G.total.toLocaleString();
+  $('res-meta').textContent  =
+    `第 ${G.stage} 關要 ${st.need.toLocaleString()} 分 · 差 ${gap.toLocaleString()} 分` +
+    ` · 最佳紀錄 第 ${Store.bestStage()} 關`;
+
+  const nextEl = $('res-next');
+  nextEl.innerHTML = `再玩一次會<b>從第 1 關重新開始</b>`;
+  nextEl.hidden = false;
+
+  const missed = G.log.filter(r => !r.correct);
+  $('res-misses').innerHTML = missed.length
+    ? `<h4>沒答出來的</h4><ul>${missed.map(r =>
+        `<li><b>${r.song.title}</b><span>${r.song.artist}</span></li>`).join('')}</ul>`
+    : `<h4>全對</h4><div class="none">十題全中,但門檻是看分數的 —— 再快一點</div>`;
+
+  clearInterval(freshTimer);
+  $('res-fresh').textContent = '';
+  show('screen-result');
+}
+
+$('btn-stage-go').addEventListener('click', () => { G.stage++; playRound(); });
+$('btn-stage-quit').addEventListener('click', () => show('screen-start'));
 
 /* ---------- 幹部榜 ---------- */
 
