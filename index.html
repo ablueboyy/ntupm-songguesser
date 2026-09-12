@@ -1488,8 +1488,6 @@ async function reportRank(entry, baseMeta){
 
 /* ---------- 排行榜 ---------- */
 
-let boardTimer = null;
-let boardFullAt = 0;      // 上次整張重抓的時間
 
 function boardRowHtml(r, rank, mine, detached){
   const cls = ['rowitem'];
@@ -1509,7 +1507,6 @@ async function renderBoard(fresh){
 
   if(!list.children.length) list.innerHTML = '<div class="empty">正在讀取⋯</div>';
 
-  if(fresh) boardFullAt = Date.now();
   const { top, total, me: mine, source } = await Store.top(fresh);
   const dev = Store.deviceId();
 
@@ -1538,32 +1535,18 @@ async function renderBoard(fresh){
     note.innerHTML = `<b>目前只有這支手機的分數</b> —— 全場共用的榜還沒接上伺服器。`;
   }
 
-  // 只有真的看得到的時候才自動重讀
-  if(source === 'server') boardAutoRefresh();
 }
 
-/* 排行榜開著的時候每 15 秒重讀一次 —— 但「開著」要連分頁一起算。
+/* 沒有定時刷新 —— 排行榜只在「被打開的那一下」讀。
 
-   切到別的分頁、切去別的 app、手機鎖屏,畫面都還在那裡開著,舊的寫法會照刷。
-   那些請求沒有任何人看得到,卻照樣在燒流量:一個人把排行榜擺著不管一小時,
-   就是 240 次沒人看的讀取。走紅之後這是流量最大的一筆浪費。
+   以前是開著就每 15 秒重讀一次。那個設計是給攤位想的:一支手機擺在桌上當公開榜,
+   要自己會動。但放到網路上就變成純粹的浪費 —— 一個人把排行榜擺著不管一小時,
+   就是 240 次沒有人在看的讀取,而且切到背景照樣刷。走紅之後這是最大的一筆流量。
 
-   回到前景會立刻重讀一次(而且是整張),所以看到的永遠是最新的 ——
-   省掉的只有「沒人在看的那段時間」。 */
-function boardAutoRefresh(){
-  clearInterval(boardTimer);
-  if(document.hidden || $('screen-board').hidden) return;
-  boardTimer = setInterval(() => {
-    if(document.hidden || $('screen-board').hidden){ clearInterval(boardTimer); return; }
-    // 平常只補新進來的成績;超過兩分鐘就整張重抓一次,
-    // 這樣工作人員下架的人才會從榜上消失 —— 下架不會改 created_at,增量抓不到。
-    renderBoard(Date.now() - boardFullAt > 120000);
-  }, 15000);
-}
-
+   現在讀的時機只有兩個:按下「排行榜」的那一下,以及切回這個分頁的時候
+   (畫面還停在排行榜的話)。想看新的就退出去再進來 —— 那本來就是一個動作。 */
 document.addEventListener('visibilitychange', () => {
-  if(document.hidden){ clearInterval(boardTimer); return; }
-  if(!$('screen-board').hidden) renderBoard(true);   // 回到前景先給他最新的
+  if(!document.hidden && !$('screen-board').hidden) renderBoard(true);
 });
 
 function escapeHtml(s){
