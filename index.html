@@ -936,7 +936,7 @@ function playClip(q){
    現在換成完全不連線的兩張靜態表(在 crew.js 裡):
 
      CREW        聯展前兩天社團的人自己玩出來的 55 個成績,真名真分數
-     SCORE_DIST  13,191 位玩家的分數分布,用來算「你贏過全場多少%」
+     SCORE_DIST  13,191 位玩家的分數分布,用來算「你贏過了多少%的玩家」
 
    換掉之後玩家其實沒有失去什麼。八千人的榜上排第 1,240 名沒有感覺;
    「你擊敗了 23 位流唱社幹部,再 89 分就能贏過兮兮」才有感 ——
@@ -944,7 +944,7 @@ function playClip(q){
 
 const CREW = (window.CREW || []).slice().sort((a, b) => b.score - a.score);
 
-/* 你的分數贏過全場多少人。SCORE_DIST 是每 250 分一階的累計人數,
+/* 你的分數贏過多少玩家。SCORE_DIST 是每 250 分一階的累計人數,
    中間用內插 —— 玩家要的是「我大概贏過幾成的人」,不是精確到個位數。 */
 function beatCount(score){
   const d = window.SCORE_DIST || [];
@@ -1422,12 +1422,12 @@ function finish(){
 
   /* 兩個數字都在這支手機上算完,不連線:
        擊敗幾位幹部 —— 有名有姓的對手,比抽象的名次好懂
-       贏過全場多少 —— 每個人都有數字,不會出現「擊敗 0 位」的挫折 */
+       贏過多少玩家 —— 每個人都有數字,不會出現「擊敗 0 位」的挫折 */
   const beaten = crewBeaten(G.total);
   $('res-meta').textContent =
     `答對 ${entry.correct} 題,共 ${R.questionCount} 題` +
     ` · 擊敗 ${beaten}/${CREW.length} 位幹部` +
-    ` · 贏過全場 ${beatPercent(G.total)}%`;
+    ` · 贏過 ${beatPercent(G.total)}% 的玩家`;
 
   // 差一點點就能超過某個人 —— 這是最好的「再玩一次」理由
   const next = crewNext(G.total);
@@ -1599,7 +1599,8 @@ function renderBoard(){
   list.innerHTML = rows.map(crewRowHtml).join('');
 
   note.innerHTML = best > 0
-    ? `你的最佳 <b>${best.toLocaleString()}</b> 分 —— 擊敗 <b>${beaten}</b> / ${CREW.length} 位幹部,贏過全場 <b>${beatPercent(best)}%</b>。`
+    ? `你的最佳 <b>${best.toLocaleString()}</b> 分 —— 擊敗 <b>${beaten}</b> / ${CREW.length} 位幹部;` +
+      `在所有玩家裡,你贏過了 <b>${beatPercent(best)}%</b> 的玩家。`
     : `聯展前兩天,社團的人自己先玩了一輪 —— 這 ${CREW.length} 個成績都是真的。玩一局,看你能擊敗幾個。`;
 
   // 只捲列表自己,不要用 scrollIntoView —— 那會連整頁一起捲,把標題推出畫面
