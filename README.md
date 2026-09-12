@@ -15,8 +15,9 @@ The interface is Traditional Chinese; the code and comments are English.
 - **闖關 (stage)** — six stages, ten questions each. Clearing one is about
   score (4,000 up to 9,000) and the song pool grows as you go: Mandarin →
   Taiwanese → Western → Korean and Japanese. Whatever a stage unlocks is
-  guaranteed to appear from then on, and the last three stages always hold at
-  least two non-Chinese songs. Fail and you restart at stage 1.
+  guaranteed at least one question from then on, so by stage 4 every round
+  holds Taiwanese, Western, and Korean or Japanese. Fail and you restart at
+  stage 1.
 
 ## No server
 
@@ -74,6 +75,11 @@ Apple's previews is not.
 round has a classic, a Taiwanese track and something non-Chinese), it decides
 which stage a song unlocks in, and it picks decoys — a Mandarin answer needs
 Mandarin decoys or the grid is solvable by elimination.
+
+Floors are written as `{ mando: 5, classic: 1, tw: 1, 'kpop+west+jp': 1 }`. A
+key joined with `+` draws from those genres as one pool, which is how "one
+non-Chinese song, any language" is expressed. `CONFIG.floor` holds speed
+mode's; each entry in `STAGES` holds its own.
 
 ### Adding songs
 

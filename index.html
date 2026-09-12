@@ -713,11 +713,12 @@ input[type=text]:focus{outline:0;border-bottom-color:var(--foam)}
 
 const CONFIG = {
   questionCount: 10,      // questions per round
-  // per-genre floor: at least this many of each per round, random within the quota
-  quota: { mando: 5, classic: 1, tw: 1 },
-  // non-Chinese floor (kpop/west/jp drawn as one pool, no language guaranteed).
-  // The rest is filled from the whole bank, so there may well be more than one.
-  foreignMin: 1,
+  /* Per-round floor. A key may name one genre or a group joined with '+',
+     in which case the draw comes from that group as a pool — so the last
+     entry guarantees one non-Chinese song without guaranteeing a language.
+     Remaining slots are filled from the whole bank, so any of these can and
+     often does come up more than its floor. */
+  floor: { mando: 5, classic: 1, tw: 1, 'kpop+west+jp': 1 },
   optionCount: 9,
   timeLimit: 12,          // seconds per question
   baseScore: 300,         // points for a correct answer
@@ -726,7 +727,6 @@ const CONFIG = {
   clipSeconds: 15,        // clip length
   maxSameArtist: 2        // max cells one artist may occupy
 };
-const FOREIGN_GENRES = ['kpop', 'west', 'jp'];
 
 const $ = id => document.getElementById(id);
 /* ---------- Stage table ----------
@@ -744,13 +744,17 @@ const $ = id => document.getElementById(id);
    previous stage's clear popup. Players have to see what they unlocked, or a
    bigger pool just reads as "harder".
 
-   `floor` and `foreignMin` guarantee the unlock shows up. Widening the pool
-   is not enough on its own — adding 30 Taiwanese songs to 260 Mandarin ones
-   means a ten-question round often contains none, and the unlock the player
-   was just shown never arrives. So once a language is unlocked it is
-   guaranteed at least one question from then on. From stage 4 the extra
-   foreignMin draw lands on top of the Western floor, so the last three
-   stages always hold at least two non-Chinese songs. */
+   `floor` guarantees the unlock shows up. Widening the pool is not enough on
+   its own — adding 30 Taiwanese songs to 260 Mandarin ones means a
+   ten-question round often contains none, and the unlock the player was just
+   shown never arrives. So once a language is unlocked it is guaranteed at
+   least one question from then on:
+
+     stage 2+   tw 1
+     stage 3+   tw 1, west 1
+     stage 4+   tw 1, west 1, kpop or jp 1
+
+   Korean and Japanese share a floor because they unlock together. */
 const STAGE_SECONDS = 12;
 const STAGE_QUESTIONS = 10;
 const ALL_GENRES = ['mando','classic','tw','west','kpop','jp'];
@@ -762,9 +766,9 @@ const STAGES = [
   { need: 6000, genres: ['mando','classic','tw','west'], unlocked: '西洋',
     floor: { tw: 1, west: 1 } },
   { need: 7000, genres: ALL_GENRES,                      unlocked: '韓文 · 日文',
-    floor: { tw: 1, west: 1 }, foreignMin: 1 },
-  { need: 8000, genres: ALL_GENRES, floor: { tw: 1, west: 1 }, foreignMin: 1 },
-  { need: 9000, genres: ALL_GENRES, floor: { tw: 1, west: 1 }, foreignMin: 1 }
+    floor: { tw: 1, west: 1, 'kpop+jp': 1 } },
+  { need: 8000, genres: ALL_GENRES, floor: { tw: 1, west: 1, 'kpop+jp': 1 } },
+  { need: 9000, genres: ALL_GENRES, floor: { tw: 1, west: 1, 'kpop+jp': 1 } }
 ];
 
 /* The line pinned at the top during play: which stage, what is unlocked so
@@ -1085,30 +1089,29 @@ function optionPool(){
   return (window.SONGS || []).concat(window.DECOYS || []);
 }
 
-/* songs       pool for this round (stage mode passes only the unlocked genres)
-   floor       minimum questions per genre, e.g. { tw: 1 }
-   foreignMin  extra draws from kpop/west/jp as one pool, on top of floor
+/* songs  pool for this round (stage mode passes only the unlocked genres)
+   floor  minimum questions per genre. A key may be one genre ('tw') or a
+          group ('kpop+jp'), in which case the draw comes from that group as
+          a pool. Floors are applied in order and never reuse a song, so
+          { west: 1, 'kpop+jp': 1 } yields two different non-Chinese songs.
 
-   Both are per-mode. Speed mode wants a spread across the whole bank; stage
-   mode wants whatever it just unlocked to actually turn up. */
-function buildQuestions(songs, floor, foreignMin){
+   Speed mode wants a spread across the whole bank; stage mode wants whatever
+   it just unlocked to actually turn up. */
+function buildQuestions(songs, floor){
   songs = songs || window.SONGS || [];
 
-  // three passes: genre floor -> non-Chinese floor -> free fill
   const picked = [];
   const take = (list, n) => {
     if(n <= 0) return;
     picked.push(...shuffle(list.filter(s => !picked.includes(s))).slice(0, n));
   };
 
-  // 1. per-genre floor
-  for(const [genre, n] of Object.entries(floor || {})){
-    take(songs.filter(s => s.genre === genre), n);
+  // floors first, then whatever is left is filled at random
+  for(const [key, n] of Object.entries(floor || {})){
+    const want = key.split('+');
+    take(songs.filter(s => want.includes(s.genre)), n);
   }
-  // 2. non-Chinese floor, drawn as one pool
-  take(songs.filter(s => FOREIGN_GENRES.includes(s.genre)), foreignMin || 0);
-  // 3. free fill from the whole pool. Also how a short genre gets topped up.
-  //    
+  // free fill. Also how a genre too short to meet its floor gets topped up.
   take(songs, R.questionCount - picked.length);
   const answers = shuffle(picked);   // shuffle the order too, or every round runs through genres the same way
 
@@ -1304,13 +1307,13 @@ async function playRound(){
   if(G.mode === 'stage'){
     const st = STAGES[G.stage - 1];
     Object.assign(R, { questionCount: STAGE_QUESTIONS, timeLimit: STAGE_SECONDS });
-    G.questions = buildQuestions(stagePool(G.stage), st.floor, st.foreignMin);
+    G.questions = buildQuestions(stagePool(G.stage), st.floor);
     $('hud-lv').textContent = `第 ${G.stage} 關`;
     $('hud-un').textContent = `${stageHudLabel(G.stage)} · ${stagePool(G.stage).length} 首`;
     $('goal').textContent = ` / ${STAGES[G.stage - 1].need.toLocaleString()}`;
   }else{
     Object.assign(R, { questionCount: CONFIG.questionCount, timeLimit: CONFIG.timeLimit });
-    G.questions = buildQuestions(window.SONGS, CONFIG.quota, CONFIG.foreignMin);
+    G.questions = buildQuestions(window.SONGS, CONFIG.floor);
     $('goal').textContent = '';
   }
   $('hud-stage').hidden = G.mode !== 'stage';
